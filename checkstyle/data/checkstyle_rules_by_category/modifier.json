@@ -1,0 +1,126 @@
+[
+  {
+    "name": "ClassMemberImpliedModifier",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.modifier.ClassMemberImpliedModifierCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks for implicit modifiers on nested types in classes and records. This check is effectively the opposite of RedundantModifier. It checks the modifiers on nested types in classes and records, ensuring that certain modifiers are explicitly specified even though they are actually redundant. Nested enums, interfaces, and records within a class are always \"static\" and as such the compiler does not require the \"static\" modifier. This check provides the ability to enforce that the \"static\" modifier is explicitly coded and not implicitly added by the compiler. public final class Person { enum Age { // violation CHILD, ADULT } } \" Rationale for this check: Nested enums, interfaces, and records are treated differently from nested classes as they are only allowed to be \"static\". Developers should not need to remember this rule, and this check provides the means to enforce that the modifier is coded explicitly.",
+    "options": [
+      {
+        "name": "violateImpliedStaticOnNestedEnum",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether to enforce that <code>static</code> is explicitly coded\n on nested enums in classes and records."
+      },
+      {
+        "name": "violateImpliedStaticOnNestedInterface",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether to enforce that <code>static</code> is explicitly coded\n on nested interfaces in classes and records."
+      },
+      {
+        "name": "violateImpliedStaticOnNestedRecord",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether to enforce that <code>static</code> is explicitly coded\n on nested records in classes and records."
+      }
+    ],
+    "message_keys": [
+      "class.implied.modifier"
+    ],
+    "category": "modifier",
+    "source_file": "ClassMemberImpliedModifierCheck.xml"
+  },
+  {
+    "name": "InterfaceMemberImpliedModifier",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.modifier.InterfaceMemberImpliedModifierCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks for implicit modifiers on interface members and nested types. This check is effectively the opposite of RedundantModifier. It checks the modifiers on interface members, ensuring that certain modifiers are explicitly specified even though they are actually redundant. Methods in interfaces are \"public\" by default, however from Java 9 they can also be \"private\". This check provides the ability to enforce that \"public\" is explicitly coded and not implicitly added by the compiler. From Java 8, there are three types of methods in interfaces - static methods marked with \"static\", default methods marked with \"default\" and abstract methods which do not have to be marked with anything. From Java 9, there are also private methods marked with \"private\". This check provides the ability to enforce that \"abstract\" is explicitly coded and not implicitly added by the compiler. Fields in interfaces are always \"public static final\" and as such the compiler does not require these modifiers. This check provides the ability to enforce that these modifiers are explicitly coded and not implicitly added by the compiler. Nested types within an interface are always \"public static\" and as such the compiler does not require the \"public static\" modifiers. This check provides the ability to enforce that the \"public\" and \"static\" modifiers are explicitly coded and not implicitly added by the compiler. public interface AddressFactory { // check enforces code contains \"public static final\" public static final String UNKNOWN = \"Unknown\"; String OTHER = \"Other\"; // violation // check enforces code contains \"public\" or \"private\" public static AddressFactory instance(); // check enforces code contains \"public abstract\" public abstract Address createAddress(String addressLine, String city); List<Address> findAddresses(String city); // violation // check enforces default methods are explicitly declared \"public\" public default Address createAddress(String city) { return createAddress(UNKNOWN, city); } default Address createOtherAddress() { // violation return createAddress(OTHER, OTHER); } } \" Rationale for this check: Methods, fields and nested types are treated differently depending on whether they are part of an interface or part of a class. For example, by default methods are package-scoped on classes, but public in interfaces. However, from Java 8 onwards, interfaces have changed to be much more like abstract classes. Interfaces now have static and instance methods with code. Developers should not have to remember which modifiers are required and which are implied. This check allows the simpler alternative approach to be adopted where the implied modifiers must always be coded explicitly.",
+    "options": [
+      {
+        "name": "violateImpliedAbstractMethod",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether to enforce that <code>abstract</code> is explicitly coded\n on interface methods."
+      },
+      {
+        "name": "violateImpliedFinalField",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether to enforce that <code>final</code> is explicitly coded\n on interface fields."
+      },
+      {
+        "name": "violateImpliedPublicField",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether to enforce that <code>public</code> is explicitly coded\n on interface fields."
+      },
+      {
+        "name": "violateImpliedPublicMethod",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether to enforce that <code>public</code> is explicitly coded\n on interface methods."
+      },
+      {
+        "name": "violateImpliedPublicNested",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether to enforce that <code>public</code> is explicitly coded\n on interface nested types."
+      },
+      {
+        "name": "violateImpliedStaticField",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether to enforce that <code>static</code> is explicitly coded\n on interface fields."
+      },
+      {
+        "name": "violateImpliedStaticNested",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether to enforce that <code>static</code> is explicitly coded\n on interface nested types."
+      }
+    ],
+    "message_keys": [
+      "interface.implied.modifier"
+    ],
+    "category": "modifier",
+    "source_file": "InterfaceMemberImpliedModifierCheck.xml"
+  },
+  {
+    "name": "ModifierOrder",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.modifier.ModifierOrderCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that the order of modifiers conforms to the suggestions in the Java Language specification, &#167; 8.1.1, 8.3.1, 8.4.3 and 9.4. The correct order is: - \"public\" - \"protected\" - \"private\" - \"abstract\" - \"default\" - \"static\" - \"sealed\" - \"non-sealed\" - \"final\" - \"transient\" - \"volatile\" - \"synchronized\" - \"native\" - \"strictfp\" In additional, modifiers are checked to ensure all annotations are declared before all other modifiers. Rationale: Code is easier to read if everybody follows a standard. ATTENTION: We skip type annotations from validation.",
+    "options": [],
+    "message_keys": [
+      "annotation.order",
+      "mod.order"
+    ],
+    "category": "modifier",
+    "source_file": "ModifierOrderCheck.xml"
+  },
+  {
+    "name": "RedundantModifier",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.modifier.RedundantModifierCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks for redundant modifiers. Rationale: The Java Language Specification strongly discourages the usage of \"public\" and \"abstract\" for method declarations in interface definitions as a matter of style. The check validates: - Interface and annotation definitions. - Final modifier on methods of final and anonymous classes. - Type declarations nested under interfaces that are declared as \"public\" or \"static\". - Class constructors. - Nested \"enum\" definitions that are declared as \"static\". - \"record\" definitions that are declared as \"final\" and nested \"record\" definitions that are declared as \"static\". - \"strictfp\" modifier when using JDK 17 or later. See reason at JEP 306 - \"final\" modifier on unnamed variables when using JDK 22 or later. interfaces by definition are abstract so the \"abstract\" modifier is redundant on them. Type declarations nested under interfaces by definition are public and static, so the \"public\" and \"static\" modifiers on nested type declarations are redundant. On the other hand, classes inside of interfaces can be abstract or non abstract. So, \"abstract\" modifier is allowed. Fields in interfaces and annotations are automatically public, static and final, so these modifiers are redundant as well. As annotations are a form of interface, their fields are also automatically public, static and final just as their annotation fields are automatically public and abstract. A record class is implicitly final and cannot be abstract, these restrictions emphasize that the API of a record class is defined solely by its state description, and cannot be enhanced later by another class. Nested records are implicitly static. This avoids an immediately enclosing instance which would silently add state to the record class. See JEP 395 for more info. Enums by definition are static implicit subclasses of java.lang.Enum&#60;E&#62;. So, the \"static\" modifier on the enums is redundant. In addition, if enum is inside of interface, \"public\" modifier is also redundant. Enums can also contain abstract methods and methods which can be overridden by the declared enumeration fields. See the following example: public enum EnumClass { FIELD_1, FIELD_2 { &#64;Override public final void method1() {} // violation expected }; public void method1() {} public final void method2() {} // no violation expected } \" Since these methods can be overridden in these situations, the final methods are not marked as redundant even though they can't be extended by other classes/enums. Nested \"enum\" types are always static by default. Final classes by definition cannot be extended so the \"final\" modifier on the method of a final class is redundant. Public modifier for constructors in non-public non-protected classes is always obsolete: public class PublicClass { public PublicClass() {} // OK } class PackagePrivateClass { public PackagePrivateClass() {} // violation expected } \" There is no violation in the following example, because removing public modifier from ProtectedInnerClass constructor will make this code not compiling: package a; public class ClassExample { protected class ProtectedInnerClass { public ProtectedInnerClass () {} } } package b; import a.ClassExample; public class ClassExtending extends ClassExample { ProtectedInnerClass pc = new ProtectedInnerClass(); } \"",
+    "options": [
+      {
+        "name": "jdkVersion",
+        "type": "java.lang.String",
+        "default_value": "22",
+        "description": "Set the JDK version that you are using.\n Old JDK version numbering is supported (e.g. 1.8 for Java 8)\n as well as just the major JDK version alone (e.g. 8) is supported.\n This property only considers features from officially released\n Java versions as supported. Features introduced in preview releases are not considered\n supported until they are included in a non-preview release."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "METHOD_DEF,VARIABLE_DEF,ANNOTATION_FIELD_DEF,INTERFACE_DEF,CTOR_DEF,CLASS_DEF,ENUM_DEF,RESOURCE,ANNOTATION_DEF,RECORD_DEF,PATTERN_VARIABLE_DEF,LITERAL_CATCH,LAMBDA",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "redundantModifier"
+    ],
+    "category": "modifier",
+    "source_file": "RedundantModifierCheck.xml"
+  }
+]

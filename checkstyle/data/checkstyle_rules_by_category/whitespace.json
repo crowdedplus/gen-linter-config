@@ -1,0 +1,446 @@
+[
+  {
+    "name": "EmptyForInitializerPad",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.EmptyForInitializerPadCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks the padding of an empty for initializer; that is whether a white space is required at an empty for initializer, or such white space is forbidden. No check occurs if there is a line wrap at the initializer, as in for ( ; i < j; i++, j--) \"",
+    "options": [
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.whitespace.PadOption",
+        "default_value": "nospace",
+        "description": "Specify policy on how to pad an empty for iterator."
+      }
+    ],
+    "message_keys": [
+      "ws.notPreceded",
+      "ws.preceded"
+    ],
+    "category": "whitespace",
+    "source_file": "EmptyForInitializerPadCheck.xml"
+  },
+  {
+    "name": "EmptyForIteratorPad",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.EmptyForIteratorPadCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks the padding of an empty for iterator; that is whether a white space is required at an empty for iterator, or such white space is forbidden. No check occurs if there is a line wrap at the iterator, as in for (Iterator foo = very.long.line.iterator(); foo.hasNext(); ) \"",
+    "options": [
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.whitespace.PadOption",
+        "default_value": "nospace",
+        "description": "Specify policy on how to pad an empty for iterator."
+      }
+    ],
+    "message_keys": [
+      "ws.followed",
+      "ws.notFollowed"
+    ],
+    "category": "whitespace",
+    "source_file": "EmptyForIteratorPadCheck.xml"
+  },
+  {
+    "name": "EmptyLineSeparator",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.EmptyLineSeparatorCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks for empty line separators before package, all import declarations, fields, constructors, methods, nested classes, static initializers and instance initializers. Checks for empty line separators before not only statements but implementation and documentation comments and blocks as well. ATTENTION: empty line separator is required between token siblings, not after line where token is found. If token does not have a sibling of the same type, then empty line is required at its end (for example for CLASS_DEF it is after '}'). Also, trailing comments are skipped.",
+    "options": [
+      {
+        "name": "allowMultipleEmptyLines",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Allow multiple empty lines between class members."
+      },
+      {
+        "name": "allowMultipleEmptyLinesInsideClassMembers",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Allow multiple empty lines inside class members."
+      },
+      {
+        "name": "allowNoEmptyLineBetweenFields",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow no empty line between fields."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "PACKAGE_DEF,IMPORT,STATIC_IMPORT,CLASS_DEF,INTERFACE_DEF,ENUM_DEF,STATIC_INIT,INSTANCE_INIT,METHOD_DEF,CTOR_DEF,VARIABLE_DEF,RECORD_DEF,COMPACT_CTOR_DEF",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "empty.line.separator",
+      "empty.line.separator.multiple.lines",
+      "empty.line.separator.multiple.lines.after",
+      "empty.line.separator.multiple.lines.inside"
+    ],
+    "category": "whitespace",
+    "source_file": "EmptyLineSeparatorCheck.xml"
+  },
+  {
+    "name": "FileTabCharacter",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.FileTabCharacterCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.Checker",
+    "description": "Checks that there are no tab characters (\"'\\t'\") in the source code. Rationale: - Developers should not need to configure the tab width of their text editors in order to be able to read source code. - From the Apache jakarta coding standards: In a distributed development environment, when the commit messages get sent to a mailing list, they are almost impossible to read if you use tabs. When the \"FileTabCharacter\" check is used with the default configuration, only the first instance of a tab character is reported.",
+    "options": [
+      {
+        "name": "eachLine",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to report on each line containing a tab, or just the first\n instance."
+      },
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default_value": "",
+        "description": "Specify the file extensions of the files to process."
+      }
+    ],
+    "message_keys": [
+      "containsTab",
+      "file.containsTab"
+    ],
+    "category": "whitespace",
+    "source_file": "FileTabCharacterCheck.xml"
+  },
+  {
+    "name": "GenericWhitespace",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.GenericWhitespaceCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that the whitespace around the Generic tokens (angle brackets) \"<\" and \">\" are correct to the typical convention. The convention is not configurable. Whitespace is defined by implementation of java.lang.Character.isWhitespace(char) Left angle bracket (\"<\"): - should be preceded with whitespace only in generic methods definitions. - should not be preceded with whitespace when it is preceded method name or constructor. - should not be preceded with whitespace when following type name. - should not be followed with whitespace in all cases. Right angle bracket (\">\"): - should not be preceded with whitespace in all cases. - should be followed with whitespace in almost all cases, except diamond operators and when preceding a method name, constructor, or record header.",
+    "options": [],
+    "message_keys": [
+      "ws.followed",
+      "ws.illegalFollow",
+      "ws.notPreceded",
+      "ws.preceded"
+    ],
+    "category": "whitespace",
+    "source_file": "GenericWhitespaceCheck.xml"
+  },
+  {
+    "name": "MethodParamPad",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.MethodParamPadCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks the padding between the identifier of a method definition, constructor definition, method call, constructor invocation, record, or record pattern; and the left parenthesis of the parameter list. That is, if the identifier and left parenthesis are on the same line, checks whether a space is required immediately after the identifier or such a space is forbidden. If they are not on the same line, reports a violation, unless configured to allow line breaks. To allow linebreaks after the identifier, set property \"allowLineBreaks\" to \"true\".",
+    "options": [
+      {
+        "name": "allowLineBreaks",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow a line break between the identifier and left parenthesis."
+      },
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.whitespace.PadOption",
+        "default_value": "nospace",
+        "description": "Specify policy on how to pad method parameter."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "CTOR_DEF,CTOR_CALL,LITERAL_NEW,METHOD_CALL,METHOD_DEF,SUPER_CTOR_CALL,ENUM_CONSTANT_DEF,RECORD_DEF,RECORD_PATTERN_DEF",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "line.previous",
+      "ws.notPreceded",
+      "ws.preceded"
+    ],
+    "category": "whitespace",
+    "source_file": "MethodParamPadCheck.xml"
+  },
+  {
+    "name": "NoLineWrap",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.NoLineWrapCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that chosen statements are not line-wrapped. By default, this Check restricts wrapping import and package statements, but it's possible to check any statement.",
+    "options": [
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "PACKAGE_DEF,IMPORT,STATIC_IMPORT",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "no.line.wrap"
+    ],
+    "category": "whitespace",
+    "source_file": "NoLineWrapCheck.xml"
+  },
+  {
+    "name": "NoWhitespaceAfter",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.NoWhitespaceAfterCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that there is no whitespace after a token. More specifically, it checks that it is not followed by whitespace, or (if linebreaks are allowed) all characters on the line after are whitespace. To forbid linebreaks after a token, set property \"allowLineBreaks\" to \"false\". The check processes ARRAY_DECLARATOR and INDEX_OP tokens specially from other tokens. Actually it is checked that there is no whitespace before these tokens, not after them. Space after the ANNOTATIONS before ARRAY_DECLARATOR and INDEX_OP will be ignored. If the annotation is between the type and the array, like \"char @NotNull [] param\", the check will skip validation for spaces. Note: This check processes the LITERAL_SYNCHRONIZED token only when it appears as a part of a synchronized statement, i.e. \"synchronized(this) {}\".",
+    "options": [
+      {
+        "name": "allowLineBreaks",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether whitespace is allowed if the token is at a linebreak."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "ARRAY_INIT,AT,INC,DEC,UNARY_MINUS,UNARY_PLUS,BNOT,LNOT,DOT,ARRAY_DECLARATOR,INDEX_OP",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "ws.followed"
+    ],
+    "category": "whitespace",
+    "source_file": "NoWhitespaceAfterCheck.xml"
+  },
+  {
+    "name": "NoWhitespaceBefore",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.NoWhitespaceBeforeCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that there is no whitespace before a token. More specifically, it checks that it is not preceded with whitespace, or (if linebreaks are allowed) all characters on the line before are whitespace. To allow linebreaks before a token, set property \"allowLineBreaks\" to \"true\". No check occurs before semicolons in empty for loop initializers or conditions.",
+    "options": [
+      {
+        "name": "allowLineBreaks",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether whitespace is allowed if the token is at a linebreak."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "COMMA,SEMI,POST_INC,POST_DEC,ELLIPSIS,LABELED_STAT",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "ws.preceded"
+    ],
+    "category": "whitespace",
+    "source_file": "NoWhitespaceBeforeCheck.xml"
+  },
+  {
+    "name": "NoWhitespaceBeforeCaseDefaultColon",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.NoWhitespaceBeforeCaseDefaultColonCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that there is no whitespace before the colon in a switch block.",
+    "options": [],
+    "message_keys": [
+      "ws.preceded"
+    ],
+    "category": "whitespace",
+    "source_file": "NoWhitespaceBeforeCaseDefaultColonCheck.xml"
+  },
+  {
+    "name": "OperatorWrap",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.OperatorWrapCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks the policy on how to wrap lines on operators. See the Java Language Specification for more information about \"instanceof\" operator.",
+    "options": [
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.whitespace.WrapOption",
+        "default_value": "nl",
+        "description": "Specify policy on how to wrap lines."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "QUESTION,COLON,EQUAL,NOT_EQUAL,DIV,PLUS,MINUS,STAR,MOD,SR,BSR,GE,GT,SL,LE,LT,BXOR,BOR,LOR,BAND,LAND,TYPE_EXTENSION_AND,LITERAL_INSTANCEOF",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "line.new",
+      "line.previous"
+    ],
+    "category": "whitespace",
+    "source_file": "OperatorWrapCheck.xml"
+  },
+  {
+    "name": "ParenPad",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.ParenPadCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks the policy on the padding of parentheses; that is whether a space is required after a left parenthesis and before a right parenthesis, or such spaces are forbidden. No check occurs at the right parenthesis after an empty for iterator, at the left parenthesis before an empty for initialization, or at the right parenthesis of a try-with-resources resource specification where the last resource variable has a trailing semicolon. Use Check EmptyForIteratorPad to validate empty for iterators and EmptyForInitializerPad to validate empty for initializers. Typecasts are also not checked, as there is TypecastParenPad to validate them.",
+    "options": [
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.whitespace.PadOption",
+        "default_value": "nospace",
+        "description": "Specify policy on how to pad parentheses."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "ANNOTATION,ANNOTATION_FIELD_DEF,CTOR_CALL,CTOR_DEF,DOT,ENUM_CONSTANT_DEF,EXPR,LITERAL_CATCH,LITERAL_DO,LITERAL_FOR,LITERAL_IF,LITERAL_NEW,LITERAL_SWITCH,LITERAL_SYNCHRONIZED,LITERAL_WHILE,METHOD_CALL,METHOD_DEF,QUESTION,RESOURCE_SPECIFICATION,SUPER_CTOR_CALL,LAMBDA,RECORD_DEF,RECORD_PATTERN_DEF",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "ws.followed",
+      "ws.notFollowed",
+      "ws.notPreceded",
+      "ws.preceded"
+    ],
+    "category": "whitespace",
+    "source_file": "ParenPadCheck.xml"
+  },
+  {
+    "name": "SeparatorWrap",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.SeparatorWrapCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks line wrapping with separators.",
+    "options": [
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.whitespace.WrapOption",
+        "default_value": "eol",
+        "description": "Specify policy on how to wrap lines."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "DOT,COMMA",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "line.new",
+      "line.previous"
+    ],
+    "category": "whitespace",
+    "source_file": "SeparatorWrapCheck.xml"
+  },
+  {
+    "name": "SingleSpaceSeparator",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.SingleSpaceSeparatorCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that non-whitespace characters are separated by no more than one whitespace. Separating characters by tabs or multiple spaces will be reported. Currently, the check doesn't permit horizontal alignment. To inspect whitespaces before and after comments, set the property \"validateComments\" to true. Setting \"validateComments\" to false will ignore cases like: int i; &#47;&#47; Multiple whitespaces before comment tokens will be ignored. private void foo(int &#47;* whitespaces before and after block-comments will be ignored *&#47; i) { \" Sometimes, users like to space similar items on different lines to the same column position for easier reading. This feature isn't supported by this check, so both braces in the following case will be reported as violations. public long toNanos(long d) { return d; } &#47;&#47; 2 violations public long toMicros(long d) { return d / (C1 / C0); } \"",
+    "options": [
+      {
+        "name": "validateComments",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to validate whitespaces surrounding comments."
+      }
+    ],
+    "message_keys": [
+      "single.space.separator"
+    ],
+    "category": "whitespace",
+    "source_file": "SingleSpaceSeparatorCheck.xml"
+  },
+  {
+    "name": "TypecastParenPad",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.TypecastParenPadCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks the policy on the padding of parentheses for typecasts. That is, whether a space is required after a left parenthesis and before a right parenthesis, or such spaces are forbidden.",
+    "options": [
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.whitespace.PadOption",
+        "default_value": "nospace",
+        "description": "Specify policy on how to pad parentheses."
+      }
+    ],
+    "message_keys": [
+      "ws.followed",
+      "ws.notFollowed",
+      "ws.notPreceded",
+      "ws.preceded"
+    ],
+    "category": "whitespace",
+    "source_file": "TypecastParenPadCheck.xml"
+  },
+  {
+    "name": "WhitespaceAfter",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAfterCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that a token is followed by whitespace, with the exception that it does not check for whitespace after the semicolon of an empty for iterator. Use Check EmptyForIteratorPad to validate empty for iterators.",
+    "options": [
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "COMMA,SEMI,TYPECAST,LITERAL_IF,LITERAL_ELSE,LITERAL_WHILE,LITERAL_DO,LITERAL_FOR,LITERAL_FINALLY,LITERAL_RETURN,LITERAL_YIELD,LITERAL_CATCH,DO_WHILE,ELLIPSIS,LITERAL_SWITCH,LITERAL_SYNCHRONIZED,LITERAL_TRY,LITERAL_CASE,LAMBDA,LITERAL_WHEN",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "ws.notFollowed",
+      "ws.typeCast"
+    ],
+    "category": "whitespace",
+    "source_file": "WhitespaceAfterCheck.xml"
+  },
+  {
+    "name": "WhitespaceAround",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that a token is surrounded by whitespace. Empty constructor, method, class, enum, interface, loop bodies (blocks), lambdas of the form public MyClass() {} // empty constructor public void func() {} // empty method public interface Foo {} // empty interface public class Foo {} // empty class public enum Foo {} // empty enum MyClass c = new MyClass() {}; // empty anonymous class while (i = 1) {} // empty while loop for (int i = 1; i > 1; i++) {} // empty for loop do {} while (i = 1); // empty do-while loop Runnable noop = () -> {}; // empty lambda public @interface Beta {} // empty annotation type \" may optionally be exempted from the policy using the \"allowEmptyMethods\", \"allowEmptyConstructors\", \"allowEmptyTypes\", \"allowEmptyLoops\", \"allowEmptyLambdas\", \"allowEmptyCatches\" and \"allowEmptySwitchBlockStatements\" properties. This check does not flag as violation double brace initialization like: new Properties() {{ setProperty(\"key\", \"value\"); }}; \" Parameter allowEmptyCatches allows to suppress violations when token list contains SLIST to check if beginning of block is surrounded by whitespace and catch block is empty, for example: try { k = 5 / i; } catch (ArithmeticException ex) {} \" With this property turned off, this raises violation because the beginning of the catch block (left curly bracket) is not separated from the end of the catch block (right curly bracket). Note: Switch expressions are ignored by this check.",
+    "options": [
+      {
+        "name": "allowEmptyCatches",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow empty catch bodies."
+      },
+      {
+        "name": "allowEmptyConstructors",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow empty constructor bodies."
+      },
+      {
+        "name": "allowEmptyLambdas",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow empty lambda bodies."
+      },
+      {
+        "name": "allowEmptyLoops",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow empty loop bodies."
+      },
+      {
+        "name": "allowEmptyMethods",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow empty method bodies."
+      },
+      {
+        "name": "allowEmptySwitchBlockStatements",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow empty switch blocks and block statements."
+      },
+      {
+        "name": "allowEmptyTypes",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow empty class, interface and enum bodies."
+      },
+      {
+        "name": "ignoreEnhancedForColon",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Ignore whitespace around colon in\n <a href=\"https://docs.oracle.com/javase/specs/jls/se11/html/jls-14.html#jls-14.14.2\">\n enhanced for</a> loop."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "ASSIGN,BAND,BAND_ASSIGN,BOR,BOR_ASSIGN,BSR,BSR_ASSIGN,BXOR,BXOR_ASSIGN,COLON,DIV,DIV_ASSIGN,DO_WHILE,EQUAL,GE,GT,LAMBDA,LAND,LCURLY,LE,LITERAL_CATCH,LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_FOR,LITERAL_IF,LITERAL_RETURN,LITERAL_SWITCH,LITERAL_SYNCHRONIZED,LITERAL_TRY,LITERAL_WHILE,LOR,LT,MINUS,MINUS_ASSIGN,MOD,MOD_ASSIGN,NOT_EQUAL,PLUS,PLUS_ASSIGN,QUESTION,RCURLY,SL,SLIST,SL_ASSIGN,SR,SR_ASSIGN,STAR,STAR_ASSIGN,LITERAL_ASSERT,TYPE_EXTENSION_AND,LITERAL_WHEN",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "ws.notFollowed",
+      "ws.notPreceded"
+    ],
+    "category": "whitespace",
+    "source_file": "WhitespaceAroundCheck.xml"
+  }
+]

@@ -1,0 +1,211 @@
+[
+  {
+    "name": "Regexp",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.regexp.RegexpCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that a specified pattern exists, exists less than a set number of times, or does not exist in the file. This check combines all the functionality provided by RegexpHeader except supplying the regular expression from a file. It differs from them in that it works in multiline mode. Its regular expression can span multiple lines and it checks this against the whole file at once. The others work in single-line mode. Their single or multiple regular expressions can only span one line. They check each of these against each line in the file in turn. Note: Because of the different mode of operation there may be some changes in the regular expressions used to achieve a particular end. In multiline mode... - \"^\" means the beginning of a line, as opposed to beginning of the input. - For beginning of the input use \"\\A\". - \"$\" means the end of a line, as opposed to the end of the input. - For end of input use \"\\Z\". - Each line in the file is terminated with a line feed character. Note: Not all regular expression engines are created equal. Some provide extra functions that others do not and some elements of the syntax may vary. This check makes use of the java.util.regex package; please check its documentation for details of how to construct a regular expression to achieve a particular goal. Note: When entering a regular expression as a parameter in the XML config file you must also take into account the XML rules. e.g. if you want to match a < symbol you need to enter &lt;. The regular expression should be entered on one line. Note: To search for parentheses () in a regular expression you must escape them like \\(\\). This is required by the regexp engine, otherwise it will think they are special instruction characters. Note: To search for things that mean something in XML, like < you need to escape them like &lt;. This is required so the XML parser does not act on them, but instead passes the correct character to the regexp engine.",
+    "options": [
+      {
+        "name": "duplicateLimit",
+        "type": "int",
+        "default_value": "0",
+        "description": "Control whether to check for duplicates of a required pattern,\n any negative value means no checking for duplicates,\n any positive value is used as the maximum number of allowed duplicates,\n if the limit is exceeded violations will be logged."
+      },
+      {
+        "name": "errorLimit",
+        "type": "int",
+        "default_value": "100",
+        "description": "Specify the maximum number of violations before the check will abort."
+      },
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default_value": "^$",
+        "description": "Specify the pattern to match against."
+      },
+      {
+        "name": "ignoreComments",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to ignore matches found within comments."
+      },
+      {
+        "name": "illegalPattern",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether the pattern is required or illegal."
+      },
+      {
+        "name": "message",
+        "type": "java.lang.String",
+        "default_value": null,
+        "description": "Specify message which is used to notify about violations,\n if empty then the default (hard-coded) message is used."
+      }
+    ],
+    "message_keys": [
+      "duplicate.regexp",
+      "illegal.regexp",
+      "required.regexp"
+    ],
+    "category": "regexp",
+    "source_file": "RegexpCheck.xml"
+  },
+  {
+    "name": "RegexpMultiline",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.regexp.RegexpMultilineCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.Checker",
+    "description": "Checks that a specified pattern matches across multiple lines in any file type. Rationale: This check can be used to when the regular expression can be span multiple lines.",
+    "options": [
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default_value": "",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default_value": "$.",
+        "description": "Specify the format of the regular expression to match."
+      },
+      {
+        "name": "ignoreCase",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to ignore case when searching."
+      },
+      {
+        "name": "matchAcrossLines",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to match expressions across multiple lines."
+      },
+      {
+        "name": "maximum",
+        "type": "int",
+        "default_value": "0",
+        "description": "Specify the maximum number of matches required in each file."
+      },
+      {
+        "name": "message",
+        "type": "java.lang.String",
+        "default_value": null,
+        "description": "Specify the message which is used to notify about violations,\n if empty then default (hard-coded) message is used."
+      },
+      {
+        "name": "minimum",
+        "type": "int",
+        "default_value": "0",
+        "description": "Specify the minimum number of matches required in each file."
+      }
+    ],
+    "message_keys": [
+      "regexp.StackOverflowError",
+      "regexp.empty",
+      "regexp.exceeded",
+      "regexp.minimum"
+    ],
+    "category": "regexp",
+    "source_file": "RegexpMultilineCheck.xml"
+  },
+  {
+    "name": "RegexpSingleline",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.regexp.RegexpSinglelineCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.Checker",
+    "description": "Checks that a specified pattern matches a single-line in any file type. Rationale: This check can be used to prototype checks and to find common bad practice such as calling \"ex.printStacktrace()\", \"System.out.println()\", \"System.exit()\", etc.",
+    "options": [
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default_value": "",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default_value": "$.",
+        "description": "Specify the format of the regular expression to match."
+      },
+      {
+        "name": "ignoreCase",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to ignore case when searching."
+      },
+      {
+        "name": "maximum",
+        "type": "int",
+        "default_value": "0",
+        "description": "Specify the maximum number of matches required in each file."
+      },
+      {
+        "name": "message",
+        "type": "java.lang.String",
+        "default_value": null,
+        "description": "Specify the message which is used to notify about violations,\n if empty then default (hard-coded) message is used."
+      },
+      {
+        "name": "minimum",
+        "type": "int",
+        "default_value": "0",
+        "description": "Specify the minimum number of matches required in each file."
+      }
+    ],
+    "message_keys": [
+      "regexp.exceeded",
+      "regexp.minimum"
+    ],
+    "category": "regexp",
+    "source_file": "RegexpSinglelineCheck.xml"
+  },
+  {
+    "name": "RegexpSinglelineJava",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.regexp.RegexpSinglelineJavaCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that a specified pattern matches a single-line in Java files. This class is variation on RegexpSingleline for detecting single-lines that match a supplied regular expression in Java files. It supports suppressing matches in Java comments.",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default_value": "$.",
+        "description": "Specify the format of the regular expression to match."
+      },
+      {
+        "name": "ignoreCase",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to ignore case when searching."
+      },
+      {
+        "name": "ignoreComments",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to ignore text in comments when searching."
+      },
+      {
+        "name": "maximum",
+        "type": "int",
+        "default_value": "0",
+        "description": "Specify the maximum number of matches required in each file."
+      },
+      {
+        "name": "message",
+        "type": "java.lang.String",
+        "default_value": null,
+        "description": "Specify the message which is used to notify about violations,\n if empty then default (hard-coded) message is used."
+      },
+      {
+        "name": "minimum",
+        "type": "int",
+        "default_value": "0",
+        "description": "Specify the minimum number of matches required in each file."
+      }
+    ],
+    "message_keys": [
+      "regexp.exceeded",
+      "regexp.minimum"
+    ],
+    "category": "regexp",
+    "source_file": "RegexpSinglelineJavaCheck.xml"
+  }
+]

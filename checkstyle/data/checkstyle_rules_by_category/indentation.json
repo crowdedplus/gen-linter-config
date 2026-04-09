@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Indentation",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.indentation.IndentationCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks correct indentation of Java code. The idea behind this is that while pretty printers are sometimes convenient for bulk reformats of legacy code, they often either aren't configurable enough or just can't anticipate how format should be done. Sometimes this is personal preference, other times it is practical experience. In any case, this check should just ensure that a minimal set of indentation rules is followed. Basic offset indentation is used for indentation inside code blocks. For any lines that span more than 1, line wrapping indentation is used for those lines after the first. Brace adjustment, case, and throws indentations are all used only if those specific identifiers start the line. If, for example, a brace is used in the middle of the line, its indentation will not take effect. All indentations have an accumulative/recursive effect when they are triggered. If during a line wrapping, another code block is found and it doesn't end on that same line, then the subsequent lines afterwards, in that new code block, are increased on top of the line wrap and any indentations above it. Example: if ((condition1 && condition2) || (condition3 && condition4) // line wrap with bigger indentation ||!(condition5 && condition6)) { // line wrap with bigger indentation field.doSomething() // basic offset .doSomething() // line wrap .doSomething( c -> { // line wrap return c.doSome(); // basic offset }); } \"",
+    "options": [
+      {
+        "name": "arrayInitIndent",
+        "type": "int",
+        "default_value": "4",
+        "description": "Specify how far an array initialization should be indented when on next line."
+      },
+      {
+        "name": "basicOffset",
+        "type": "int",
+        "default_value": "4",
+        "description": "Specify how far new indentation level should be indented when on the next line."
+      },
+      {
+        "name": "braceAdjustment",
+        "type": "int",
+        "default_value": "0",
+        "description": "Specify how far a braces should be indented when on the next line."
+      },
+      {
+        "name": "caseIndent",
+        "type": "int",
+        "default_value": "4",
+        "description": "Specify how far a case label should be indented when on next line."
+      },
+      {
+        "name": "forceStrictCondition",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Force strict indent level in line wrapping case. If value is true, line wrap indent\n have to be same as lineWrappingIndentation parameter. If value is false, line wrap indent\n could be bigger on any value user would like."
+      },
+      {
+        "name": "lineWrappingIndentation",
+        "type": "int",
+        "default_value": "4",
+        "description": "Specify how far continuation line should be indented when line-wrapping is present."
+      },
+      {
+        "name": "throwsIndent",
+        "type": "int",
+        "default_value": "4",
+        "description": "Specify how far a throws clause should be indented when on next line."
+      }
+    ],
+    "message_keys": [
+      "indentation.child.error",
+      "indentation.child.error.multi",
+      "indentation.error",
+      "indentation.error.multi"
+    ],
+    "category": "indentation",
+    "source_file": "IndentationCheck.xml"
+  },
+  {
+    "name": "JavadocTagContinuationIndentation",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTagContinuationIndentationCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks the indentation of the continuation lines in block tags. That is whether the continued description of at clauses should be indented or not. If the text is not properly indented it throws a violation. A continuation line is when the description starts/spans past the line with the tag. Default indentation required is at least 4, but this can be changed with the help of properties below. - This check does not validate the indentation of lines inside \"pre\" tags.",
+    "options": [
+      {
+        "name": "offset",
+        "type": "int",
+        "default_value": "4",
+        "description": "Specify how many spaces to use for new indentation level."
+      },
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight html rules defined at\n <a href=\"https://checkstyle.org/writingjavadocchecks.html#Tight-HTML_rules\">\n     Tight-HTML Rules</a>."
+      }
+    ],
+    "message_keys": [
+      "javadoc.parse.rule.error",
+      "javadoc.unclosedHtml",
+      "tag.continuation.indent"
+    ],
+    "category": "indentation",
+    "source_file": "JavadocTagContinuationIndentationCheck.xml"
+  }
+]

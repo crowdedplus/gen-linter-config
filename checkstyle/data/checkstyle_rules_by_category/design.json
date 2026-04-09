@@ -1,0 +1,206 @@
+[
+  {
+    "name": "DesignForExtension",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.design.DesignForExtensionCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that classes are designed for extension (subclass creation). Nothing wrong could be with founded classes. This check makes sense only for library projects (not application projects) which care of ideal OOP-design to make sure that class works in all cases even misusage. Even in library projects this check most likely will find classes that are designed for extension by somebody. User needs to use suppressions extensively to got a benefit from this check, and keep in suppressions all confirmed/known classes that are deigned for inheritance intentionally to let the check catch only new classes, and bring this to team/user attention. ATTENTION: Only user can decide whether a class is designed for extension or not. The check just shows all classes which are possibly designed for extension. If smth inappropriate is found please use suppression. ATTENTION: If the method which can be overridden in a subclass has a javadoc comment (a good practice is to explain its self-use of overridable methods) the check will not rise a violation. The violation can also be skipped if the method which can be overridden in a subclass has one or more annotations that are specified in ignoredAnnotations option. Note, that by default @Override annotation is not included in the ignoredAnnotations set as in a subclass the method which has the annotation can also be overridden in its subclass. Problem is described at \"Effective Java, 2nd Edition by Joshua Bloch\" book, chapter \"Item 17: Design and document for inheritance or else prohibit it\". Some quotes from book: The class must document its self-use of overridable methods. By convention, a method that invokes overridable methods contains a description of these invocations at the end of its documentation comment. The description begins with the phrase “This implementation.” The best solution to this problem is to prohibit subclassing in classes that are not designed and documented to be safely subclassed. If a concrete class does not implement a standard interface, then you may inconvenience some programmers by prohibiting inheritance. If you feel that you must allow inheritance from such a class, one reasonable approach is to ensure that the class never invokes any of its overridable methods and to document this fact. In other words, eliminate the class’s self-use of overridable methods entirely. In doing so, you’ll create a class that is reasonably safe to subclass. Overriding a method will never affect the behavior of any other method. The check finds classes that have overridable methods (public or protected methods that are non-static, not-final, non-abstract) and have non-empty implementation. Rationale: This library design style protects superclasses against being broken by subclasses. The downside is that subclasses are limited in their flexibility, in particular they cannot prevent execution of code in the superclass, but that also means that subclasses cannot corrupt the state of the superclass by forgetting to call the superclass's method. More specifically, it enforces a programming style where superclasses provide empty \"hooks\" that can be implemented by subclasses. Example of code that cause violation as it is designed for extension: public abstract class Plant { private String roots; private String trunk; protected void validate() { if (roots == null) throw new IllegalArgumentException(\"No roots!\"); if (trunk == null) throw new IllegalArgumentException(\"No trunk!\"); } public abstract void grow(); } public class Tree extends Plant { private List leaves; &#64;Overrides protected void validate() { super.validate(); if (leaves == null) throw new IllegalArgumentException(\"No leaves!\"); } public void grow() { validate(); } } \" Example of code without violation: public abstract class Plant { private String roots; private String trunk; private void validate() { if (roots == null) throw new IllegalArgumentException(\"No roots!\"); if (trunk == null) throw new IllegalArgumentException(\"No trunk!\"); validateEx(); } protected void validateEx() { } public abstract void grow(); } \"",
+    "options": [
+      {
+        "name": "ignoredAnnotations",
+        "type": "java.lang.String[]",
+        "default_value": "After, AfterClass, Before, BeforeClass, Test",
+        "description": "Specify annotations which allow the check to skip the method from validation."
+      },
+      {
+        "name": "requiredJavadocPhrase",
+        "type": "java.util.regex.Pattern",
+        "default_value": ".*",
+        "description": "Specify the comment text pattern which qualifies a\n method as designed for extension. Supports multi-line regex."
+      }
+    ],
+    "message_keys": [
+      "design.forExtension"
+    ],
+    "category": "design",
+    "source_file": "DesignForExtensionCheck.xml"
+  },
+  {
+    "name": "HideUtilityClassConstructor",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.design.HideUtilityClassConstructorCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Makes sure that utility classes (classes that contain only static methods or fields in their API) do not have a public constructor. Rationale: Instantiating utility classes does not make sense. Hence, the constructors should either be private or (if you want to allow subclassing) protected. A common mistake is forgetting to hide the default constructor. If you make the constructor protected you may want to consider the following constructor implementation technique to disallow instantiating subclasses: public class StringUtils // not final to allow subclassing { protected StringUtils() { // prevents calls from subclass throw new UnsupportedOperationException(); } public static int count(char c, String s) { // ... } } \"",
+    "options": [
+      {
+        "name": "ignoreAnnotatedBy",
+        "type": "java.lang.String[]",
+        "default_value": "",
+        "description": "Ignore classes annotated with the specified annotation(s). Annotation names\n provided in this property must exactly match the annotation names on the classes.\n If the target class has annotations specified with their fully qualified names\n (including package), the annotations in this property should also be specified with\n their fully qualified names. Similarly, if the target class has annotations specified\n with their simple names, this property should contain the annotations with the same\n simple names."
+      }
+    ],
+    "message_keys": [
+      "hide.utility.class"
+    ],
+    "category": "design",
+    "source_file": "HideUtilityClassConstructorCheck.xml"
+  },
+  {
+    "name": "InnerTypeLast",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.design.InnerTypeLastCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks nested (internal) classes/interfaces are declared at the bottom of the primary (top-level) class after all init and static init blocks, method, constructor and field declarations.",
+    "options": [],
+    "message_keys": [
+      "arrangement.members.before.inner"
+    ],
+    "category": "design",
+    "source_file": "InnerTypeLastCheck.xml"
+  },
+  {
+    "name": "InterfaceIsType",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.design.InterfaceIsTypeCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Implements Joshua Bloch, Effective Java, Item 17 - Use Interfaces only to define types. According to Bloch, an interface should describe a type. It is therefore inappropriate to define an interface that does not contain any methods but only constants. The Standard interface javax.swing.SwingConstants is an example of an interface that would be flagged by this check. The check can be configured to also disallow marker interfaces like \"java.io.Serializable\", that do not contain methods or constants at all.",
+    "options": [
+      {
+        "name": "allowMarkerInterfaces",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether marker interfaces like Serializable are allowed."
+      }
+    ],
+    "message_keys": [
+      "interface.type"
+    ],
+    "category": "design",
+    "source_file": "InterfaceIsTypeCheck.xml"
+  },
+  {
+    "name": "MutableException",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.design.MutableExceptionCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Ensures that exception classes (classes with names conforming to some pattern and explicitly extending classes with names conforming to other pattern) are immutable, that is, that they have only final fields. The current algorithm is very simple: it checks that all members of exception are final. The user can still mutate an exception's instance (e.g. Throwable has a method called \"setStackTrace\" which changes the exception's stack trace). But, at least, all information provided by this exception type is unchangeable. Rationale: Exception instances should represent an error condition. Having non-final fields not only allows the state to be modified by accident and therefore mask the original condition but also allows developers to accidentally forget to set the initial state. In both cases, code catching the exception could draw incorrect conclusions based on the state.",
+    "options": [
+      {
+        "name": "extendedClassNameFormat",
+        "type": "java.util.regex.Pattern",
+        "default_value": "^.*Exception$|^.*Error$|^.*Throwable$",
+        "description": "Specify pattern for extended class names."
+      },
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default_value": "^.*Exception$|^.*Error$|^.*Throwable$",
+        "description": "Specify pattern for exception class names."
+      }
+    ],
+    "message_keys": [
+      "mutable.exception"
+    ],
+    "category": "design",
+    "source_file": "MutableExceptionCheck.xml"
+  },
+  {
+    "name": "OneTopLevelClass",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.design.OneTopLevelClassCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that each top-level class, interface, enum or annotation resides in a source file of its own. Official description of a 'top-level' term: 7.6. Top Level Type Declarations. If file doesn't contain public class, interface, enum or annotation, top-level type is the first type in file.",
+    "options": [],
+    "message_keys": [
+      "one.top.level.class"
+    ],
+    "category": "design",
+    "source_file": "OneTopLevelClassCheck.xml"
+  },
+  {
+    "name": "SealedShouldHavePermitsList",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.design.SealedShouldHavePermitsListCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that sealed classes and interfaces have a permits list. Rationale: When a permits clause is omitted from a sealed class, any class within the same compilation unit can extend it. This differs from other sealed classes where permitted subclasses are explicitly declared, making them readily visible to the reader. Without a permits clause, identifying potential subclasses requires searching the entire compilation unit, which can be challenging, especially in large files with complex class hierarchies. See the Java Language Specification for more information about sealed classes.",
+    "options": [],
+    "message_keys": [
+      "sealed.should.have.permits"
+    ],
+    "category": "design",
+    "source_file": "SealedShouldHavePermitsListCheck.xml"
+  },
+  {
+    "name": "ThrowsCount",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.design.ThrowsCountCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Restricts throws statements to a specified count. Methods with \"Override\" or \"java.lang.Override\" annotation are skipped from validation as current class cannot change signature of these methods. Rationale: Exceptions form part of a method's interface. Declaring a method to throw too many differently rooted exceptions makes exception handling onerous and leads to poor programming practices such as writing code like \"catch(Exception ex)\". 4 is the empirical value which is based on reports that we had for the ThrowsCountCheck over big projects such as OpenJDK. This check also forces developers to put exceptions into a hierarchy such that in the simplest case, only one type of exception need be checked for by a caller but any subclasses can be caught specifically if necessary. For more information on rules for the exceptions and their issues, see Effective Java: Programming Language Guide Second Edition by Joshua Bloch pages 264-273. ignorePrivateMethods - allows to skip private methods as they do not cause problems for other classes.",
+    "options": [
+      {
+        "name": "ignorePrivateMethods",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Allow private methods to be ignored."
+      },
+      {
+        "name": "max",
+        "type": "int",
+        "default_value": "4",
+        "description": "Specify maximum allowed number of throws statements."
+      }
+    ],
+    "message_keys": [
+      "throws.count"
+    ],
+    "category": "design",
+    "source_file": "ThrowsCountCheck.xml"
+  },
+  {
+    "name": "VisibilityModifier",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.design.VisibilityModifierCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks visibility of class members. Only static final, immutable or annotated by specified annotation members may be public; other class members must be private unless the property \"protectedAllowed\" or \"packageAllowed\" is set. Public members are not flagged if the name matches the public member regular expression (contains \"\"^serialVersionUID$\"\" by default). Note that Checkstyle 2 used to include \"\"^f[A-Z][a-zA-Z0-9]*$\"\" in the default pattern to allow names used in container-managed persistence for Enterprise JavaBeans (EJB) 1.1 with the default settings. With EJB 2.0 it is no longer necessary to have public access for persistent fields, so the default has been changed. Rationale: Enforce encapsulation. Check also has options making it less strict: ignoreAnnotationCanonicalNames - the list of annotations which ignore variables in consideration. If user want to provide short annotation name that type will match to any named the same type without consideration of package. allowPublicFinalFields - which allows public final fields. allowPublicImmutableFields - which allows immutable fields to be declared as public if defined in final class. Field is known to be immutable if: - It's declared as final - Has either a primitive type or instance of class user defined to be immutable (such as String, ImmutableCollection from Guava, etc.) Classes known to be immutable are listed in immutableClassCanonicalNames by their canonical names. Property Rationale: Forcing all fields of class to have private modifier by default is good in most cases, but in some cases it drawbacks in too much boilerplate get/set code. One of such cases are immutable classes. Restriction: Check doesn't check if class is immutable, there's no checking if accessory methods are missing and all fields are immutable, we only check if current field is immutable or final. Under the flag allowPublicImmutableFields, the enclosing class must also be final, to encourage immutability. Under the flag allowPublicFinalFields, the final modifier on the enclosing class is optional. Star imports are out of scope of this Check. So if one of type imported via star import collides with user specified one by its short name - there won't be Check's violation.",
+    "options": [
+      {
+        "name": "allowPublicFinalFields",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow final fields to be declared as public."
+      },
+      {
+        "name": "allowPublicImmutableFields",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow immutable fields to be declared as public if defined in final class."
+      },
+      {
+        "name": "ignoreAnnotationCanonicalNames",
+        "type": "java.lang.String[]",
+        "default_value": "com.google.common.annotations.VisibleForTesting, org.junit.ClassRule, org.junit.Rule",
+        "description": "Specify annotations canonical names which ignore variables\n in consideration."
+      },
+      {
+        "name": "immutableClassCanonicalNames",
+        "type": "java.lang.String[]",
+        "default_value": "java.io.File, java.lang.Boolean, java.lang.Byte, java.lang.Character, java.lang.Double, java.lang.Float, java.lang.Integer, java.lang.Long, java.lang.Short, java.lang.StackTraceElement, java.lang.String, java.math.BigDecimal, java.math.BigInteger, java.net.Inet4Address, java.net.Inet6Address, java.net.InetSocketAddress, java.net.URI, java.net.URL, java.util.Locale, java.util.UUID",
+        "description": "Specify immutable classes canonical names."
+      },
+      {
+        "name": "packageAllowed",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether package visible members are allowed."
+      },
+      {
+        "name": "protectedAllowed",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether protected members are allowed."
+      },
+      {
+        "name": "publicMemberPattern",
+        "type": "java.util.regex.Pattern",
+        "default_value": "^serialVersionUID$",
+        "description": "Specify pattern for public members that should be ignored."
+      }
+    ],
+    "message_keys": [
+      "variable.notPrivate"
+    ],
+    "category": "design",
+    "source_file": "VisibilityModifierCheck.xml"
+  }
+]

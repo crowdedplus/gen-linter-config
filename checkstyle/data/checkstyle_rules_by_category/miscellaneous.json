@@ -1,0 +1,280 @@
+[
+  {
+    "name": "ArrayTypeStyle",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.ArrayTypeStyleCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks the style of array type definitions. Some like Java style: \"public static void main(String[] args)\" and some like C style: \"public static void main(String args[])\". By default, the Check enforces Java style. This check strictly enforces only Java style for method return types regardless of the value for 'javaStyle'. For example, \"byte[] getData()\". This is because C doesn't compile methods with array declarations on the name.",
+    "options": [
+      {
+        "name": "javaStyle",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether to enforce Java style (true) or C style (false)."
+      }
+    ],
+    "message_keys": [
+      "array.type.style"
+    ],
+    "category": "miscellaneous",
+    "source_file": "ArrayTypeStyleCheck.xml"
+  },
+  {
+    "name": "AvoidEscapedUnicodeCharacters",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.AvoidEscapedUnicodeCharactersCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Restricts using Unicode escapes (such as &#92;u221e). It is possible to allow using escapes for non-printable, control characters. Also, this check can be configured to allow using escapes if trail comment is present. By the option it is possible to allow using escapes if literal contains only them.",
+    "options": [
+      {
+        "name": "allowByTailComment",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow use escapes if trail comment is present."
+      },
+      {
+        "name": "allowEscapesForControlCharacters",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow use escapes for non-printable, control characters."
+      },
+      {
+        "name": "allowIfAllCharactersEscaped",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow if all characters in literal are escaped."
+      },
+      {
+        "name": "allowNonPrintableEscapes",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow use escapes for non-printable, whitespace characters."
+      }
+    ],
+    "message_keys": [
+      "forbid.escaped.unicode.char"
+    ],
+    "category": "miscellaneous",
+    "source_file": "AvoidEscapedUnicodeCharactersCheck.xml"
+  },
+  {
+    "name": "DescendantToken",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.DescendantTokenCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks for restricted tokens beneath other tokens. WARNING: This is a very powerful and flexible check, but, at the same time, it is low-level and very implementation-dependent because its results depend on the grammar we use to build abstract syntax trees. Thus, we recommend using other checks when they provide the desired functionality. Essentially, this check just works on the level of an abstract syntax tree and knows nothing about language structures.",
+    "options": [
+      {
+        "name": "limitedTokens",
+        "type": "java.lang.String[]",
+        "default_value": "",
+        "description": "Specify set of tokens with limited occurrences as descendants."
+      },
+      {
+        "name": "maximumDepth",
+        "type": "int",
+        "default_value": "2147483647",
+        "description": "Specify the maximum depth for descendant counts."
+      },
+      {
+        "name": "maximumMessage",
+        "type": "java.lang.String",
+        "default_value": null,
+        "description": "Define the violation message when the maximum count is exceeded."
+      },
+      {
+        "name": "maximumNumber",
+        "type": "int",
+        "default_value": "2147483647",
+        "description": "Specify a maximum count for descendants."
+      },
+      {
+        "name": "minimumDepth",
+        "type": "int",
+        "default_value": "0",
+        "description": "Specify the minimum depth for descendant counts."
+      },
+      {
+        "name": "minimumMessage",
+        "type": "java.lang.String",
+        "default_value": null,
+        "description": "Define the violation message when the minimum count is not reached."
+      },
+      {
+        "name": "minimumNumber",
+        "type": "int",
+        "default_value": "0",
+        "description": "Specify a minimum count for descendants."
+      },
+      {
+        "name": "sumTokenCounts",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether the number of tokens found should be calculated\n from the sum of the individual token counts."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "descendant.token.max",
+      "descendant.token.min",
+      "descendant.token.sum.max",
+      "descendant.token.sum.min"
+    ],
+    "category": "miscellaneous",
+    "source_file": "DescendantTokenCheck.xml"
+  },
+  {
+    "name": "HexLiteralCase",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.HexLiteralCaseCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that hexadecimal literals are defined using uppercase letters \"(A-F)\" rather than lowercase \"(a-f)\". This convention follows the OpenJDK Style Guide.",
+    "options": [],
+    "message_keys": [
+      "hex.literal"
+    ],
+    "category": "miscellaneous",
+    "source_file": "HexLiteralCaseCheck.xml"
+  },
+  {
+    "name": "NewlineAtEndOfFile",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.NewlineAtEndOfFileCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.Checker",
+    "description": "Checks whether files end with a line separator. Rationale: Any not empty source files and text files in general should end with a line separator to let other easily add new content at the end of file and \"diff\" command does not show previous lines as changed. Example (the line with 'No newline at end of file' should not be in the diff): &#64;&#64; -32,4 +32,5 &#64;&#64; ForbidWildcardAsReturnTypeCheck.returnTypeClassNamesIgnoreRegex PublicReferenceToPrivateTypeCheck.name = Public Reference To Private Type StaticMethodCandidateCheck.name = Static Method Candidate -StaticMethodCandidateCheck.desc = Checks whether private methods should be declared as static. \\ No newline at end of file +StaticMethodCandidateCheck.desc = Checks whether private methods should be declared as static. +StaticMethodCandidateCheck.skippedMethods = Method names to skip during the check. \" It can also trick the VCS to report the wrong owner for such lines. An engineer who has added nothing but a newline character becomes the last known author for the entire line. As a result, a mate can ask him a question to which he will not give the correct answer. Old Rationale: CVS source control management systems will even print a warning when it encounters a file that doesn't end with a line separator. Attention: property fileExtensions works with files that are passed by similar property for at Checker. Please make sure required file extensions are mentioned at Checker's fileExtensions property. This will check against the platform-specific default line separator. This check verifies only the presence of a single line separator at the end of the file. It does not report violations for multiple trailing blank lines or additional newline characters beyond the final separator. It is also possible to enforce the use of a specific line-separator across platforms, with the \"lineSeparator\" property.",
+    "options": [
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default_value": "",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "lineSeparator",
+        "type": "com.puppycrawl.tools.checkstyle.checks.LineSeparatorOption",
+        "default_value": "lf_cr_crlf",
+        "description": "Specify the type of line separator."
+      }
+    ],
+    "message_keys": [
+      "noNewlineAtEOF",
+      "unable.open",
+      "wrong.line.end"
+    ],
+    "category": "miscellaneous",
+    "source_file": "NewlineAtEndOfFileCheck.xml"
+  },
+  {
+    "name": "NoCodeInFile",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.NoCodeInFileCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks whether file contains code. Java compiler is not raising errors on files with no code or all commented out. Files which are considered to have no code: - File with no text - File with single-line comment(s) - File with a multi line comment(s).",
+    "options": [],
+    "message_keys": [
+      "nocode.in.file"
+    ],
+    "category": "miscellaneous",
+    "source_file": "NoCodeInFileCheck.xml"
+  },
+  {
+    "name": "OrderedProperties",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.OrderedPropertiesCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.Checker",
+    "description": "Detects if keys in properties files are in correct order. Rationale: Sorted properties make it easy for people to find required properties by name in file. This makes it easier to merge. While there are no problems at runtime. This check is valuable only on files with string resources where order of lines does not matter at all, but this can be improved. E.g.: checkstyle/src/main/resources/com/puppycrawl/tools/checkstyle/messages.properties You may suppress warnings of this check for files that have a logical structure like build files or log4j configuration files. See SuppressionFilter. \"<suppress checks=\"OrderedProperties\"files=\"log4j.properties|ResourceBundle/Bug.*.properties|logging.properties\"/>\" Known limitation: The key should not contain a newline. The string compare will work, but not the line number reporting.",
+    "options": [
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default_value": ".properties",
+        "description": "Specify the file extensions of the files to process."
+      }
+    ],
+    "message_keys": [
+      "properties.notSorted.property",
+      "unable.open.cause"
+    ],
+    "category": "miscellaneous",
+    "source_file": "OrderedPropertiesCheck.xml"
+  },
+  {
+    "name": "SuppressWarningsHolder",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.SuppressWarningsHolder",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Maintains a set of check suppressions from \"@SuppressWarnings\" annotations. It allows to prevent Checkstyle from reporting violations from parts of code that were annotated with \"@SuppressWarnings\" and using name of the check to be excluded. It is possible to suppress all the checkstyle warnings with the argument \"\"all\"\". You can also use a \"checkstyle:\" prefix to prevent compiler from processing these annotations. You can also define aliases for check names that need to be suppressed.",
+    "options": [
+      {
+        "name": "aliasList",
+        "type": "java.lang.String[]",
+        "default_value": "",
+        "description": "Specify aliases for check names that can be used in code\n within <code>SuppressWarnings</code> in a format of comma separated attribute=value entries.\n The attribute is the fully qualified name of the Check and value is its alias."
+      }
+    ],
+    "message_keys": [],
+    "category": "miscellaneous",
+    "source_file": "SuppressWarningsHolder.xml"
+  },
+  {
+    "name": "Translation",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.TranslationCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.Checker",
+    "description": "Ensures the correct translation of code by checking property files for consistency regarding their keys. Two property files describing one and the same context are consistent if they contain the same keys. TranslationCheck also can check an existence of required translations which must exist in project, if \"requiredTranslations\" option is used. Language code for the property \"requiredTranslations\" is composed of the lowercase, two-letter codes as defined by ISO 639-1. Default value is empty String Set which means that only the existence of default translation is checked. Note, if you specify language codes (or just one language code) of required translations the check will also check for existence of default translation files in project. Note: If your project uses preprocessed translation files and the original files do not have the \"properties\" extension, you can specify additional file extensions via the \"fileExtensions\" property. Attention: the check will perform the validation of ISO codes if the option is used. So, if you specify, for example, \"mm\" for language code, TranslationCheck will rise violation that the language code is incorrect. Attention: this Check could produce false-positives if it is used with Checker that use cache (property \"cacheFile\") This is known design problem, will be addressed at issue.",
+    "options": [
+      {
+        "name": "baseName",
+        "type": "java.util.regex.Pattern",
+        "default_value": "^messages.*$",
+        "description": "Specify\n <a href=\"https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ResourceBundle.html\">\n Base name</a> of resource bundles which contain message resources.\n It helps the check to distinguish config and localization resources."
+      },
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default_value": ".properties",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "requiredTranslations",
+        "type": "java.lang.String[]",
+        "default_value": "",
+        "description": "Specify language codes of required translations which must exist in project."
+      }
+    ],
+    "message_keys": [
+      "translation.missingKey",
+      "translation.missingTranslationFile"
+    ],
+    "category": "miscellaneous",
+    "source_file": "TranslationCheck.xml"
+  },
+  {
+    "name": "UniqueProperties",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.UniquePropertiesCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.Checker",
+    "description": "Detects duplicated keys in properties files. Rationale: Multiple property keys usually appear after merge or rebase of several branches. While there are no problems in runtime, there can be a confusion due to having different values for the duplicated properties.",
+    "options": [
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default_value": ".properties",
+        "description": "Specify the file extensions of the files to process."
+      }
+    ],
+    "message_keys": [
+      "properties.duplicate.property",
+      "unable.open.cause"
+    ],
+    "category": "miscellaneous",
+    "source_file": "UniquePropertiesCheck.xml"
+  },
+  {
+    "name": "UpperEll",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.UpperEllCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that long constants are defined with an upper ell. That is \"'L'\" and not \"'l'\". This is in accordance with the Java Language Specification, Section 3.10.1. Rationale: The lower-case ell \"'l'\" looks a lot like \"1\".",
+    "options": [],
+    "message_keys": [
+      "upperEll"
+    ],
+    "category": "miscellaneous",
+    "source_file": "UpperEllCheck.xml"
+  }
+]
