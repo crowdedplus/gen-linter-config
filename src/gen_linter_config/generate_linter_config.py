@@ -8,23 +8,9 @@ import inspect
 import json
 
 
-# 添加项目根目录到Python路径
-current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, current_dir)
-# 添加checkstyle目录
-checkstyle_dir = os.path.join(current_dir, 'checkstyle')
-sys.path.insert(0, checkstyle_dir)
-eslint_dir = os.path.join(current_dir, 'ESLint')
-sys.path.insert(0,eslint_dir)
-other_dir = os.path.join(current_dir,"others")
-sys.path.insert(0,other_dir)
-
 # 导入项目模块
-from gpt_wrapper import GPTAgent
-import util
-from checkstyle import util_java
-from gen_checkstyle_config import gen_checkstyle
-from gen_eslint_config import gen_eslint
+from gen_linter_config.checkstyle.gen_checkstyle_config import gen_checkstyle
+from gen_linter_config.ESLint.gen_eslint_config import gen_eslint
 from others import gen_lint_config_rough
 
 def _get_input_content(input_arg):
