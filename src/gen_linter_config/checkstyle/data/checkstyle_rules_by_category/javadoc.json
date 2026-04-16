@@ -1,0 +1,642 @@
+[
+  {
+    "name": "AtclauseOrder",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.AtclauseOrderCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks the order of javadoc block-tags or javadoc tags. Note: Google used the term \"at-clauses\" for block tags in their guide till 2017-02-28.",
+    "options": [
+      {
+        "name": "tagOrder",
+        "type": "java.lang.String[]",
+        "default_value": "@author, @version, @param, @return, @throws, @exception, @see, @since, @serial, @serialField, @serialData, @deprecated",
+        "description": "Specify the order by tags."
+      },
+      {
+        "name": "target",
+        "type": "java.lang.String[]",
+        "default_value": "CLASS_DEF, COMPACT_CTOR_DEF, CTOR_DEF, ENUM_DEF, INTERFACE_DEF, METHOD_DEF, RECORD_DEF, VARIABLE_DEF",
+        "description": "Specify block tags targeted."
+      },
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight html rules defined at\n <a href=\"https://checkstyle.org/writingjavadocchecks.html#Tight-HTML_rules\">\n     Tight-HTML Rules</a>."
+      }
+    ],
+    "message_keys": [
+      "at.clause.order",
+      "javadoc.parse.rule.error",
+      "javadoc.unclosedHtml"
+    ],
+    "category": "javadoc",
+    "source_file": "AtclauseOrderCheck.xml"
+  },
+  {
+    "name": "InvalidJavadocPosition",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.InvalidJavadocPositionCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that Javadocs are located at the correct position. As specified at Documentation Comment Specification for the Standard Doclet, Javadocs are recognized only when placed immediately before module, package, class, interface, constructor, method, or field declarations. Any other position, like in the body of a method, will be ignored by the javadoc tool and is considered invalid by this check.",
+    "options": [],
+    "message_keys": [
+      "invalid.position"
+    ],
+    "category": "javadoc",
+    "source_file": "InvalidJavadocPositionCheck.xml"
+  },
+  {
+    "name": "JavadocContentLocation",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocContentLocationCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that the Javadoc content begins from the same position for all Javadoc comments in the project. Any leading asterisks and spaces are not counted as the beginning of the content and are therefore ignored. It is possible to enforce two different styles: - \"first_line\" - Javadoc content starts from the first line: &#47;** Summary text. * More details. *&#47; public void method(); \" - \"second_line\" - Javadoc content starts from the second line: &#47;** * Summary text. * More details. *&#47; public void method(); \" This check does not validate the Javadoc summary itself nor its presence. The check will not report any violations for missing or malformed javadoc summary. To validate the Javadoc summary use SummaryJavadoc check. The Documentation Comment Specification permits leading asterisks on the first line. For these Javadoc comments: &#47;*** * Some text. *&#47; &#47;************ * Some text. *&#47; &#47;** ** * Some text. *&#47; \" The documentation generated will be just \"Some text.\" without any asterisks. Since these asterisks will not appear in the generated documentation, they should not be considered as the beginning of the Javadoc content. In such cases, the check assumes that the Javadoc content begins on the second line.",
+    "options": [
+      {
+        "name": "location",
+        "type": "com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocContentLocationOption",
+        "default_value": "second_line",
+        "description": "Specify the policy on placement of the Javadoc content."
+      }
+    ],
+    "message_keys": [
+      "javadoc.content.first.line",
+      "javadoc.content.second.line"
+    ],
+    "category": "javadoc",
+    "source_file": "JavadocContentLocationCheck.xml"
+  },
+  {
+    "name": "JavadocLeadingAsteriskAlign",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocLeadingAsteriskAlignCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks the alignment of leading asterisks in a Javadoc comment. The Check ensures that leading asterisks are aligned vertically under the first asterisk ( &#42; ) of opening Javadoc tag. The alignment of closing Javadoc tag ( &#42;/ ) is also checked. If a closing Javadoc tag contains non-whitespace character before it then it's alignment will be ignored. If the ending javadoc line contains a leading asterisk, then that leading asterisk's alignment will be considered, the closing Javadoc tag will be ignored. If you're using tabs then specify the the tab width in the tabWidth property.",
+    "options": [
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight html rules defined at\n <a href=\"https://checkstyle.org/writingjavadocchecks.html#Tight-HTML_rules\">\n     Tight-HTML Rules</a>."
+      }
+    ],
+    "message_keys": [
+      "javadoc.asterisk.indentation",
+      "javadoc.parse.rule.error",
+      "javadoc.unclosedHtml"
+    ],
+    "category": "javadoc",
+    "source_file": "JavadocLeadingAsteriskAlignCheck.xml"
+  },
+  {
+    "name": "JavadocMethod",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks the Javadoc of a method or constructor. Violates parameters and type parameters for which no param tags are present can be suppressed by defining property \"allowMissingParamTags\". Violates methods which return non-void but for which no return tag is present can be suppressed by defining property \"allowMissingReturnTag\". Violates exceptions which are declared to be thrown (by \"throws\" in the method signature or by \"throw new\" in the method body), but for which no throws tag is present by activation of property \"validateThrows\". Note that \"throw new\" is not checked in the following places: - Inside a try block (with catch). It is not possible to determine if the thrown exception can be caught by the catch block as there is no knowledge of the inheritance hierarchy, so the try block is ignored entirely. However, catch and finally blocks, as well as try blocks without catch, are still checked. - Local classes, anonymous classes and lambda expressions. It is not known when the throw statements inside such classes are going to be evaluated, so they are ignored. ATTENTION: Checkstyle does not have information about hierarchy of exception types so usage of base class is considered as separate exception type. As workaround, you need to specify both types in javadoc (parent and exact type). Javadoc is not required on a method that is tagged with the \"@Override\" annotation. However, under Java 5 it is not possible to mark a method required for an interface (this was corrected under Java 6). Hence, Checkstyle supports using the convention of using a single \"{@inheritDoc}\" tag instead of all the other tags. Note that only inheritable items will allow the \"{@inheritDoc}\" tag to be used in place of comments. Static methods at all visibilities, private non-static methods and constructors are not inheritable. For example, if the following method is implementing a method required by an interface, then the Javadoc could be done as: &#47;** {&#64;inheritDoc} *&#47; public int checkReturnTag(final int aTagIndex, JavadocTag[] aTags, int aLineNo) \"",
+    "options": [
+      {
+        "name": "accessModifiers",
+        "type": "com.puppycrawl.tools.checkstyle.checks.naming.AccessModifierOption[]",
+        "default_value": "public, protected, package, private",
+        "description": "Specify the access modifiers where Javadoc comments are checked."
+      },
+      {
+        "name": "allowInlineReturn",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to allow inline return tags."
+      },
+      {
+        "name": "allowMissingParamTags",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to ignore violations when a method has parameters\n but does not have matching <code>param</code> tags in the javadoc."
+      },
+      {
+        "name": "allowMissingReturnTag",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to ignore violations when a method returns non-void type\n and does not have a <code>return</code> tag in the javadoc."
+      },
+      {
+        "name": "allowedAnnotations",
+        "type": "java.lang.String[]",
+        "default_value": "Override",
+        "description": "Specify annotations that allow missed documentation."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "METHOD_DEF,CTOR_DEF,ANNOTATION_FIELD_DEF,COMPACT_CTOR_DEF",
+        "description": "tokens to check"
+      },
+      {
+        "name": "validateThrows",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to validate <code>throws</code> tags."
+      }
+    ],
+    "message_keys": [
+      "javadoc.classInfo",
+      "javadoc.duplicateTag",
+      "javadoc.expectedTag",
+      "javadoc.invalidInheritDoc",
+      "javadoc.return.expected",
+      "javadoc.unusedTag",
+      "javadoc.unusedTagGeneral"
+    ],
+    "category": "javadoc",
+    "source_file": "JavadocMethodCheck.xml"
+  },
+  {
+    "name": "JavadocMissingLeadingAsterisk",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMissingLeadingAsteriskCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks if the javadoc has leading asterisks on each line. The check does not require asterisks on the first line, nor on the last line if it is blank. All other lines in a Javadoc should start with \"*\", including blank lines and code blocks.",
+    "options": [
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight html rules defined at\n <a href=\"https://checkstyle.org/writingjavadocchecks.html#Tight-HTML_rules\">\n     Tight-HTML Rules</a>."
+      }
+    ],
+    "message_keys": [
+      "javadoc.missing.asterisk",
+      "javadoc.parse.rule.error",
+      "javadoc.unclosedHtml"
+    ],
+    "category": "javadoc",
+    "source_file": "JavadocMissingLeadingAsteriskCheck.xml"
+  },
+  {
+    "name": "JavadocMissingWhitespaceAfterAsterisk",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMissingWhitespaceAfterAsteriskCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that there is at least one whitespace after the leading asterisk. Although spaces after asterisks are optional in the Javadoc comments, their absence makes the documentation difficult to read. It is the de facto standard to put at least one whitespace after the leading asterisk.",
+    "options": [
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight html rules defined at\n <a href=\"https://checkstyle.org/writingjavadocchecks.html#Tight-HTML_rules\">\n     Tight-HTML Rules</a>."
+      }
+    ],
+    "message_keys": [
+      "javadoc.missing.whitespace",
+      "javadoc.parse.rule.error",
+      "javadoc.unclosedHtml"
+    ],
+    "category": "javadoc",
+    "source_file": "JavadocMissingWhitespaceAfterAsteriskCheck.xml"
+  },
+  {
+    "name": "JavadocPackage",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocPackageCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.Checker",
+    "description": "Checks that each Java package has a Javadoc file used for commenting. By default, it only allows a \"package-info.java\" file, but can be configured to allow a \"package.html\" file. A violation will be reported if both files exist as this is not allowed by the Javadoc tool.",
+    "options": [
+      {
+        "name": "allowLegacy",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Allow legacy <code>package.html</code> file to be used."
+      },
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default_value": ".java",
+        "description": "Specify the file extensions of the files to process."
+      }
+    ],
+    "message_keys": [
+      "javadoc.legacyPackageHtml",
+      "javadoc.packageInfo"
+    ],
+    "category": "javadoc",
+    "source_file": "JavadocPackageCheck.xml"
+  },
+  {
+    "name": "JavadocParagraph",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocParagraphCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks the Javadoc paragraph. Checks that: - There is one blank line between each of two paragraphs. - Each paragraph but the first has <p> immediately before the first word, with no space after. - The outer most paragraph tags should not precede HTML block-tag. Nested paragraph tags are allowed to do that. This check only supports following block-tags: <address>,<blockquote> ,<div>,<dl> ,<h1>,<h2>,<h3>,<h4>,<h5>,<h6>,<hr> ,<ol>,<p>,<pre> ,<table>,<ul>. ATTENTION: This Check ignores HTML comments. The Check ignores all the nested paragraph tags, it will not give any kind of violation if the paragraph tag is nested.",
+    "options": [
+      {
+        "name": "allowNewlineParagraph",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether the &lt;p&gt; tag should be placed\n immediately before the first word."
+      },
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight html rules defined at\n <a href=\"https://checkstyle.org/writingjavadocchecks.html#Tight-HTML_rules\">\n     Tight-HTML Rules</a>."
+      }
+    ],
+    "message_keys": [
+      "javadoc.paragraph.line.before",
+      "javadoc.paragraph.misplaced.tag",
+      "javadoc.paragraph.preceded.block.tag",
+      "javadoc.paragraph.redundant.paragraph",
+      "javadoc.paragraph.tag.after",
+      "javadoc.parse.rule.error",
+      "javadoc.unclosedHtml"
+    ],
+    "category": "javadoc",
+    "source_file": "JavadocParagraphCheck.xml"
+  },
+  {
+    "name": "JavadocStyle",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocStyleCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Validates Javadoc comments to help ensure they are well formed. The following checks are performed: - Ensures the first sentence ends with proper punctuation (That is a period, question mark, or exclamation mark, by default). Note that this check is not applied to inline \"@return\" tags, because the Javadoc tools automatically appends a period to the end of the tag content. Javadoc automatically places the first sentence in the method summary table and index. Without proper punctuation the Javadoc may be malformed. All items eligible for the \"{@inheritDoc}\" tag are exempt from this requirement. - Check text for Javadoc statements that do not have any description. This includes both completely empty Javadoc, and Javadoc with only tags such as \"@param\" and \"@return\". - Check text for incomplete HTML tags. Verifies that HTML tags have corresponding end tags and issues an \"Unclosed HTML tag found:\" error if not. An \"Extra HTML tag found:\" error is issued if an end tag is found without a previous open tag. - Check that a package Javadoc comment is well-formed (as described above). - Check for allowed HTML tags. The list of allowed HTML tags is \"a\", \"abbr\", \"acronym\", \"address\", \"area\", \"b\", \"bdo\", \"big\", \"blockquote\", \"br\", \"caption\", \"cite\", \"code\", \"colgroup\", \"dd\", \"del\", \"dfn\", \"div\", \"dl\", \"dt\", \"em\", \"fieldset\", \"font\", \"h1\", \"h2\", \"h3\", \"h4\", \"h5\", \"h6\", \"hr\", \"i\", \"img\", \"ins\", \"kbd\", \"li\", \"ol\", \"p\", \"pre\", \"q\", \"samp\", \"small\", \"span\", \"strong\", \"sub\", \"sup\", \"table\", \"tbody\", \"td\", \"tfoot\", \"th\", \"thead\", \"tr\", \"tt\", \"u\", \"ul\", \"var\". These checks were patterned after the checks made by the DocCheck doclet available from Sun. Note: Original Sun's DocCheck tool does not exist anymore.",
+    "options": [
+      {
+        "name": "checkEmptyJavadoc",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to check if the Javadoc is missing a describing text."
+      },
+      {
+        "name": "checkFirstSentence",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether to check the first sentence for proper end of sentence."
+      },
+      {
+        "name": "checkHtml",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether to check for incomplete HTML tags."
+      },
+      {
+        "name": "endOfSentenceFormat",
+        "type": "java.util.regex.Pattern",
+        "default_value": "([.?!][ \\t\\n\\r\\f<])|([.?!]$)",
+        "description": "Specify the format for matching the end of a sentence."
+      },
+      {
+        "name": "excludeScope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default_value": null,
+        "description": "Specify the visibility scope where Javadoc comments are not checked."
+      },
+      {
+        "name": "scope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default_value": "private",
+        "description": "Specify the visibility scope where Javadoc comments are checked."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "ANNOTATION_DEF,ANNOTATION_FIELD_DEF,CLASS_DEF,CTOR_DEF,ENUM_CONSTANT_DEF,ENUM_DEF,INTERFACE_DEF,METHOD_DEF,PACKAGE_DEF,VARIABLE_DEF,RECORD_DEF,COMPACT_CTOR_DEF",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "javadoc.empty",
+      "javadoc.extraHtml",
+      "javadoc.incompleteTag",
+      "javadoc.noPeriod",
+      "javadoc.unclosedHtml"
+    ],
+    "category": "javadoc",
+    "source_file": "JavadocStyleCheck.xml"
+  },
+  {
+    "name": "JavadocType",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTypeCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks the Javadoc comments for type definitions. By default, does not check for author or version tags. The scope to verify is specified using the \"Scope\" class and defaults to \"Scope.PRIVATE\". To verify another scope, set property scope to one of the \"Scope\" constants. To define the format for an author tag or a version tag, set property authorFormat or versionFormat respectively to a pattern. Does not perform checks for author and version tags for inner classes, as they should be redundant because of outer class. Does not perform checks for type definitions that do not have any Javadoc comments. Error messages about type parameters and record components for which no param tags are present can be suppressed by defining property \"allowMissingParamTags\".",
+    "options": [
+      {
+        "name": "allowMissingParamTags",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to ignore violations when a class has type parameters but\n does not have matching param tags in the Javadoc."
+      },
+      {
+        "name": "allowUnknownTags",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to ignore violations when a Javadoc tag is not recognised."
+      },
+      {
+        "name": "allowedAnnotations",
+        "type": "java.lang.String[]",
+        "default_value": "Generated",
+        "description": "Specify annotations that allow skipping validation at all.\n Only short names are allowed, e.g. <code>Generated</code>."
+      },
+      {
+        "name": "authorFormat",
+        "type": "java.util.regex.Pattern",
+        "default_value": null,
+        "description": "Specify the pattern for <code>@author</code> tag."
+      },
+      {
+        "name": "excludeScope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default_value": null,
+        "description": "Specify the visibility scope where Javadoc comments are not checked."
+      },
+      {
+        "name": "scope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default_value": "private",
+        "description": "Specify the visibility scope where Javadoc comments are checked."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "INTERFACE_DEF,CLASS_DEF,ENUM_DEF,ANNOTATION_DEF,RECORD_DEF",
+        "description": "tokens to check"
+      },
+      {
+        "name": "versionFormat",
+        "type": "java.util.regex.Pattern",
+        "default_value": null,
+        "description": "Specify the pattern for <code>@version</code> tag."
+      }
+    ],
+    "message_keys": [
+      "javadoc.unknownTag",
+      "javadoc.unusedTag",
+      "javadoc.unusedTagGeneral",
+      "type.missingTag",
+      "type.tagFormat"
+    ],
+    "category": "javadoc",
+    "source_file": "JavadocTypeCheck.xml"
+  },
+  {
+    "name": "JavadocVariable",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocVariableCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that a variable has a Javadoc comment. Ignores \"serialVersionUID\" fields.",
+    "options": [
+      {
+        "name": "accessModifiers",
+        "type": "com.puppycrawl.tools.checkstyle.checks.naming.AccessModifierOption[]",
+        "default_value": "public, protected, package, private",
+        "description": "Specify the set of access modifiers used to determine which fields should be\n checked. This includes both explicitly declared modifiers and implicit ones, such as\n package-private for fields without an explicit modifier. It also accounts for special\n cases where fields have implicit modifiers, such as <code>public static final</code>\n for interface fields and <code>public static</code> for enum constants, or where the nesting\n types accessibility is more restrictive and hides the nested field.\n Only fields matching the specified modifiers will be analyzed."
+      },
+      {
+        "name": "ignoreNamePattern",
+        "type": "java.util.regex.Pattern",
+        "default_value": null,
+        "description": "Specify the regexp to define variable names to ignore."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "ENUM_CONSTANT_DEF",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "javadoc.missing"
+    ],
+    "category": "javadoc",
+    "source_file": "JavadocVariableCheck.xml"
+  },
+  {
+    "name": "MissingJavadocMethod",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.MissingJavadocMethodCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks for missing Javadoc comments for a method or constructor. The scope to verify is specified using the \"Scope\" class and defaults to \"Scope.PUBLIC\". To verify another scope, set property scope to a different scope. Javadoc is not required on a method that is tagged with the \"@Override\" annotation. However, under Java 5 it is not possible to mark a method required for an interface (this was corrected under Java 6). Hence, Checkstyle supports using the convention of using a single \"{@inheritDoc}\" tag instead of all the other tags. For getters and setters for the property \"allowMissingPropertyJavadoc\", the methods must match exactly the structures below. public void setNumber(final int number) { mNumber = number; } public int getNumber() { return mNumber; } public boolean isSomething() { return false; } \"",
+    "options": [
+      {
+        "name": "allowMissingPropertyJavadoc",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to allow missing Javadoc on accessor methods for properties\n (setters and getters)."
+      },
+      {
+        "name": "allowedAnnotations",
+        "type": "java.lang.String[]",
+        "default_value": "Override",
+        "description": "Configure annotations that allow missed documentation."
+      },
+      {
+        "name": "excludeScope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default_value": null,
+        "description": "Specify the visibility scope where Javadoc comments are not checked."
+      },
+      {
+        "name": "ignoreMethodNamesRegex",
+        "type": "java.util.regex.Pattern",
+        "default_value": null,
+        "description": "Ignore method whose names are matching specified regex."
+      },
+      {
+        "name": "minLineCount",
+        "type": "int",
+        "default_value": "-1",
+        "description": "Control the minimal amount of lines in method to allow no documentation."
+      },
+      {
+        "name": "scope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default_value": "public",
+        "description": "Specify the visibility scope where Javadoc comments are checked."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "METHOD_DEF,CTOR_DEF,ANNOTATION_FIELD_DEF,COMPACT_CTOR_DEF",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "javadoc.missing"
+    ],
+    "category": "javadoc",
+    "source_file": "MissingJavadocMethodCheck.xml"
+  },
+  {
+    "name": "MissingJavadocPackage",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.MissingJavadocPackageCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks for missing package definition Javadoc comments in package-info.java files. Rationale: description and other related documentation for a package can be written up in the package-info.java file and it gets used in the production of the Javadocs. See link for more info. This check specifically only validates package definitions. It will not validate any methods or interfaces declared in the package-info.java file.",
+    "options": [],
+    "message_keys": [
+      "package.javadoc.missing"
+    ],
+    "category": "javadoc",
+    "source_file": "MissingJavadocPackageCheck.xml"
+  },
+  {
+    "name": "MissingJavadocType",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.MissingJavadocTypeCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks for missing Javadoc comments for class, enum, interface, and annotation interface definitions. The scope to verify is specified using the \"Scope\" class and defaults to \"Scope.PUBLIC\". To verify another scope, set property scope to one of the \"Scope\" constants.",
+    "options": [
+      {
+        "name": "excludeScope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default_value": null,
+        "description": "Specify the visibility scope where Javadoc comments are not checked."
+      },
+      {
+        "name": "scope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default_value": "public",
+        "description": "Specify the visibility scope where Javadoc comments are checked."
+      },
+      {
+        "name": "skipAnnotations",
+        "type": "java.lang.String[]",
+        "default_value": "Generated",
+        "description": "Specify annotations that allow missed documentation.\n If annotation is present in target sources in multiple forms of qualified\n name, all forms should be listed in this property."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "INTERFACE_DEF,CLASS_DEF,ENUM_DEF,ANNOTATION_DEF,RECORD_DEF",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "javadoc.missing"
+    ],
+    "category": "javadoc",
+    "source_file": "MissingJavadocTypeCheck.xml"
+  },
+  {
+    "name": "NonEmptyAtclauseDescription",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.NonEmptyAtclauseDescriptionCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that the block tag is followed by description.",
+    "options": [
+      {
+        "name": "javadocTokens",
+        "type": "java.lang.String[]",
+        "default_value": "PARAM_BLOCK_TAG,RETURN_BLOCK_TAG,THROWS_BLOCK_TAG,EXCEPTION_BLOCK_TAG,DEPRECATED_BLOCK_TAG",
+        "description": "javadoc tokens to check"
+      },
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight html rules defined at\n <a href=\"https://checkstyle.org/writingjavadocchecks.html#Tight-HTML_rules\">\n     Tight-HTML Rules</a>."
+      }
+    ],
+    "message_keys": [
+      "javadoc.parse.rule.error",
+      "javadoc.unclosedHtml",
+      "non.empty.atclause"
+    ],
+    "category": "javadoc",
+    "source_file": "NonEmptyAtclauseDescriptionCheck.xml"
+  },
+  {
+    "name": "SingleLineJavadoc",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.SingleLineJavadocCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that a Javadoc block can fit in a single-line and doesn't contain block tags. Javadoc comment that contains at least one block tag should be formatted in a few lines.",
+    "options": [
+      {
+        "name": "ignoreInlineTags",
+        "type": "boolean",
+        "default_value": "true",
+        "description": "Control whether\n <a href=\"https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html#CHDBEFIF\">\n inline tags</a> must be ignored."
+      },
+      {
+        "name": "ignoredTags",
+        "type": "java.lang.String[]",
+        "default_value": "",
+        "description": "Specify\n <a href=\"https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html#CHDBEFIF\">\n block tags</a> which are ignored by the check."
+      },
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight html rules defined at\n <a href=\"https://checkstyle.org/writingjavadocchecks.html#Tight-HTML_rules\">\n     Tight-HTML Rules</a>."
+      }
+    ],
+    "message_keys": [
+      "javadoc.parse.rule.error",
+      "javadoc.unclosedHtml",
+      "singleline.javadoc"
+    ],
+    "category": "javadoc",
+    "source_file": "SingleLineJavadocCheck.xml"
+  },
+  {
+    "name": "SummaryJavadoc",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.SummaryJavadocCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks that Javadoc summary sentence does not contain phrases that are not recommended to use. Summaries that contain only the \"{@inheritDoc}\" tag are skipped. Summaries that contain a non-empty \"{@return}\" are allowed. Check also violate Javadoc that does not contain first sentence, though with \"{@return}\" a period is not required as the Javadoc tool adds it. Note: For defining a summary, both the first sentence and the @summary tag approaches are supported.",
+    "options": [
+      {
+        "name": "forbiddenSummaryFragments",
+        "type": "java.util.regex.Pattern",
+        "default_value": "^$",
+        "description": "Specify the regexp for forbidden summary fragments."
+      },
+      {
+        "name": "period",
+        "type": "java.lang.String",
+        "default_value": ".",
+        "description": "Specify the period symbol. Used to check the first sentence ends with a period.\n Periods that are not followed by a whitespace character are ignored (eg. the period in v1.0).\n Because some periods include whitespace built into the character, if this is set to a\n non-default value any period will end the sentence, whether it is followed by whitespace or\n not."
+      },
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight html rules defined at\n <a href=\"https://checkstyle.org/writingjavadocchecks.html#Tight-HTML_rules\">\n     Tight-HTML Rules</a>."
+      }
+    ],
+    "message_keys": [
+      "javadoc.parse.rule.error",
+      "javadoc.unclosedHtml",
+      "summary.first.sentence",
+      "summary.javaDoc",
+      "summary.javaDoc.missing",
+      "summary.javaDoc.missing.period"
+    ],
+    "category": "javadoc",
+    "source_file": "SummaryJavadocCheck.xml"
+  },
+  {
+    "name": "WriteTag",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.javadoc.WriteTagCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Requires user defined Javadoc tag to be present in Javadoc comment with defined format. To define the format for a tag, set property tagFormat to a regular expression. Property tagSeverity is used for severity of events when the tag exists. No violation reported in case there is no javadoc.",
+    "options": [
+      {
+        "name": "tag",
+        "type": "java.lang.String",
+        "default_value": null,
+        "description": "Specify the name of tag."
+      },
+      {
+        "name": "tagFormat",
+        "type": "java.util.regex.Pattern",
+        "default_value": null,
+        "description": "Specify the regexp to match tag content."
+      },
+      {
+        "name": "tagSeverity",
+        "type": "com.puppycrawl.tools.checkstyle.api.SeverityLevel",
+        "default_value": "info",
+        "description": "Specify the severity level when tag is found and printed."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "INTERFACE_DEF,CLASS_DEF,ENUM_DEF,ANNOTATION_DEF,RECORD_DEF",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "javadoc.writeTag",
+      "type.missingTag",
+      "type.tagFormat"
+    ],
+    "category": "javadoc",
+    "source_file": "WriteTagCheck.xml"
+  }
+]

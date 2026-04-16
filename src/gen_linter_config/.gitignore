@@ -1,0 +1,5 @@
+.venv
+test_all/input/
+test_all/output/
+gen_linter_config.egg-info/
+.idea/

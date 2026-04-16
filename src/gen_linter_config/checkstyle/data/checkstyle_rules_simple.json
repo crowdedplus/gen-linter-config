@@ -1,0 +1,3850 @@
+[
+  {
+    "name": "AbbreviationAsWordInName",
+    "description": "Validates abbreviations (consecutive capital letters) length in identifier name, it also allows to enforce camel case naming. Please read more at Google Style Guide to get to know how to avoid long ab",
+    "category": "naming",
+    "options": [
+      {
+        "name": "allowedAbbreviationLength",
+        "type": "int",
+        "default": "3",
+        "description": "Indicate the number of consecutive capital letters allowed\n in targeted identifiers (abbreviations i"
+      },
+      {
+        "name": "allowedAbbreviations",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify abbreviations that must be skipped for checking."
+      },
+      {
+        "name": "ignoreFinal",
+        "type": "boolean",
+        "default": "true",
+        "description": "Allow to skip variables with <code>final</code> modifier."
+      },
+      {
+        "name": "ignoreOverriddenMethods",
+        "type": "boolean",
+        "default": "true",
+        "description": "Allow to ignore methods tagged with <code>@Override</code>\n annotation (that usually mean inherited "
+      },
+      {
+        "name": "ignoreStatic",
+        "type": "boolean",
+        "default": "true",
+        "description": "Allow to skip variables with <code>static</code> modifier."
+      },
+      {
+        "name": "ignoreStaticFinal",
+        "type": "boolean",
+        "default": "true",
+        "description": "Allow to skip variables with both <code>static</code> and <code>final</code> modifiers."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "CLASS_DEF,INTERFACE_DEF,ENUM_DEF,ANNOTATION_DEF,ANNOTATION_FIELD_DEF,PARAMETER_DEF,VARIABLE_DEF,METHOD_DEF,PATTERN_VARIABLE_DEF,RECORD_DEF,RECORD_COMPONENT_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "AbstractClassName",
+    "description": "Ensures that the names of abstract classes conforming to some pattern and check that \"abstract\" modifier exists. Rationale: Abstract classes are convenience base class implementations of interfaces. F",
+    "category": "naming",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^Abstract.+$",
+        "description": "Specify valid identifiers."
+      },
+      {
+        "name": "ignoreModifier",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore checking for the <code>abstract</code> modifier on\n classes that match the"
+      },
+      {
+        "name": "ignoreName",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore checking the name. Realistically only useful if\n using the check to identi"
+      }
+    ]
+  },
+  {
+    "name": "AnnotationLocation",
+    "description": "Checks location of annotation on language elements. By default, Check enforce to locate annotations before target element, annotation should be located on separate line from target element. This check",
+    "category": "annotation",
+    "options": [
+      {
+        "name": "allowSamelineMultipleAnnotations",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow annotation(s) to be located on the same line as\n target element."
+      },
+      {
+        "name": "allowSamelineParameterizedAnnotation",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow one and only parameterized annotation to be located on the same line as\n target element."
+      },
+      {
+        "name": "allowSamelineSingleParameterlessAnnotation",
+        "type": "boolean",
+        "default": "true",
+        "description": "Allow single parameterless annotation to be located on the same line as\n target element."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "CLASS_DEF,INTERFACE_DEF,PACKAGE_DEF,ENUM_CONSTANT_DEF,ENUM_DEF,METHOD_DEF,CTOR_DEF,VARIABLE_DEF,RECORD_DEF,COMPACT_CTOR_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "AnnotationOnSameLine",
+    "description": "Checks that annotations are located on the same line with their targets. Verifying with this check is not good practice, but it is using by some style guides.",
+    "category": "annotation",
+    "options": [
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "CLASS_DEF,INTERFACE_DEF,ENUM_DEF,METHOD_DEF,CTOR_DEF,VARIABLE_DEF,RECORD_DEF,COMPACT_CTOR_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "AnnotationUseStyle",
+    "description": "Checks the style of elements in annotations. Annotations have three element styles starting with the least verbose. - \"ElementStyleOption.COMPACT_NO_ARRAY\" - \"ElementStyleOption.COMPACT\" - \"ElementSty",
+    "category": "annotation",
+    "options": [
+      {
+        "name": "closingParens",
+        "type": "com.puppycrawl.tools.checkstyle.checks.annotation.AnnotationUseStyleCheck$ClosingParensOption",
+        "default": "never",
+        "description": "Define the policy for ending parenthesis."
+      },
+      {
+        "name": "elementStyle",
+        "type": "com.puppycrawl.tools.checkstyle.checks.annotation.AnnotationUseStyleCheck$ElementStyleOption",
+        "default": "compact_no_array",
+        "description": "Define the annotation element styles."
+      },
+      {
+        "name": "trailingArrayComma",
+        "type": "com.puppycrawl.tools.checkstyle.checks.annotation.AnnotationUseStyleCheck$TrailingArrayCommaOption",
+        "default": "never",
+        "description": "Define the policy for trailing comma in arrays."
+      }
+    ]
+  },
+  {
+    "name": "AnonInnerLength",
+    "description": "Checks for long anonymous inner classes. Rationale: If an anonymous inner class becomes very long it is hard to understand and to see the flow of the method where the class is defined. Therefore, long",
+    "category": "sizes",
+    "options": [
+      {
+        "name": "max",
+        "type": "int",
+        "default": "20",
+        "description": "Specify the maximum number of lines allowed."
+      }
+    ]
+  },
+  {
+    "name": "ArrayTrailingComma",
+    "description": "Checks that array initialization contains a trailing comma. int[] a = new int[] { 1, 2, 3, }; \" By default, the check demands a comma at the end if neither left nor right curly braces are on the same ",
+    "category": "coding",
+    "options": [
+      {
+        "name": "alwaysDemandTrailingComma",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to always check for a trailing comma, even when an array is inline."
+      }
+    ]
+  },
+  {
+    "name": "ArrayTypeStyle",
+    "description": "Checks the style of array type definitions. Some like Java style: \"public static void main(String[] args)\" and some like C style: \"public static void main(String args[])\". By default, the Check enforc",
+    "category": "miscellaneous",
+    "options": [
+      {
+        "name": "javaStyle",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to enforce Java style (true) or C style (false)."
+      }
+    ]
+  },
+  {
+    "name": "AtclauseOrder",
+    "description": "Checks the order of javadoc block-tags or javadoc tags. Note: Google used the term \"at-clauses\" for block tags in their guide till 2017-02-28.",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "tagOrder",
+        "type": "java.lang.String[]",
+        "default": "@author, @version, @param, @return, @throws, @exception, @see, @since, @serial, @serialField, @serialData, @deprecated",
+        "description": "Specify the order by tags."
+      },
+      {
+        "name": "target",
+        "type": "java.lang.String[]",
+        "default": "CLASS_DEF, COMPACT_CTOR_DEF, CTOR_DEF, ENUM_DEF, INTERFACE_DEF, METHOD_DEF, RECORD_DEF, VARIABLE_DEF",
+        "description": "Specify block tags targeted."
+      },
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight htm"
+      }
+    ]
+  },
+  {
+    "name": "AvoidDoubleBraceInitialization",
+    "description": "Detects double brace initialization. Rationale: Double brace initialization (set of Instance Initializers in class body) may look cool, but it is considered as anti-pattern and should be avoided. This",
+    "category": "blocks",
+    "options": []
+  },
+  {
+    "name": "AvoidEscapedUnicodeCharacters",
+    "description": "Restricts using Unicode escapes (such as &#92;u221e). It is possible to allow using escapes for non-printable, control characters. Also, this check can be configured to allow using escapes if trail co",
+    "category": "miscellaneous",
+    "options": [
+      {
+        "name": "allowByTailComment",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow use escapes if trail comment is present."
+      },
+      {
+        "name": "allowEscapesForControlCharacters",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow use escapes for non-printable, control characters."
+      },
+      {
+        "name": "allowIfAllCharactersEscaped",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow if all characters in literal are escaped."
+      },
+      {
+        "name": "allowNonPrintableEscapes",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow use escapes for non-printable, whitespace characters."
+      }
+    ]
+  },
+  {
+    "name": "AvoidInlineConditionals",
+    "description": "Detects inline conditionals. Here is one example of an inline conditional: String a = getParameter(\"a\"); String b = (a==null || a.length()<1) ? null : a.substring(1); \" Rationale: Some developers find",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "AvoidNestedBlocks",
+    "description": "Finds nested blocks (blocks that are used freely in the code). Rationale: Nested blocks are often leftovers from the debugging process, they confuse the reader. For example, this check finds the obsol",
+    "category": "blocks",
+    "options": [
+      {
+        "name": "allowInSwitchCase",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow nested blocks if they are the only child of a switch case."
+      }
+    ]
+  },
+  {
+    "name": "AvoidNoArgumentSuperConstructorCall",
+    "description": "Checks if call to superclass constructor without arguments is present. Such invocation is redundant because constructor body implicitly begins with a superclass constructor invocation \"super();\" See s",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "AvoidStarImport",
+    "description": "Checks that there are no import statements that use the \"*\" notation. Rationale: Importing all classes from a package or static members from a class leads to tight coupling between packages or classes",
+    "category": "imports",
+    "options": [
+      {
+        "name": "allowClassImports",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to allow starred class imports like\n <code>import java.util.*;</code>."
+      },
+      {
+        "name": "allowStaticMemberImports",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to allow starred static member imports like\n <code>import static org.junit.Assert.*;"
+      },
+      {
+        "name": "excludes",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify packages where starred class imports are\n allowed and classes where starred static member im"
+      }
+    ]
+  },
+  {
+    "name": "AvoidStaticImport",
+    "description": "Checks that there are no static import statements. Rationale: Importing static members can lead to naming conflicts between class' members. It may lead to poor code readability since it may no longer ",
+    "category": "imports",
+    "options": [
+      {
+        "name": "excludes",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Control whether to allow for certain classes via a star notation\n to be excluded such as <code>java."
+      }
+    ]
+  },
+  {
+    "name": "BooleanExpressionComplexity",
+    "description": "Restricts the number of boolean operators (\"&&\", \"||\", \"&\", \"|\" and \"^\") in an expression. Rationale: Too many conditions leads to code that is difficult to read and hence debug and maintain. Note tha",
+    "category": "metrics",
+    "options": [
+      {
+        "name": "max",
+        "type": "int",
+        "default": "3",
+        "description": "Specify the maximum number of boolean operations allowed in one expression."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "LAND,BAND,LOR,BOR,BXOR",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "CatchParameterName",
+    "description": "Checks that \"catch\" parameter names conform to a specified pattern. Default pattern has the following characteristic: - allows names beginning with two lowercase letters followed by at least one upper",
+    "category": "naming",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^(e|t|ex|[a-z][a-z][a-zA-Z]+|_)$",
+        "description": "Sets the pattern to match valid identifiers."
+      }
+    ]
+  },
+  {
+    "name": "ClassDataAbstractionCoupling",
+    "description": "Measures the number of distinct classes that are instantiated within the given class or record. This type of coupling is not caused by inheritance or the object-oriented paradigm. Generally speaking, ",
+    "category": "metrics",
+    "options": [
+      {
+        "name": "excludeClassesRegexps",
+        "type": "java.util.regex.Pattern[]",
+        "default": "^$",
+        "description": "Specify user-configured regular expressions to ignore classes."
+      },
+      {
+        "name": "excludedClasses",
+        "type": "java.lang.String[]",
+        "default": "ArrayIndexOutOfBoundsException, ArrayList, Boolean, Byte, Character, Class, Collection, Deprecated, Deque, Double, DoubleStream, EnumSet, Exception, Float, FunctionalInterface, HashMap, HashSet, IllegalArgumentException, IllegalStateException, IndexOutOfBoundsException, IntStream, Integer, LinkedHashMap, LinkedHashSet, LinkedList, List, Long, LongStream, Map, NullPointerException, Object, Optional, OptionalDouble, OptionalInt, OptionalLong, Override, Queue, RuntimeException, SafeVarargs, SecurityException, Set, Short, SortedMap, SortedSet, Stream, String, StringBuffer, StringBuilder, SuppressWarnings, Throwable, TreeMap, TreeSet, UnsupportedOperationException, Void, boolean, byte, char, double, float, int, long, short, var, void",
+        "description": "Specify user-configured class names to ignore."
+      },
+      {
+        "name": "excludedPackages",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify user-configured packages to ignore."
+      },
+      {
+        "name": "max",
+        "type": "int",
+        "default": "7",
+        "description": "Specify the maximum threshold allowed."
+      }
+    ]
+  },
+  {
+    "name": "ClassFanOutComplexity",
+    "description": "Checks the number of other types a given class/record/interface/enum/annotation relies on. Also, the square of this has been shown to indicate the amount of maintenance required in functional programs",
+    "category": "metrics",
+    "options": [
+      {
+        "name": "excludeClassesRegexps",
+        "type": "java.util.regex.Pattern[]",
+        "default": "^$",
+        "description": "Specify user-configured regular expressions to ignore classes."
+      },
+      {
+        "name": "excludedClasses",
+        "type": "java.lang.String[]",
+        "default": "ArrayIndexOutOfBoundsException, ArrayList, Boolean, Byte, Character, Class, Collection, Deprecated, Deque, Double, DoubleStream, EnumSet, Exception, Float, FunctionalInterface, HashMap, HashSet, IllegalArgumentException, IllegalStateException, IndexOutOfBoundsException, IntStream, Integer, LinkedHashMap, LinkedHashSet, LinkedList, List, Long, LongStream, Map, NullPointerException, Object, Optional, OptionalDouble, OptionalInt, OptionalLong, Override, Queue, RuntimeException, SafeVarargs, SecurityException, Set, Short, SortedMap, SortedSet, Stream, String, StringBuffer, StringBuilder, SuppressWarnings, Throwable, TreeMap, TreeSet, UnsupportedOperationException, Void, boolean, byte, char, double, float, int, long, short, var, void",
+        "description": "Specify user-configured class names to ignore."
+      },
+      {
+        "name": "excludedPackages",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify user-configured packages to ignore."
+      },
+      {
+        "name": "max",
+        "type": "int",
+        "default": "20",
+        "description": "Specify the maximum threshold allowed."
+      }
+    ]
+  },
+  {
+    "name": "ClassMemberImpliedModifier",
+    "description": "Checks for implicit modifiers on nested types in classes and records. This check is effectively the opposite of RedundantModifier. It checks the modifiers on nested types in classes and records, ensur",
+    "category": "modifier",
+    "options": [
+      {
+        "name": "violateImpliedStaticOnNestedEnum",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to enforce that <code>static</code> is explicitly coded\n on nested enums in classes "
+      },
+      {
+        "name": "violateImpliedStaticOnNestedInterface",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to enforce that <code>static</code> is explicitly coded\n on nested interfaces in cla"
+      },
+      {
+        "name": "violateImpliedStaticOnNestedRecord",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to enforce that <code>static</code> is explicitly coded\n on nested records in classe"
+      }
+    ]
+  },
+  {
+    "name": "ClassTypeParameterName",
+    "description": "Checks that class type parameter names conform to a specified pattern.",
+    "category": "naming",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^[A-Z]$",
+        "description": "Sets the pattern to match valid identifiers."
+      }
+    ]
+  },
+  {
+    "name": "CommentsIndentation",
+    "description": "Controls the indentation between comments and surrounding code. Comments are indented at the same level as the surrounding code. Detailed info about such convention can be found here",
+    "category": "coding",
+    "options": [
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "SINGLE_LINE_COMMENT,BLOCK_COMMENT_BEGIN",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "ConstantName",
+    "description": "Checks that constant names conform to a specified pattern. A constant is a static and final field or an interface/annotation field, except serialVersionUID and serialPersistentFields .",
+    "category": "naming",
+    "options": [
+      {
+        "name": "applyToPackage",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to package-private members."
+      },
+      {
+        "name": "applyToPrivate",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to private members."
+      },
+      {
+        "name": "applyToProtected",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to protected members."
+      },
+      {
+        "name": "applyToPublic",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to public members."
+      },
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$",
+        "description": "Sets the pattern to match valid identifiers."
+      }
+    ]
+  },
+  {
+    "name": "ConstructorsDeclarationGrouping",
+    "description": "Checks that all constructors are grouped together. If there is any non-constructor code separating constructors, this check identifies and logs a violation for those ungrouped constructors. The violat",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "CovariantEquals",
+    "description": "Checks that classes and records which define a covariant \"equals()\" method also override method \"equals(Object)\". Covariant \"equals()\" - method that is similar to \"equals(Object)\", but with a covarian",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "CustomImportOrder",
+    "description": "Checks that the groups of import declarations appear in the order specified by the user. If there is an import but its group is not specified in the configuration such an import should be placed at th",
+    "category": "imports",
+    "options": [
+      {
+        "name": "customImportOrderRules",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify ordered list of import groups."
+      },
+      {
+        "name": "separateLineBetweenGroups",
+        "type": "boolean",
+        "default": "true",
+        "description": "Force empty line separator between import groups."
+      },
+      {
+        "name": "sortImportsInGroupAlphabetically",
+        "type": "boolean",
+        "default": "false",
+        "description": "Force grouping alphabetically, in\n <a href=\"https://en.wikipedia.org/wiki/ASCII#Order\">ASCII sort or"
+      },
+      {
+        "name": "specialImportsRegExp",
+        "type": "java.util.regex.Pattern",
+        "default": "^$",
+        "description": "Specify RegExp for SPECIAL_IMPORTS group imports."
+      },
+      {
+        "name": "standardPackageRegExp",
+        "type": "java.util.regex.Pattern",
+        "default": "^(java|javax)\\.",
+        "description": "Specify RegExp for STANDARD_JAVA_PACKAGE group imports."
+      },
+      {
+        "name": "thirdPartyPackageRegExp",
+        "type": "java.util.regex.Pattern",
+        "default": ".*",
+        "description": "Specify RegExp for THIRD_PARTY_PACKAGE group imports."
+      }
+    ]
+  },
+  {
+    "name": "CyclomaticComplexity",
+    "description": "Checks cyclomatic complexity against a specified limit. It is a measure of the minimum number of possible paths through the source and therefore the number of required tests, it is not about quality o",
+    "category": "metrics",
+    "options": [
+      {
+        "name": "max",
+        "type": "int",
+        "default": "10",
+        "description": "Specify the maximum threshold allowed."
+      },
+      {
+        "name": "switchBlockAsSingleDecisionPoint",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to treat the whole switch block as a single decision point."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "LITERAL_WHILE,LITERAL_DO,LITERAL_FOR,LITERAL_IF,LITERAL_SWITCH,LITERAL_CASE,LITERAL_CATCH,QUESTION,LAND,LOR,LITERAL_WHEN",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "DeclarationOrder",
+    "description": "Checks that the parts of a class, record, or interface declaration appear in the order suggested by the Code Conventions for the Java Programming Language. According to Code Conventions for the Java P",
+    "category": "coding",
+    "options": [
+      {
+        "name": "ignoreConstructors",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore constructors."
+      },
+      {
+        "name": "ignoreModifiers",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore modifiers (fields, ...)."
+      }
+    ]
+  },
+  {
+    "name": "DefaultComesLast",
+    "description": "Check that the \"default\" is after all the cases in a \"switch\" statement. Rationale: Java allows \"default\" anywhere within the \"switch\" statement. But it is more readable if it comes after the last \"ca",
+    "category": "coding",
+    "options": [
+      {
+        "name": "skipIfLastAndSharedWithCase",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to allow <code>default</code> along with\n <code>case</code> if they are not last."
+      }
+    ]
+  },
+  {
+    "name": "DescendantToken",
+    "description": "Checks for restricted tokens beneath other tokens. WARNING: This is a very powerful and flexible check, but, at the same time, it is low-level and very implementation-dependent because its results dep",
+    "category": "miscellaneous",
+    "options": [
+      {
+        "name": "limitedTokens",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify set of tokens with limited occurrences as descendants."
+      },
+      {
+        "name": "maximumDepth",
+        "type": "int",
+        "default": "2147483647",
+        "description": "Specify the maximum depth for descendant counts."
+      },
+      {
+        "name": "maximumMessage",
+        "type": "java.lang.String",
+        "default": null,
+        "description": "Define the violation message when the maximum count is exceeded."
+      },
+      {
+        "name": "maximumNumber",
+        "type": "int",
+        "default": "2147483647",
+        "description": "Specify a maximum count for descendants."
+      },
+      {
+        "name": "minimumDepth",
+        "type": "int",
+        "default": "0",
+        "description": "Specify the minimum depth for descendant counts."
+      },
+      {
+        "name": "minimumMessage",
+        "type": "java.lang.String",
+        "default": null,
+        "description": "Define the violation message when the minimum count is not reached."
+      },
+      {
+        "name": "minimumNumber",
+        "type": "int",
+        "default": "0",
+        "description": "Specify a minimum count for descendants."
+      },
+      {
+        "name": "sumTokenCounts",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether the number of tokens found should be calculated\n from the sum of the individual toke"
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "DesignForExtension",
+    "description": "Checks that classes are designed for extension (subclass creation). Nothing wrong could be with founded classes. This check makes sense only for library projects (not application projects) which care ",
+    "category": "design",
+    "options": [
+      {
+        "name": "ignoredAnnotations",
+        "type": "java.lang.String[]",
+        "default": "After, AfterClass, Before, BeforeClass, Test",
+        "description": "Specify annotations which allow the check to skip the method from validation."
+      },
+      {
+        "name": "requiredJavadocPhrase",
+        "type": "java.util.regex.Pattern",
+        "default": ".*",
+        "description": "Specify the comment text pattern which qualifies a\n method as designed for extension. Supports multi"
+      }
+    ]
+  },
+  {
+    "name": "EmptyBlock",
+    "description": "Checks for empty blocks. This check does not validate sequential blocks. This check does not violate fallthrough. NOTE: This check processes LITERAL_CASE and LITERAL_DEFAULT separately. Verification e",
+    "category": "blocks",
+    "options": [
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.blocks.BlockOption",
+        "default": "statement",
+        "description": "Specify the policy on block contents."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "LITERAL_WHILE,LITERAL_TRY,LITERAL_FINALLY,LITERAL_DO,LITERAL_IF,LITERAL_ELSE,LITERAL_FOR,INSTANCE_INIT,STATIC_INIT,LITERAL_SWITCH,LITERAL_SYNCHRONIZED",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "EmptyCatchBlock",
+    "description": "Checks for empty catch blocks. By default, check allows empty catch block with any comment inside. There are two options to make validation more precise: exceptionVariableName and commentFormat. If bo",
+    "category": "blocks",
+    "options": [
+      {
+        "name": "commentFormat",
+        "type": "java.util.regex.Pattern",
+        "default": ".*",
+        "description": "Specify the RegExp for the first comment inside empty catch block.\n If check meets comment inside em"
+      },
+      {
+        "name": "exceptionVariableName",
+        "type": "java.util.regex.Pattern",
+        "default": "^$",
+        "description": "Specify the RegExp for the name of the variable associated with exception.\n If check meets variable "
+      }
+    ]
+  },
+  {
+    "name": "EmptyForInitializerPad",
+    "description": "Checks the padding of an empty for initializer; that is whether a white space is required at an empty for initializer, or such white space is forbidden. No check occurs if there is a line wrap at the ",
+    "category": "whitespace",
+    "options": [
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.whitespace.PadOption",
+        "default": "nospace",
+        "description": "Specify policy on how to pad an empty for iterator."
+      }
+    ]
+  },
+  {
+    "name": "EmptyForIteratorPad",
+    "description": "Checks the padding of an empty for iterator; that is whether a white space is required at an empty for iterator, or such white space is forbidden. No check occurs if there is a line wrap at the iterat",
+    "category": "whitespace",
+    "options": [
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.whitespace.PadOption",
+        "default": "nospace",
+        "description": "Specify policy on how to pad an empty for iterator."
+      }
+    ]
+  },
+  {
+    "name": "EmptyLineSeparator",
+    "description": "Checks for empty line separators before package, all import declarations, fields, constructors, methods, nested classes, static initializers and instance initializers. Checks for empty line separators",
+    "category": "whitespace",
+    "options": [
+      {
+        "name": "allowMultipleEmptyLines",
+        "type": "boolean",
+        "default": "true",
+        "description": "Allow multiple empty lines between class members."
+      },
+      {
+        "name": "allowMultipleEmptyLinesInsideClassMembers",
+        "type": "boolean",
+        "default": "true",
+        "description": "Allow multiple empty lines inside class members."
+      },
+      {
+        "name": "allowNoEmptyLineBetweenFields",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow no empty line between fields."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "PACKAGE_DEF,IMPORT,STATIC_IMPORT,CLASS_DEF,INTERFACE_DEF,ENUM_DEF,STATIC_INIT,INSTANCE_INIT,METHOD_DEF,CTOR_DEF,VARIABLE_DEF,RECORD_DEF,COMPACT_CTOR_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "EmptyStatement",
+    "description": "Detects empty statements (standalone \"\";\"\" semicolon). Empty statements often introduce bugs that are hard to spot",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "EqualsAvoidNull",
+    "description": "Checks that any combination of String literals is on the left side of an \"equals()\" comparison. Also checks for String literals assigned to some field (such as \"someString.equals(anotherString = \"text",
+    "category": "coding",
+    "options": [
+      {
+        "name": "ignoreEqualsIgnoreCase",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore <code>String.equalsIgnoreCase(String)</code> invocations."
+      }
+    ]
+  },
+  {
+    "name": "EqualsHashCode",
+    "description": "Checks that classes that either override \"equals()\" or \"hashCode()\" also overrides the other. This check only verifies that the method declarations match \"Object.equals(Object)\" and \"Object.hashCode()",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "ExecutableStatementCount",
+    "description": "Restricts the number of executable statements to a specified limit.",
+    "category": "sizes",
+    "options": [
+      {
+        "name": "max",
+        "type": "int",
+        "default": "30",
+        "description": "Specify the maximum threshold allowed."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "CTOR_DEF,METHOD_DEF,INSTANCE_INIT,STATIC_INIT,COMPACT_CTOR_DEF,LAMBDA",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "ExplicitInitialization",
+    "description": "Checks if any class or object member is explicitly initialized to default for its type value (\"null\" for object references, zero for numeric types and \"char\" and \"false\" for \"boolean\". Rationale: Each",
+    "category": "coding",
+    "options": [
+      {
+        "name": "onlyObjectReferences",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether only explicit initializations made to null\n for objects should be checked."
+      }
+    ]
+  },
+  {
+    "name": "FallThrough",
+    "description": "Checks for fall-through in \"switch\" statements. Finds locations where a \"case\" contains Java code but lacks a \"break\", \"return\", \"yield\", \"throw\" or \"continue\" statement. The check honors special comm",
+    "category": "coding",
+    "options": [
+      {
+        "name": "checkLastCaseGroup",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether the last case group must be checked."
+      },
+      {
+        "name": "reliefPattern",
+        "type": "java.util.regex.Pattern",
+        "default": "falls?[ -]?thr(u|ough)",
+        "description": "Define the RegExp to match the relief comment that suppresses\n the warning about a fall through."
+      }
+    ]
+  },
+  {
+    "name": "FileLength",
+    "description": "Checks for long source files. Rationale: If a source file becomes very long it is hard to understand. Therefore, long classes should usually be refactored into several individual classes that focus on",
+    "category": "sizes",
+    "options": [
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "max",
+        "type": "int",
+        "default": "2000",
+        "description": "Specify the maximum number of lines allowed."
+      }
+    ]
+  },
+  {
+    "name": "FileTabCharacter",
+    "description": "Checks that there are no tab characters (\"'\\t'\") in the source code. Rationale: - Developers should not need to configure the tab width of their text editors in order to be able to read source code. -",
+    "category": "whitespace",
+    "options": [
+      {
+        "name": "eachLine",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to report on each line containing a tab, or just the first\n instance."
+      },
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify the file extensions of the files to process."
+      }
+    ]
+  },
+  {
+    "name": "FinalClass",
+    "description": "Ensures that identifies classes that can be effectively declared as final are explicitly marked as final. The following are different types of classes that can be identified: - Private classes with no",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "FinalLocalVariable",
+    "description": "Checks that local variables that never have their values changed are declared final. The check can be configured to also check that unchanged parameters are declared final. When configured to check pa",
+    "category": "coding",
+    "options": [
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "VARIABLE_DEF",
+        "description": "tokens to check"
+      },
+      {
+        "name": "validateEnhancedForLoopVariable",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to check\n <a href=\"https://docs.oracle.com/javase/specs/jls/se11/html/jls-14.html#jl"
+      },
+      {
+        "name": "validateUnnamedVariables",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to check\n <a href=\"https://docs.oracle.com/javase/specs/jls/se21/preview/specs/unnam"
+      }
+    ]
+  },
+  {
+    "name": "FinalParameters",
+    "description": "Checks that parameters for methods, constructors, catch and for-each blocks are final. Interface, abstract, and native methods are not checked: the final keyword does not make sense for interface, abs",
+    "category": "coding",
+    "options": [
+      {
+        "name": "ignorePrimitiveTypes",
+        "type": "boolean",
+        "default": "false",
+        "description": "Ignore primitive types as parameters."
+      },
+      {
+        "name": "ignoreUnnamedParameters",
+        "type": "boolean",
+        "default": "true",
+        "description": "Ignore\n <a href=\"https://docs.oracle.com/en/java/javase/21/docs/specs/unnamed-jls.html\">\n unnamed pa"
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "METHOD_DEF,CTOR_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "GenericWhitespace",
+    "description": "Checks that the whitespace around the Generic tokens (angle brackets) \"<\" and \">\" are correct to the typical convention. The convention is not configurable. Whitespace is defined by implementation of ",
+    "category": "whitespace",
+    "options": []
+  },
+  {
+    "name": "Header",
+    "description": "Checks that a source file begins with a specified header. Property \"headerFile\" specifies a file that contains the required header. Alternatively, the header specification can be set directly in the \"",
+    "category": "header",
+    "options": [
+      {
+        "name": "charset",
+        "type": "java.lang.String",
+        "default": null,
+        "description": "Specify the character encoding to use when reading the headerFile."
+      },
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "header",
+        "type": "java.lang.String",
+        "default": null,
+        "description": "Specify the required header specified inline.\n Individual header lines must be separated by the stri"
+      },
+      {
+        "name": "headerFile",
+        "type": "java.net.URI",
+        "default": null,
+        "description": "Specify the name of the file containing the required header."
+      },
+      {
+        "name": "ignoreLines",
+        "type": "int[]",
+        "default": "",
+        "description": "Specifies the line numbers\n to ignore when matching lines in a content of headerFile."
+      }
+    ]
+  },
+  {
+    "name": "HexLiteralCase",
+    "description": "Checks that hexadecimal literals are defined using uppercase letters \"(A-F)\" rather than lowercase \"(a-f)\". This convention follows the OpenJDK Style Guide.",
+    "category": "miscellaneous",
+    "options": []
+  },
+  {
+    "name": "HiddenField",
+    "description": "Checks that a local variable or a parameter does not shadow a field that is defined in the same class. It is possible to configure the check to ignore all property setter methods. A method is recogniz",
+    "category": "coding",
+    "options": [
+      {
+        "name": "ignoreAbstractMethods",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore parameters of abstract methods."
+      },
+      {
+        "name": "ignoreConstructorParameter",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore constructor parameters."
+      },
+      {
+        "name": "ignoreFormat",
+        "type": "java.util.regex.Pattern",
+        "default": null,
+        "description": "Define the RegExp for names of variables and parameters to ignore."
+      },
+      {
+        "name": "ignoreSetter",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow to ignore the parameter of a property setter method."
+      },
+      {
+        "name": "setterCanReturnItsClass",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow to expand the definition of a setter method to include methods\n that return the class' instanc"
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "VARIABLE_DEF,PARAMETER_DEF,PATTERN_VARIABLE_DEF,LAMBDA,RECORD_COMPONENT_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "HideUtilityClassConstructor",
+    "description": "Makes sure that utility classes (classes that contain only static methods or fields in their API) do not have a public constructor. Rationale: Instantiating utility classes does not make sense. Hence,",
+    "category": "design",
+    "options": [
+      {
+        "name": "ignoreAnnotatedBy",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Ignore classes annotated with the specified annotation(s). Annotation names\n provided in this proper"
+      }
+    ]
+  },
+  {
+    "name": "IllegalCatch",
+    "description": "Checks that certain exception types do not appear in a \"catch\" statement. Rationale: catching \"java.lang.Exception\", \"java.lang.Error\" or \"java.lang.RuntimeException\" is almost never acceptable. Novic",
+    "category": "coding",
+    "options": [
+      {
+        "name": "illegalClassNames",
+        "type": "java.lang.String[]",
+        "default": "Error, Exception, RuntimeException, Throwable, java.lang.Error, java.lang.Exception, java.lang.RuntimeException, java.lang.Throwable",
+        "description": "Specify exception class names to reject."
+      }
+    ]
+  },
+  {
+    "name": "IllegalIdentifierName",
+    "description": "Checks identifiers against a regular expression pattern to detect illegal names. Since this check uses a pattern to define valid identifiers, users will need to use negative lookaheads to explicitly b",
+    "category": "naming",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^(?!var$|\\S*\\$)\\S+$",
+        "description": "Sets the pattern to match valid identifiers."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "CLASS_DEF,INTERFACE_DEF,ENUM_DEF,ANNOTATION_DEF,ANNOTATION_FIELD_DEF,PARAMETER_DEF,VARIABLE_DEF,METHOD_DEF,ENUM_CONSTANT_DEF,PATTERN_VARIABLE_DEF,RECORD_DEF,RECORD_COMPONENT_DEF,LAMBDA",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "IllegalImport",
+    "description": "Checks for imports from a set of illegal packages and modules. Note: By default, the check rejects all \"sun.*\" packages since programs that contain direct calls to the \"sun.*\" packages are \"not guaran",
+    "category": "imports",
+    "options": [
+      {
+        "name": "illegalClasses",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify class names to reject, if <b>regexp</b> property is not\n set, checks if import equals class "
+      },
+      {
+        "name": "illegalModules",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify module names to reject, if <b>regexp</b> property is not\n set, checks if import equals modul"
+      },
+      {
+        "name": "illegalPkgs",
+        "type": "java.lang.String[]",
+        "default": "sun",
+        "description": "Specify packages to reject, if <b>regexp</b> property is not set,\n checks if import is the part of p"
+      },
+      {
+        "name": "regexp",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether the <code>illegalPkgs</code>, <code>illegalClasses</code> and\n <code>illegalModules<"
+      }
+    ]
+  },
+  {
+    "name": "IllegalInstantiation",
+    "description": "Checks for illegal instantiations where a factory method is preferred. Rationale: Depending on the project, for some classes it might be preferable to create instances through factory methods rather t",
+    "category": "coding",
+    "options": [
+      {
+        "name": "classes",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify fully qualified class names that should not be instantiated."
+      }
+    ]
+  },
+  {
+    "name": "IllegalThrows",
+    "description": "Checks that specified types are not declared to be thrown. Declaring that a method throws \"java.lang.Error\" or \"java.lang.RuntimeException\" is almost never acceptable.",
+    "category": "coding",
+    "options": [
+      {
+        "name": "ignoreOverriddenMethods",
+        "type": "boolean",
+        "default": "true",
+        "description": "Allow to ignore checking overridden methods\n (marked with <code>Override</code> or <code>java.lang.O"
+      },
+      {
+        "name": "ignoredMethodNames",
+        "type": "java.lang.String[]",
+        "default": "finalize",
+        "description": "Specify names of methods to ignore."
+      },
+      {
+        "name": "illegalClassNames",
+        "type": "java.lang.String[]",
+        "default": "Error, RuntimeException, Throwable, java.lang.Error, java.lang.RuntimeException, java.lang.Throwable",
+        "description": "Specify throw class names to reject."
+      }
+    ]
+  },
+  {
+    "name": "IllegalToken",
+    "description": "Checks for illegal tokens. By default, labels are prohibited. Rationale: Certain language features can harm readability, lead to confusion or are not obvious to novice developers. Other features may b",
+    "category": "coding",
+    "options": [
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "LABELED_STAT",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "IllegalTokenText",
+    "description": "Checks specified tokens text for matching an illegal pattern. By default, no tokens are specified.",
+    "category": "coding",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^$",
+        "description": "Define the RegExp for illegal pattern."
+      },
+      {
+        "name": "ignoreCase",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore case when matching."
+      },
+      {
+        "name": "message",
+        "type": "java.lang.String",
+        "default": "",
+        "description": "Define the message which is used to notify about violations;\n if empty then the default message is u"
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "IllegalType",
+    "description": "Checks that particular classes or interfaces are never used. Rationale: Helps reduce coupling on concrete classes. For additional restriction of type usage see also: IllegalInstantiation, IllegalImpor",
+    "category": "coding",
+    "options": [
+      {
+        "name": "ignoredMethodNames",
+        "type": "java.lang.String[]",
+        "default": "getEnvironment, getInitialContext",
+        "description": "Specify methods that should not be checked."
+      },
+      {
+        "name": "illegalAbstractClassNameFormat",
+        "type": "java.util.regex.Pattern",
+        "default": "^(.*[.])?Abstract.*$",
+        "description": "Specify RegExp for illegal abstract class names."
+      },
+      {
+        "name": "illegalClassNames",
+        "type": "java.lang.String[]",
+        "default": "HashMap, HashSet, LinkedHashMap, LinkedHashSet, TreeMap, TreeSet, java.util.HashMap, java.util.HashSet, java.util.LinkedHashMap, java.util.LinkedHashSet, java.util.TreeMap, java.util.TreeSet",
+        "description": "Specify classes that should not be used as types in variable declarations,\n return values or paramet"
+      },
+      {
+        "name": "legalAbstractClassNames",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Define abstract classes that may be used as types."
+      },
+      {
+        "name": "memberModifiers",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Control whether to check only methods and fields with any of\n the specified modifiers.\n This propert"
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "ANNOTATION_FIELD_DEF,CLASS_DEF,INTERFACE_DEF,METHOD_CALL,METHOD_DEF,METHOD_REF,PARAMETER_DEF,VARIABLE_DEF,PATTERN_VARIABLE_DEF,RECORD_DEF,RECORD_COMPONENT_DEF,RECORD_PATTERN_DEF",
+        "description": "tokens to check"
+      },
+      {
+        "name": "validateAbstractClassNames",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to validate abstract class names."
+      }
+    ]
+  },
+  {
+    "name": "ImportControl",
+    "description": "Controls what can be imported in each package and file. Useful for ensuring that application layering rules are not violated, especially on large projects. You can control imports based on the package",
+    "category": "imports",
+    "options": [
+      {
+        "name": "file",
+        "type": "java.net.URI",
+        "default": null,
+        "description": "Specify the location of the file containing the import control configuration.\n It can be a regular f"
+      },
+      {
+        "name": "path",
+        "type": "java.util.regex.Pattern",
+        "default": ".*",
+        "description": "Specify the regular expression of file paths to which this check should apply.\n Files that don't mat"
+      }
+    ]
+  },
+  {
+    "name": "ImportOrder",
+    "description": "Checks the ordering/grouping of imports. Features are: - groups type/static imports: ensures that groups of imports come in a specific order (e.g., java. comes first, javax. comes second, then everyth",
+    "category": "imports",
+    "options": [
+      {
+        "name": "caseSensitive",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether string comparison should be case-sensitive or not.\n Case-sensitive sorting is in\n <a"
+      },
+      {
+        "name": "groups",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify list of <b>type import</b> groups. Every group identified either by a\n common prefix string,"
+      },
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.imports.ImportOrderOption",
+        "default": "under",
+        "description": "Specify policy on the relative order between type imports and static imports."
+      },
+      {
+        "name": "ordered",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether type imports within each group should be sorted.\n It doesn't affect sorting for stat"
+      },
+      {
+        "name": "separated",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether type import groups should be separated by, at least,\n one blank line or comment and "
+      },
+      {
+        "name": "separatedStaticGroups",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether static import groups should be separated by, at least,\n one blank line or comment an"
+      },
+      {
+        "name": "sortStaticImportsAlphabetically",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether <b>static imports</b> located at <b>top</b> or\n <b>bottom</b> are sorted within the "
+      },
+      {
+        "name": "staticGroups",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify list of <b>static</b> import groups. Every group identified either by a\n common prefix strin"
+      },
+      {
+        "name": "useContainerOrderingForStatic",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to use container ordering (Eclipse IDE term) for static\n imports or not."
+      }
+    ]
+  },
+  {
+    "name": "Indentation",
+    "description": "Checks correct indentation of Java code. The idea behind this is that while pretty printers are sometimes convenient for bulk reformats of legacy code, they often either aren't configurable enough or ",
+    "category": "indentation",
+    "options": [
+      {
+        "name": "arrayInitIndent",
+        "type": "int",
+        "default": "4",
+        "description": "Specify how far an array initialization should be indented when on next line."
+      },
+      {
+        "name": "basicOffset",
+        "type": "int",
+        "default": "4",
+        "description": "Specify how far new indentation level should be indented when on the next line."
+      },
+      {
+        "name": "braceAdjustment",
+        "type": "int",
+        "default": "0",
+        "description": "Specify how far a braces should be indented when on the next line."
+      },
+      {
+        "name": "caseIndent",
+        "type": "int",
+        "default": "4",
+        "description": "Specify how far a case label should be indented when on next line."
+      },
+      {
+        "name": "forceStrictCondition",
+        "type": "boolean",
+        "default": "false",
+        "description": "Force strict indent level in line wrapping case. If value is true, line wrap indent\n have to be same"
+      },
+      {
+        "name": "lineWrappingIndentation",
+        "type": "int",
+        "default": "4",
+        "description": "Specify how far continuation line should be indented when line-wrapping is present."
+      },
+      {
+        "name": "throwsIndent",
+        "type": "int",
+        "default": "4",
+        "description": "Specify how far a throws clause should be indented when on next line."
+      }
+    ]
+  },
+  {
+    "name": "InnerAssignment",
+    "description": "Checks for assignments in subexpressions, such as in \"String s = Integer.toString(i = 2);\". Rationale: Except for the loop idioms, all assignments should occur in their own top-level statement to incr",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "InnerTypeLast",
+    "description": "Checks nested (internal) classes/interfaces are declared at the bottom of the primary (top-level) class after all init and static init blocks, method, constructor and field declarations.",
+    "category": "design",
+    "options": []
+  },
+  {
+    "name": "InterfaceIsType",
+    "description": "Implements Joshua Bloch, Effective Java, Item 17 - Use Interfaces only to define types. According to Bloch, an interface should describe a type. It is therefore inappropriate to define an interface th",
+    "category": "design",
+    "options": [
+      {
+        "name": "allowMarkerInterfaces",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether marker interfaces like Serializable are allowed."
+      }
+    ]
+  },
+  {
+    "name": "InterfaceMemberImpliedModifier",
+    "description": "Checks for implicit modifiers on interface members and nested types. This check is effectively the opposite of RedundantModifier. It checks the modifiers on interface members, ensuring that certain mo",
+    "category": "modifier",
+    "options": [
+      {
+        "name": "violateImpliedAbstractMethod",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to enforce that <code>abstract</code> is explicitly coded\n on interface methods."
+      },
+      {
+        "name": "violateImpliedFinalField",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to enforce that <code>final</code> is explicitly coded\n on interface fields."
+      },
+      {
+        "name": "violateImpliedPublicField",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to enforce that <code>public</code> is explicitly coded\n on interface fields."
+      },
+      {
+        "name": "violateImpliedPublicMethod",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to enforce that <code>public</code> is explicitly coded\n on interface methods."
+      },
+      {
+        "name": "violateImpliedPublicNested",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to enforce that <code>public</code> is explicitly coded\n on interface nested types."
+      },
+      {
+        "name": "violateImpliedStaticField",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to enforce that <code>static</code> is explicitly coded\n on interface fields."
+      },
+      {
+        "name": "violateImpliedStaticNested",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to enforce that <code>static</code> is explicitly coded\n on interface nested types."
+      }
+    ]
+  },
+  {
+    "name": "InterfaceTypeParameterName",
+    "description": "Checks that interface type parameter names conform to a specified pattern.",
+    "category": "naming",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^[A-Z]$",
+        "description": "Sets the pattern to match valid identifiers."
+      }
+    ]
+  },
+  {
+    "name": "InvalidJavadocPosition",
+    "description": "Checks that Javadocs are located at the correct position. As specified at Documentation Comment Specification for the Standard Doclet, Javadocs are recognized only when placed immediately before modul",
+    "category": "javadoc",
+    "options": []
+  },
+  {
+    "name": "JavadocBlockTagLocation",
+    "description": "Checks that a javadoc block tag appears only at the beginning of a line, ignoring leading asterisks and white space. A block tag is a token that starts with \"@\" symbol and is preceded by a whitespace.",
+    "category": "blocks",
+    "options": [
+      {
+        "name": "tags",
+        "type": "java.lang.String[]",
+        "default": "author, deprecated, exception, hidden, param, provides, return, see, serial, serialData, serialField, since, throws, uses, version",
+        "description": "Specify the javadoc tags to process."
+      },
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight htm"
+      }
+    ]
+  },
+  {
+    "name": "JavadocContentLocation",
+    "description": "Checks that the Javadoc content begins from the same position for all Javadoc comments in the project. Any leading asterisks and spaces are not counted as the beginning of the content and are therefor",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "location",
+        "type": "com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocContentLocationOption",
+        "default": "second_line",
+        "description": "Specify the policy on placement of the Javadoc content."
+      }
+    ]
+  },
+  {
+    "name": "JavadocLeadingAsteriskAlign",
+    "description": "Checks the alignment of leading asterisks in a Javadoc comment. The Check ensures that leading asterisks are aligned vertically under the first asterisk ( &#42; ) of opening Javadoc tag. The alignment",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight htm"
+      }
+    ]
+  },
+  {
+    "name": "JavadocMethod",
+    "description": "Checks the Javadoc of a method or constructor. Violates parameters and type parameters for which no param tags are present can be suppressed by defining property \"allowMissingParamTags\". Violates meth",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "accessModifiers",
+        "type": "com.puppycrawl.tools.checkstyle.checks.naming.AccessModifierOption[]",
+        "default": "public, protected, package, private",
+        "description": "Specify the access modifiers where Javadoc comments are checked."
+      },
+      {
+        "name": "allowInlineReturn",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to allow inline return tags."
+      },
+      {
+        "name": "allowMissingParamTags",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore violations when a method has parameters\n but does not have matching <code>"
+      },
+      {
+        "name": "allowMissingReturnTag",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore violations when a method returns non-void type\n and does not have a <code>"
+      },
+      {
+        "name": "allowedAnnotations",
+        "type": "java.lang.String[]",
+        "default": "Override",
+        "description": "Specify annotations that allow missed documentation."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "METHOD_DEF,CTOR_DEF,ANNOTATION_FIELD_DEF,COMPACT_CTOR_DEF",
+        "description": "tokens to check"
+      },
+      {
+        "name": "validateThrows",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to validate <code>throws</code> tags."
+      }
+    ]
+  },
+  {
+    "name": "JavadocMissingLeadingAsterisk",
+    "description": "Checks if the javadoc has leading asterisks on each line. The check does not require asterisks on the first line, nor on the last line if it is blank. All other lines in a Javadoc should start with \"*",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight htm"
+      }
+    ]
+  },
+  {
+    "name": "JavadocMissingWhitespaceAfterAsterisk",
+    "description": "Checks that there is at least one whitespace after the leading asterisk. Although spaces after asterisks are optional in the Javadoc comments, their absence makes the documentation difficult to read. ",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight htm"
+      }
+    ]
+  },
+  {
+    "name": "JavadocPackage",
+    "description": "Checks that each Java package has a Javadoc file used for commenting. By default, it only allows a \"package-info.java\" file, but can be configured to allow a \"package.html\" file. A violation will be r",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "allowLegacy",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow legacy <code>package.html</code> file to be used."
+      },
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default": ".java",
+        "description": "Specify the file extensions of the files to process."
+      }
+    ]
+  },
+  {
+    "name": "JavadocParagraph",
+    "description": "Checks the Javadoc paragraph. Checks that: - There is one blank line between each of two paragraphs. - Each paragraph but the first has <p> immediately before the first word, with no space after. - Th",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "allowNewlineParagraph",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether the &lt;p&gt; tag should be placed\n immediately before the first word."
+      },
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight htm"
+      }
+    ]
+  },
+  {
+    "name": "JavadocStyle",
+    "description": "Validates Javadoc comments to help ensure they are well formed. The following checks are performed: - Ensures the first sentence ends with proper punctuation (That is a period, question mark, or excla",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "checkEmptyJavadoc",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to check if the Javadoc is missing a describing text."
+      },
+      {
+        "name": "checkFirstSentence",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to check the first sentence for proper end of sentence."
+      },
+      {
+        "name": "checkHtml",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to check for incomplete HTML tags."
+      },
+      {
+        "name": "endOfSentenceFormat",
+        "type": "java.util.regex.Pattern",
+        "default": "([.?!][ \\t\\n\\r\\f<])|([.?!]$)",
+        "description": "Specify the format for matching the end of a sentence."
+      },
+      {
+        "name": "excludeScope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default": null,
+        "description": "Specify the visibility scope where Javadoc comments are not checked."
+      },
+      {
+        "name": "scope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default": "private",
+        "description": "Specify the visibility scope where Javadoc comments are checked."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "ANNOTATION_DEF,ANNOTATION_FIELD_DEF,CLASS_DEF,CTOR_DEF,ENUM_CONSTANT_DEF,ENUM_DEF,INTERFACE_DEF,METHOD_DEF,PACKAGE_DEF,VARIABLE_DEF,RECORD_DEF,COMPACT_CTOR_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "JavadocTagContinuationIndentation",
+    "description": "Checks the indentation of the continuation lines in block tags. That is whether the continued description of at clauses should be indented or not. If the text is not properly indented it throws a viol",
+    "category": "indentation",
+    "options": [
+      {
+        "name": "offset",
+        "type": "int",
+        "default": "4",
+        "description": "Specify how many spaces to use for new indentation level."
+      },
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight htm"
+      }
+    ]
+  },
+  {
+    "name": "JavadocType",
+    "description": "Checks the Javadoc comments for type definitions. By default, does not check for author or version tags. The scope to verify is specified using the \"Scope\" class and defaults to \"Scope.PRIVATE\". To ve",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "allowMissingParamTags",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore violations when a class has type parameters but\n does not have matching pa"
+      },
+      {
+        "name": "allowUnknownTags",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore violations when a Javadoc tag is not recognised."
+      },
+      {
+        "name": "allowedAnnotations",
+        "type": "java.lang.String[]",
+        "default": "Generated",
+        "description": "Specify annotations that allow skipping validation at all.\n Only short names are allowed, e.g. <code"
+      },
+      {
+        "name": "authorFormat",
+        "type": "java.util.regex.Pattern",
+        "default": null,
+        "description": "Specify the pattern for <code>@author</code> tag."
+      },
+      {
+        "name": "excludeScope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default": null,
+        "description": "Specify the visibility scope where Javadoc comments are not checked."
+      },
+      {
+        "name": "scope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default": "private",
+        "description": "Specify the visibility scope where Javadoc comments are checked."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "INTERFACE_DEF,CLASS_DEF,ENUM_DEF,ANNOTATION_DEF,RECORD_DEF",
+        "description": "tokens to check"
+      },
+      {
+        "name": "versionFormat",
+        "type": "java.util.regex.Pattern",
+        "default": null,
+        "description": "Specify the pattern for <code>@version</code> tag."
+      }
+    ]
+  },
+  {
+    "name": "JavadocVariable",
+    "description": "Checks that a variable has a Javadoc comment. Ignores \"serialVersionUID\" fields.",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "accessModifiers",
+        "type": "com.puppycrawl.tools.checkstyle.checks.naming.AccessModifierOption[]",
+        "default": "public, protected, package, private",
+        "description": "Specify the set of access modifiers used to determine which fields should be\n checked. This includes"
+      },
+      {
+        "name": "ignoreNamePattern",
+        "type": "java.util.regex.Pattern",
+        "default": null,
+        "description": "Specify the regexp to define variable names to ignore."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "ENUM_CONSTANT_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "JavaNCSS",
+    "description": "Determines complexity of methods, classes and files by counting the Non Commenting Source Statements (NCSS). This check adheres to the specification for the JavaNCSS-Tool written by Chr. Clemens Lee. ",
+    "category": "metrics",
+    "options": [
+      {
+        "name": "classMaximum",
+        "type": "int",
+        "default": "1500",
+        "description": "Specify the maximum allowed number of non commenting lines in a class."
+      },
+      {
+        "name": "fileMaximum",
+        "type": "int",
+        "default": "2000",
+        "description": "Specify the maximum allowed number of non commenting lines\n in a file including all top level and ne"
+      },
+      {
+        "name": "methodMaximum",
+        "type": "int",
+        "default": "50",
+        "description": "Specify the maximum allowed number of non commenting lines in a method."
+      },
+      {
+        "name": "recordMaximum",
+        "type": "int",
+        "default": "150",
+        "description": "Specify the maximum allowed number of non commenting lines in a record."
+      }
+    ]
+  },
+  {
+    "name": "LambdaBodyLength",
+    "description": "Checks lambda body length. Rationale: Similar to anonymous inner classes, if lambda body becomes very long it is hard to understand and to see the flow of the method where the lambda is defined. There",
+    "category": "sizes",
+    "options": [
+      {
+        "name": "max",
+        "type": "int",
+        "default": "10",
+        "description": "Specify the maximum number of lines allowed."
+      }
+    ]
+  },
+  {
+    "name": "LambdaParameterName",
+    "description": "Checks lambda parameter names.",
+    "category": "naming",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^([a-z][a-zA-Z0-9]*|_)$",
+        "description": "Sets the pattern to match valid identifiers."
+      }
+    ]
+  },
+  {
+    "name": "LeftCurly",
+    "description": "Checks for the placement of left curly braces (\"'{'\") for code blocks.",
+    "category": "blocks",
+    "options": [
+      {
+        "name": "ignoreEnums",
+        "type": "boolean",
+        "default": "true",
+        "description": "Allow to ignore enums when left curly brace policy is EOL."
+      },
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyOption",
+        "default": "eol",
+        "description": "Specify the policy on placement of a left curly brace (<code>'{'</code>)."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "ANNOTATION_DEF,CLASS_DEF,CTOR_DEF,ENUM_CONSTANT_DEF,ENUM_DEF,INTERFACE_DEF,LAMBDA,LITERAL_CASE,LITERAL_CATCH,LITERAL_DEFAULT,LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_FOR,LITERAL_IF,LITERAL_SWITCH,LITERAL_SYNCHRONIZED,LITERAL_TRY,LITERAL_WHILE,METHOD_DEF,OBJBLOCK,STATIC_INIT,RECORD_DEF,COMPACT_CTOR_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "LineLength",
+    "description": "Checks for long lines. Rationale: Long lines are hard to read in printouts or if developers have limited screen space for the source code, e.g. if the IDE displays additional information like project ",
+    "category": "sizes",
+    "options": [
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "ignorePattern",
+        "type": "java.util.regex.Pattern",
+        "default": "^(package|import) .*",
+        "description": "Specify pattern for lines to ignore."
+      },
+      {
+        "name": "max",
+        "type": "int",
+        "default": "80",
+        "description": "Specify the maximum line length allowed."
+      }
+    ]
+  },
+  {
+    "name": "LocalFinalVariableName",
+    "description": "Checks that local final variable names conform to a specified pattern. A catch parameter and resources in try statements are considered to be a local, final variables. This check does not support fina",
+    "category": "coding",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^([a-z][a-zA-Z0-9]*|_)$",
+        "description": "Sets the pattern to match valid identifiers."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "VARIABLE_DEF,PARAMETER_DEF,RESOURCE",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "LocalVariableName",
+    "description": "Checks that local, non-\"final\" variable names conform to a specified pattern. A catch parameter is considered to be a local variable. This check does not support pattern variables. Instead, use Patter",
+    "category": "naming",
+    "options": [
+      {
+        "name": "allowOneCharVarInForLoop",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow one character variable name in\n <a href=\"https://docs.oracle.com/javase/tutorial/java/nutsandb"
+      },
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^([a-z][a-zA-Z0-9]*|_)$",
+        "description": "Sets the pattern to match valid identifiers."
+      }
+    ]
+  },
+  {
+    "name": "MagicNumber",
+    "description": "Checks that there are no \"magic numbers\" where a magic number is a numeric literal that is not defined as a constant. By default, -1, 0, 1, and 2 are not considered to be magic numbers. Constant defin",
+    "category": "coding",
+    "options": [
+      {
+        "name": "constantWaiverParentToken",
+        "type": "java.lang.String[]",
+        "default": "ARRAY_INIT, ASSIGN, BAND, BNOT, BOR, BSR, BXOR, COLON, DIV, ELIST, EQUAL, EXPR, GE, GT, LE, LITERAL_NEW, LT, METHOD_CALL, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR, TYPECAST, UNARY_MINUS, UNARY_PLUS",
+        "description": "Specify tokens that are allowed in the AST path from the\n number literal to the enclosing constant d"
+      },
+      {
+        "name": "ignoreAnnotation",
+        "type": "boolean",
+        "default": "false",
+        "description": "Ignore magic numbers in annotation declarations."
+      },
+      {
+        "name": "ignoreAnnotationElementDefaults",
+        "type": "boolean",
+        "default": "true",
+        "description": "Ignore magic numbers in annotation elements defaults."
+      },
+      {
+        "name": "ignoreFieldDeclaration",
+        "type": "boolean",
+        "default": "false",
+        "description": "Ignore magic numbers in field declarations."
+      },
+      {
+        "name": "ignoreHashCodeMethod",
+        "type": "boolean",
+        "default": "false",
+        "description": "Ignore magic numbers in hashCode methods."
+      },
+      {
+        "name": "ignoreNumbers",
+        "type": "double[]",
+        "default": "-1, 0, 1, 2",
+        "description": "Specify non-magic numbers."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "NUM_DOUBLE,NUM_FLOAT,NUM_INT,NUM_LONG",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "MatchXpath",
+    "description": "Evaluates Xpath query and report violation on all matching AST nodes. This check allows user to implement custom checks using Xpath. If Xpath query is not specified explicitly, then the check does not",
+    "category": "coding",
+    "options": [
+      {
+        "name": "query",
+        "type": "java.lang.String",
+        "default": "",
+        "description": "Specify Xpath query."
+      }
+    ]
+  },
+  {
+    "name": "MemberName",
+    "description": "Checks that instance variable names conform to a specified pattern.",
+    "category": "naming",
+    "options": [
+      {
+        "name": "applyToPackage",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to package-private members."
+      },
+      {
+        "name": "applyToPrivate",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to private members."
+      },
+      {
+        "name": "applyToProtected",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to protected members."
+      },
+      {
+        "name": "applyToPublic",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to public members."
+      },
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^[a-z][a-zA-Z0-9]*$",
+        "description": "Sets the pattern to match valid identifiers."
+      }
+    ]
+  },
+  {
+    "name": "MethodCount",
+    "description": "Checks the number of methods declared in each type declaration by access modifier or total count. This check can be configured to flag classes that define too many methods to prevent the class from ge",
+    "category": "sizes",
+    "options": [
+      {
+        "name": "maxPackage",
+        "type": "int",
+        "default": "100",
+        "description": "Specify the maximum number of <code>package</code> methods allowed."
+      },
+      {
+        "name": "maxPrivate",
+        "type": "int",
+        "default": "100",
+        "description": "Specify the maximum number of <code>private</code> methods allowed."
+      },
+      {
+        "name": "maxProtected",
+        "type": "int",
+        "default": "100",
+        "description": "Specify the maximum number of <code>protected</code> methods allowed."
+      },
+      {
+        "name": "maxPublic",
+        "type": "int",
+        "default": "100",
+        "description": "Specify the maximum number of <code>public</code> methods allowed."
+      },
+      {
+        "name": "maxTotal",
+        "type": "int",
+        "default": "100",
+        "description": "Specify the maximum number of methods allowed at all scope levels."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "CLASS_DEF,ENUM_CONSTANT_DEF,ENUM_DEF,INTERFACE_DEF,ANNOTATION_DEF,RECORD_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "MethodLength",
+    "description": "Checks for long methods and constructors. Rationale: If a method becomes very long it is hard to understand. Therefore, long methods should usually be refactored into several individual methods that f",
+    "category": "sizes",
+    "options": [
+      {
+        "name": "countEmpty",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to count empty lines and comments."
+      },
+      {
+        "name": "max",
+        "type": "int",
+        "default": "150",
+        "description": "Specify the maximum number of lines allowed."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "METHOD_DEF,CTOR_DEF,COMPACT_CTOR_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "MethodName",
+    "description": "Checks that method names conform to a specified pattern. Also, checks if a method name has the same name as the residing class. The default is false (it is not allowed). It is legal in Java to have me",
+    "category": "naming",
+    "options": [
+      {
+        "name": "allowClassName",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to allow a method name to have the same name\n as the enclosing class name. Setting t"
+      },
+      {
+        "name": "applyToPackage",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to package-private members."
+      },
+      {
+        "name": "applyToPrivate",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to private members."
+      },
+      {
+        "name": "applyToProtected",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to protected members."
+      },
+      {
+        "name": "applyToPublic",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to public members."
+      },
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^[a-z][a-zA-Z0-9]*$",
+        "description": "Sets the pattern to match valid identifiers."
+      }
+    ]
+  },
+  {
+    "name": "MethodParamPad",
+    "description": "Checks the padding between the identifier of a method definition, constructor definition, method call, constructor invocation, record, or record pattern; and the left parenthesis of the parameter list",
+    "category": "whitespace",
+    "options": [
+      {
+        "name": "allowLineBreaks",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow a line break between the identifier and left parenthesis."
+      },
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.whitespace.PadOption",
+        "default": "nospace",
+        "description": "Specify policy on how to pad method parameter."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "CTOR_DEF,CTOR_CALL,LITERAL_NEW,METHOD_CALL,METHOD_DEF,SUPER_CTOR_CALL,ENUM_CONSTANT_DEF,RECORD_DEF,RECORD_PATTERN_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "MethodTypeParameterName",
+    "description": "Checks that method type parameter names conform to a specified pattern.",
+    "category": "naming",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^[A-Z]$",
+        "description": "Sets the pattern to match valid identifiers."
+      }
+    ]
+  },
+  {
+    "name": "MissingCtor",
+    "description": "Checks that classes (except abstract ones) define a constructor and don't rely on the default one.",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "MissingDeprecated",
+    "description": "Verifies that the annotation \"@Deprecated\" and the Javadoc tag \"@deprecated\" are both present when either of them is present. Both ways of flagging deprecation serve their own purpose. The &#64;Deprec",
+    "category": "annotation",
+    "options": [
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight htm"
+      }
+    ]
+  },
+  {
+    "name": "MissingJavadocMethod",
+    "description": "Checks for missing Javadoc comments for a method or constructor. The scope to verify is specified using the \"Scope\" class and defaults to \"Scope.PUBLIC\". To verify another scope, set property scope to",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "allowMissingPropertyJavadoc",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to allow missing Javadoc on accessor methods for properties\n (setters and getters)."
+      },
+      {
+        "name": "allowedAnnotations",
+        "type": "java.lang.String[]",
+        "default": "Override",
+        "description": "Configure annotations that allow missed documentation."
+      },
+      {
+        "name": "excludeScope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default": null,
+        "description": "Specify the visibility scope where Javadoc comments are not checked."
+      },
+      {
+        "name": "ignoreMethodNamesRegex",
+        "type": "java.util.regex.Pattern",
+        "default": null,
+        "description": "Ignore method whose names are matching specified regex."
+      },
+      {
+        "name": "minLineCount",
+        "type": "int",
+        "default": "-1",
+        "description": "Control the minimal amount of lines in method to allow no documentation."
+      },
+      {
+        "name": "scope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default": "public",
+        "description": "Specify the visibility scope where Javadoc comments are checked."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "METHOD_DEF,CTOR_DEF,ANNOTATION_FIELD_DEF,COMPACT_CTOR_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "MissingJavadocPackage",
+    "description": "Checks for missing package definition Javadoc comments in package-info.java files. Rationale: description and other related documentation for a package can be written up in the package-info.java file ",
+    "category": "javadoc",
+    "options": []
+  },
+  {
+    "name": "MissingJavadocType",
+    "description": "Checks for missing Javadoc comments for class, enum, interface, and annotation interface definitions. The scope to verify is specified using the \"Scope\" class and defaults to \"Scope.PUBLIC\". To verify",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "excludeScope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default": null,
+        "description": "Specify the visibility scope where Javadoc comments are not checked."
+      },
+      {
+        "name": "scope",
+        "type": "com.puppycrawl.tools.checkstyle.api.Scope",
+        "default": "public",
+        "description": "Specify the visibility scope where Javadoc comments are checked."
+      },
+      {
+        "name": "skipAnnotations",
+        "type": "java.lang.String[]",
+        "default": "Generated",
+        "description": "Specify annotations that allow missed documentation.\n If annotation is present in target sources in "
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "INTERFACE_DEF,CLASS_DEF,ENUM_DEF,ANNOTATION_DEF,RECORD_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "MissingNullCaseInSwitch",
+    "description": "Checks that a given switch statement or expression that use a reference type in its selector expression has a \"null\" case label. Rationale: switch statements and expressions in Java throw a \"NullPoint",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "MissingOverride",
+    "description": "Verifies that the \"@Override\" annotation is present when the \"@inheritDoc\" javadoc tag is present. Rationale: The &#64;Override annotation helps compiler tools ensure that an override is actually occu",
+    "category": "annotation",
+    "options": [
+      {
+        "name": "javaFiveCompatibility",
+        "type": "boolean",
+        "default": "false",
+        "description": "Enable java 5 compatibility mode."
+      }
+    ]
+  },
+  {
+    "name": "MissingSwitchDefault",
+    "description": "Checks that switch statement has a \"default\" clause. Rationale: It's usually a good idea to introduce a default case in every switch statement. Even if the developer is sure that all currently possibl",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "ModifiedControlVariable",
+    "description": "Checks that for loop control variables are not modified inside the for block. An example is: for (int i = 0; i < 1; i++) { i++; // violation } \" Rationale: If the control variable is modified inside t",
+    "category": "coding",
+    "options": [
+      {
+        "name": "skipEnhancedForLoopVariable",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to check\n <a href=\"https://docs.oracle.com/javase/specs/jls/se11/html/jls-14.html#jl"
+      }
+    ]
+  },
+  {
+    "name": "ModifierOrder",
+    "description": "Checks that the order of modifiers conforms to the suggestions in the Java Language specification, &#167; 8.1.1, 8.3.1, 8.4.3 and 9.4. The correct order is: - \"public\" - \"protected\" - \"private\" - \"abs",
+    "category": "modifier",
+    "options": []
+  },
+  {
+    "name": "MultiFileRegexpHeader",
+    "description": "Checks the header of a source file against multiple header files that contain a pattern for each line of the source header.",
+    "category": "header",
+    "options": [
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "headerFiles",
+        "type": "java.lang.String",
+        "default": null,
+        "description": "Specify a comma-separated list of files containing the required headers.\n If a file's header matches"
+      }
+    ]
+  },
+  {
+    "name": "MultipleStringLiterals",
+    "description": "Checks for multiple occurrences of the same string literal within a single file. Rationale: Code duplication makes maintenance more difficult, so it can be better to replace the multiple occurrences w",
+    "category": "coding",
+    "options": [
+      {
+        "name": "allowedDuplicates",
+        "type": "int",
+        "default": "1",
+        "description": "Specify the maximum number of occurrences to allow without generating a warning."
+      },
+      {
+        "name": "ignoreOccurrenceContext",
+        "type": "java.lang.String[]",
+        "default": "ANNOTATION",
+        "description": "Specify token type names where duplicate strings are ignored even\n if they don't match ignoredString"
+      },
+      {
+        "name": "ignoreStringsRegexp",
+        "type": "java.util.regex.Pattern",
+        "default": "^\"\"$",
+        "description": "Specify RegExp for ignored strings (with quotation marks)."
+      }
+    ]
+  },
+  {
+    "name": "MultipleVariableDeclarations",
+    "description": "Checks that each variable declaration is in its own statement and on its own line. Rationale: the Java code conventions chapter 6.1 recommends that declarations should be one per line/statement.",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "MutableException",
+    "description": "Ensures that exception classes (classes with names conforming to some pattern and explicitly extending classes with names conforming to other pattern) are immutable, that is, that they have only final",
+    "category": "design",
+    "options": [
+      {
+        "name": "extendedClassNameFormat",
+        "type": "java.util.regex.Pattern",
+        "default": "^.*Exception$|^.*Error$|^.*Throwable$",
+        "description": "Specify pattern for extended class names."
+      },
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^.*Exception$|^.*Error$|^.*Throwable$",
+        "description": "Specify pattern for exception class names."
+      }
+    ]
+  },
+  {
+    "name": "NeedBraces",
+    "description": "Checks for braces around code blocks. Attention: The break in case blocks is not counted to allow compact view.",
+    "category": "blocks",
+    "options": [
+      {
+        "name": "allowEmptyLoopBody",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow loops with empty bodies."
+      },
+      {
+        "name": "allowSingleLineStatement",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow single-line statements without braces."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "LITERAL_DO,LITERAL_ELSE,LITERAL_FOR,LITERAL_IF,LITERAL_WHILE",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "NestedForDepth",
+    "description": "Restricts nested \"for\" blocks to a specified depth.",
+    "category": "coding",
+    "options": [
+      {
+        "name": "max",
+        "type": "int",
+        "default": "1",
+        "description": "Specify maximum allowed nesting depth."
+      }
+    ]
+  },
+  {
+    "name": "NestedIfDepth",
+    "description": "Restricts nested if-else blocks to a specified depth.",
+    "category": "coding",
+    "options": [
+      {
+        "name": "max",
+        "type": "int",
+        "default": "1",
+        "description": "Specify maximum allowed nesting depth."
+      }
+    ]
+  },
+  {
+    "name": "NestedTryDepth",
+    "description": "Restricts nested try-catch-finally blocks to a specified depth.",
+    "category": "coding",
+    "options": [
+      {
+        "name": "max",
+        "type": "int",
+        "default": "1",
+        "description": "Specify maximum allowed nesting depth."
+      }
+    ]
+  },
+  {
+    "name": "NewlineAtEndOfFile",
+    "description": "Checks whether files end with a line separator. Rationale: Any not empty source files and text files in general should end with a line separator to let other easily add new content at the end of file ",
+    "category": "miscellaneous",
+    "options": [
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "lineSeparator",
+        "type": "com.puppycrawl.tools.checkstyle.checks.LineSeparatorOption",
+        "default": "lf_cr_crlf",
+        "description": "Specify the type of line separator."
+      }
+    ]
+  },
+  {
+    "name": "NoArrayTrailingComma",
+    "description": "Checks that array initialization do not contain a trailing comma. Rationale: JLS allows trailing commas in arrays and enumerations, but does not allow them in other locations. To unify the coding styl",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "NoClone",
+    "description": "Checks that the clone method is not overridden from the Object class. This check is almost exactly the same as the \"NoFinalizerCheck\". See Object.clone() Rationale: The clone method relies on strange,",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "NoCodeInFile",
+    "description": "Checks whether file contains code. Java compiler is not raising errors on files with no code or all commented out. Files which are considered to have no code: - File with no text - File with single-li",
+    "category": "miscellaneous",
+    "options": []
+  },
+  {
+    "name": "NoEnumTrailingComma",
+    "description": "Checks that enum definition does not contain a trailing comma. Rationale: JLS allows trailing commas in arrays and enumerations, but does not allow them in other locations. To unify the coding style, ",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "NoFinalizer",
+    "description": "Checks that there is no method \"finalize\" with zero parameters. See Object.finalize() Rationale: Finalizers are unpredictable, often dangerous, and generally unnecessary. Their use can cause erratic b",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "NoLineWrap",
+    "description": "Checks that chosen statements are not line-wrapped. By default, this Check restricts wrapping import and package statements, but it's possible to check any statement.",
+    "category": "whitespace",
+    "options": [
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "PACKAGE_DEF,IMPORT,STATIC_IMPORT",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "NonEmptyAtclauseDescription",
+    "description": "Checks that the block tag is followed by description.",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "javadocTokens",
+        "type": "java.lang.String[]",
+        "default": "PARAM_BLOCK_TAG,RETURN_BLOCK_TAG,THROWS_BLOCK_TAG,EXCEPTION_BLOCK_TAG,DEPRECATED_BLOCK_TAG",
+        "description": "javadoc tokens to check"
+      },
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight htm"
+      }
+    ]
+  },
+  {
+    "name": "NoWhitespaceAfter",
+    "description": "Checks that there is no whitespace after a token. More specifically, it checks that it is not followed by whitespace, or (if linebreaks are allowed) all characters on the line after are whitespace. To",
+    "category": "whitespace",
+    "options": [
+      {
+        "name": "allowLineBreaks",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether whitespace is allowed if the token is at a linebreak."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "ARRAY_INIT,AT,INC,DEC,UNARY_MINUS,UNARY_PLUS,BNOT,LNOT,DOT,ARRAY_DECLARATOR,INDEX_OP",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "NoWhitespaceBefore",
+    "description": "Checks that there is no whitespace before a token. More specifically, it checks that it is not preceded with whitespace, or (if linebreaks are allowed) all characters on the line before are whitespace",
+    "category": "whitespace",
+    "options": [
+      {
+        "name": "allowLineBreaks",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether whitespace is allowed if the token is at a linebreak."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "COMMA,SEMI,POST_INC,POST_DEC,ELLIPSIS,LABELED_STAT",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "NoWhitespaceBeforeCaseDefaultColon",
+    "description": "Checks that there is no whitespace before the colon in a switch block.",
+    "category": "whitespace",
+    "options": []
+  },
+  {
+    "name": "NPathComplexity",
+    "description": "Checks the NPATH complexity against a specified limit. The NPATH metric computes the number of possible execution paths through a function(method). It takes into account the nesting of conditional sta",
+    "category": "metrics",
+    "options": [
+      {
+        "name": "max",
+        "type": "int",
+        "default": "200",
+        "description": "Specify the maximum threshold allowed."
+      }
+    ]
+  },
+  {
+    "name": "OneStatementPerLine",
+    "description": "Checks that there is only one statement per line. Rationale: It's very difficult to read multiple statements on one line. In the Java programming language, statements are the fundamental unit of execu",
+    "category": "coding",
+    "options": [
+      {
+        "name": "treatTryResourcesAsStatement",
+        "type": "boolean",
+        "default": "false",
+        "description": "Enable resources processing."
+      }
+    ]
+  },
+  {
+    "name": "OneTopLevelClass",
+    "description": "Checks that each top-level class, interface, enum or annotation resides in a source file of its own. Official description of a 'top-level' term: 7.6. Top Level Type Declarations. If file doesn't conta",
+    "category": "design",
+    "options": []
+  },
+  {
+    "name": "OperatorWrap",
+    "description": "Checks the policy on how to wrap lines on operators. See the Java Language Specification for more information about \"instanceof\" operator.",
+    "category": "whitespace",
+    "options": [
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.whitespace.WrapOption",
+        "default": "nl",
+        "description": "Specify policy on how to wrap lines."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "QUESTION,COLON,EQUAL,NOT_EQUAL,DIV,PLUS,MINUS,STAR,MOD,SR,BSR,GE,GT,SL,LE,LT,BXOR,BOR,LOR,BAND,LAND,TYPE_EXTENSION_AND,LITERAL_INSTANCEOF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "OrderedProperties",
+    "description": "Detects if keys in properties files are in correct order. Rationale: Sorted properties make it easy for people to find required properties by name in file. This makes it easier to merge. While there a",
+    "category": "miscellaneous",
+    "options": [
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default": ".properties",
+        "description": "Specify the file extensions of the files to process."
+      }
+    ]
+  },
+  {
+    "name": "OuterTypeFilename",
+    "description": "Checks that the outer type name and the file name match. For example, the class \"Foo\" must be in a file named \"Foo.java\".",
+    "category": "naming",
+    "options": []
+  },
+  {
+    "name": "OuterTypeNumber",
+    "description": "Checks for the number of types declared at the outer (or root) level in a file. Rationale: It is considered good practice to only define one outer type per file.",
+    "category": "sizes",
+    "options": [
+      {
+        "name": "max",
+        "type": "int",
+        "default": "1",
+        "description": "Specify the maximum number of outer types allowed."
+      }
+    ]
+  },
+  {
+    "name": "OverloadMethodsDeclarationOrder",
+    "description": "Checks that overloaded methods are grouped together. Overloaded methods have the same name but different signatures where the signature can differ by the number of input parameters or type of input pa",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "PackageAnnotation",
+    "description": "Checks that all package annotations are in the package-info.java file. For Java SE8 and above, placement of package annotations in the package-info.java file is enforced by the compiler and this check",
+    "category": "annotation",
+    "options": []
+  },
+  {
+    "name": "PackageDeclaration",
+    "description": "Ensures that a class has a package declaration, and (optionally) whether the package name matches the directory name for the source file. Rationale: Classes that live in the null package cannot be imp",
+    "category": "coding",
+    "options": [
+      {
+        "name": "matchDirectoryStructure",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to check for directory and package name match."
+      }
+    ]
+  },
+  {
+    "name": "PackageName",
+    "description": "Checks that package names conform to a specified pattern. The default value of \"format\" for module \"PackageName\" has been chosen to match the requirements in the Java Language specification and the Su",
+    "category": "naming",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^[a-z]+(\\.[a-zA-Z_]\\w*)*$",
+        "description": "Control the pattern to match valid identifiers."
+      }
+    ]
+  },
+  {
+    "name": "ParameterAssignment",
+    "description": "Disallows assignment of parameters. Rationale: Parameter assignment is often considered poor programming practice. Forcing developers to declare parameters as final is often onerous. Having a check en",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "ParameterName",
+    "description": "Checks that method parameter names conform to a specified pattern. By using \"accessModifiers\" property it is possible to specify different formats for methods at different visibility levels. To valida",
+    "category": "naming",
+    "options": [
+      {
+        "name": "accessModifiers",
+        "type": "com.puppycrawl.tools.checkstyle.checks.naming.AccessModifierOption[]",
+        "default": "public, protected, package, private",
+        "description": "Access modifiers of methods where parameters are checked."
+      },
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^[a-z][a-zA-Z0-9]*$",
+        "description": "Sets the pattern to match valid identifiers."
+      },
+      {
+        "name": "ignoreOverridden",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allows to skip methods with Override annotation from validation."
+      }
+    ]
+  },
+  {
+    "name": "ParameterNumber",
+    "description": "Checks the number of parameters of a method or constructor.",
+    "category": "sizes",
+    "options": [
+      {
+        "name": "ignoreAnnotatedBy",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Ignore methods and constructors annotated with the specified annotation(s)."
+      },
+      {
+        "name": "ignoreOverriddenMethods",
+        "type": "boolean",
+        "default": "false",
+        "description": "Ignore number of parameters for methods with <code>@Override</code> annotation."
+      },
+      {
+        "name": "max",
+        "type": "int",
+        "default": "7",
+        "description": "Specify the maximum number of parameters allowed."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "METHOD_DEF,CTOR_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "ParenPad",
+    "description": "Checks the policy on the padding of parentheses; that is whether a space is required after a left parenthesis and before a right parenthesis, or such spaces are forbidden. No check occurs at the right",
+    "category": "whitespace",
+    "options": [
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.whitespace.PadOption",
+        "default": "nospace",
+        "description": "Specify policy on how to pad parentheses."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "ANNOTATION,ANNOTATION_FIELD_DEF,CTOR_CALL,CTOR_DEF,DOT,ENUM_CONSTANT_DEF,EXPR,LITERAL_CATCH,LITERAL_DO,LITERAL_FOR,LITERAL_IF,LITERAL_NEW,LITERAL_SWITCH,LITERAL_SYNCHRONIZED,LITERAL_WHILE,METHOD_CALL,METHOD_DEF,QUESTION,RESOURCE_SPECIFICATION,SUPER_CTOR_CALL,LAMBDA,RECORD_DEF,RECORD_PATTERN_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "PatternVariableAssignment",
+    "description": "Checks for assignment of pattern variables. Pattern variable assignment is considered bad programming practice. The pattern variable is meant to be a direct reference to the object being matched. Reas",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "PatternVariableName",
+    "description": "Checks that pattern variable names conform to a specified pattern.",
+    "category": "naming",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^([a-z][a-zA-Z0-9]*|_)$",
+        "description": "Sets the pattern to match valid identifiers."
+      }
+    ]
+  },
+  {
+    "name": "RecordComponentName",
+    "description": "Checks that record component names conform to a specified pattern.",
+    "category": "naming",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^[a-z][a-zA-Z0-9]*$",
+        "description": "Sets the pattern to match valid identifiers."
+      }
+    ]
+  },
+  {
+    "name": "RecordComponentNumber",
+    "description": "Checks the number of record components in the header of a record definition.",
+    "category": "sizes",
+    "options": [
+      {
+        "name": "accessModifiers",
+        "type": "com.puppycrawl.tools.checkstyle.checks.naming.AccessModifierOption[]",
+        "default": "public, protected, package, private",
+        "description": "Access modifiers of record definitions where the number of record\n components should be checked."
+      },
+      {
+        "name": "max",
+        "type": "int",
+        "default": "8",
+        "description": "Specify the maximum number of components allowed in the header\n of a record definition."
+      }
+    ]
+  },
+  {
+    "name": "RecordTypeParameterName",
+    "description": "Checks that record type parameter names conform to a specified pattern.",
+    "category": "naming",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^[A-Z]$",
+        "description": "Sets the pattern to match valid identifiers."
+      }
+    ]
+  },
+  {
+    "name": "RedundantImport",
+    "description": "Checks for redundant import statements. An import statement is considered redundant if: - It is a duplicate of another import. This is, when a class or a module is imported more than once. - The class",
+    "category": "imports",
+    "options": []
+  },
+  {
+    "name": "RedundantModifier",
+    "description": "Checks for redundant modifiers. Rationale: The Java Language Specification strongly discourages the usage of \"public\" and \"abstract\" for method declarations in interface definitions as a matter of sty",
+    "category": "modifier",
+    "options": [
+      {
+        "name": "jdkVersion",
+        "type": "java.lang.String",
+        "default": "22",
+        "description": "Set the JDK version that you are using.\n Old JDK version numbering is supported (e.g. 1.8 for Java 8"
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "METHOD_DEF,VARIABLE_DEF,ANNOTATION_FIELD_DEF,INTERFACE_DEF,CTOR_DEF,CLASS_DEF,ENUM_DEF,RESOURCE,ANNOTATION_DEF,RECORD_DEF,PATTERN_VARIABLE_DEF,LITERAL_CATCH,LAMBDA",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "Regexp",
+    "description": "Checks that a specified pattern exists, exists less than a set number of times, or does not exist in the file. This check combines all the functionality provided by RegexpHeader except supplying the r",
+    "category": "regexp",
+    "options": [
+      {
+        "name": "duplicateLimit",
+        "type": "int",
+        "default": "0",
+        "description": "Control whether to check for duplicates of a required pattern,\n any negative value means no checking"
+      },
+      {
+        "name": "errorLimit",
+        "type": "int",
+        "default": "100",
+        "description": "Specify the maximum number of violations before the check will abort."
+      },
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^$",
+        "description": "Specify the pattern to match against."
+      },
+      {
+        "name": "ignoreComments",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore matches found within comments."
+      },
+      {
+        "name": "illegalPattern",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether the pattern is required or illegal."
+      },
+      {
+        "name": "message",
+        "type": "java.lang.String",
+        "default": null,
+        "description": "Specify message which is used to notify about violations,\n if empty then the default (hard-coded) me"
+      }
+    ]
+  },
+  {
+    "name": "RegexpHeader",
+    "description": "Checks the header of a source file against a header that contains a pattern for each line of the source header.",
+    "category": "header",
+    "options": [
+      {
+        "name": "charset",
+        "type": "java.lang.String",
+        "default": null,
+        "description": "Specify the character encoding to use when reading the headerFile."
+      },
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "header",
+        "type": "java.lang.String",
+        "default": null,
+        "description": "Define the required header specified inline.\n Individual header lines must be separated by the strin"
+      },
+      {
+        "name": "headerFile",
+        "type": "java.net.URI",
+        "default": null,
+        "description": "Specify the name of the file containing the required header."
+      },
+      {
+        "name": "multiLines",
+        "type": "int[]",
+        "default": "",
+        "description": "Specify the line numbers to repeat (zero or more times)."
+      }
+    ]
+  },
+  {
+    "name": "RegexpMultiline",
+    "description": "Checks that a specified pattern matches across multiple lines in any file type. Rationale: This check can be used to when the regular expression can be span multiple lines.",
+    "category": "regexp",
+    "options": [
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "$.",
+        "description": "Specify the format of the regular expression to match."
+      },
+      {
+        "name": "ignoreCase",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore case when searching."
+      },
+      {
+        "name": "matchAcrossLines",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to match expressions across multiple lines."
+      },
+      {
+        "name": "maximum",
+        "type": "int",
+        "default": "0",
+        "description": "Specify the maximum number of matches required in each file."
+      },
+      {
+        "name": "message",
+        "type": "java.lang.String",
+        "default": null,
+        "description": "Specify the message which is used to notify about violations,\n if empty then default (hard-coded) me"
+      },
+      {
+        "name": "minimum",
+        "type": "int",
+        "default": "0",
+        "description": "Specify the minimum number of matches required in each file."
+      }
+    ]
+  },
+  {
+    "name": "RegexpOnFilename",
+    "description": "Checks that a specified pattern matches based on file and/or folder path. It can also be used to verify files match specific naming patterns not covered by other checks (Ex: properties, xml, etc.). Wh",
+    "category": "naming",
+    "options": [
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "fileNamePattern",
+        "type": "java.util.regex.Pattern",
+        "default": null,
+        "description": "Specify the regular expression to match the file name against."
+      },
+      {
+        "name": "folderPattern",
+        "type": "java.util.regex.Pattern",
+        "default": null,
+        "description": "Specify the regular expression to match the folder path against."
+      },
+      {
+        "name": "ignoreFileNameExtensions",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore the file extension for the file name match."
+      },
+      {
+        "name": "match",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to look for a match or mismatch on the file name,\n if the fileNamePattern is supplie"
+      }
+    ]
+  },
+  {
+    "name": "RegexpSingleline",
+    "description": "Checks that a specified pattern matches a single-line in any file type. Rationale: This check can be used to prototype checks and to find common bad practice such as calling \"ex.printStacktrace()\", \"S",
+    "category": "regexp",
+    "options": [
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "$.",
+        "description": "Specify the format of the regular expression to match."
+      },
+      {
+        "name": "ignoreCase",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore case when searching."
+      },
+      {
+        "name": "maximum",
+        "type": "int",
+        "default": "0",
+        "description": "Specify the maximum number of matches required in each file."
+      },
+      {
+        "name": "message",
+        "type": "java.lang.String",
+        "default": null,
+        "description": "Specify the message which is used to notify about violations,\n if empty then default (hard-coded) me"
+      },
+      {
+        "name": "minimum",
+        "type": "int",
+        "default": "0",
+        "description": "Specify the minimum number of matches required in each file."
+      }
+    ]
+  },
+  {
+    "name": "RegexpSinglelineJava",
+    "description": "Checks that a specified pattern matches a single-line in Java files. This class is variation on RegexpSingleline for detecting single-lines that match a supplied regular expression in Java files. It s",
+    "category": "regexp",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "$.",
+        "description": "Specify the format of the regular expression to match."
+      },
+      {
+        "name": "ignoreCase",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore case when searching."
+      },
+      {
+        "name": "ignoreComments",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to ignore text in comments when searching."
+      },
+      {
+        "name": "maximum",
+        "type": "int",
+        "default": "0",
+        "description": "Specify the maximum number of matches required in each file."
+      },
+      {
+        "name": "message",
+        "type": "java.lang.String",
+        "default": null,
+        "description": "Specify the message which is used to notify about violations,\n if empty then default (hard-coded) me"
+      },
+      {
+        "name": "minimum",
+        "type": "int",
+        "default": "0",
+        "description": "Specify the minimum number of matches required in each file."
+      }
+    ]
+  },
+  {
+    "name": "RequireEmptyLineBeforeBlockTagGroup",
+    "description": "Checks that one blank line before the block tag if it is present in Javadoc.",
+    "category": "blocks",
+    "options": [
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight htm"
+      }
+    ]
+  },
+  {
+    "name": "RequireThis",
+    "description": "Checks that references to instance variables and methods of the present object are explicitly of the form \"this.varName\" or \"this.methodName(args)\" and that those references don't rely on the default ",
+    "category": "coding",
+    "options": [
+      {
+        "name": "checkFields",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to check references to fields."
+      },
+      {
+        "name": "checkMethods",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to check references to methods."
+      },
+      {
+        "name": "validateOnlyOverlapping",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to check only overlapping by variables or arguments."
+      }
+    ]
+  },
+  {
+    "name": "ReturnCount",
+    "description": "Restricts the number of return statements in methods, constructors and lambda expressions. Ignores specified methods (\"equals\" by default). max property will only check returns in methods and lambdas ",
+    "category": "coding",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^equals$",
+        "description": "Specify method names to ignore."
+      },
+      {
+        "name": "max",
+        "type": "int",
+        "default": "2",
+        "description": "Specify maximum allowed number of return statements\n in non-void methods/lambdas."
+      },
+      {
+        "name": "maxForVoid",
+        "type": "int",
+        "default": "1",
+        "description": "Specify maximum allowed number of return statements\n in void methods/constructors/lambdas."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "CTOR_DEF,METHOD_DEF,LAMBDA",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "RightCurly",
+    "description": "Checks the placement of right curly braces (\"'}'\") for code blocks. This check supports if-else, try-catch-finally blocks, switch statements, switch cases, while-loops, for-loops, method definitions, ",
+    "category": "blocks",
+    "options": [
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.blocks.RightCurlyOption",
+        "default": "same",
+        "description": "Specify the policy on placement of a right curly brace (<code>'}'</code>)."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "LITERAL_TRY,LITERAL_CATCH,LITERAL_FINALLY,LITERAL_IF,LITERAL_ELSE",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "SealedShouldHavePermitsList",
+    "description": "Checks that sealed classes and interfaces have a permits list. Rationale: When a permits clause is omitted from a sealed class, any class within the same compilation unit can extend it. This differs f",
+    "category": "design",
+    "options": []
+  },
+  {
+    "name": "SeparatorWrap",
+    "description": "Checks line wrapping with separators.",
+    "category": "whitespace",
+    "options": [
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.whitespace.WrapOption",
+        "default": "eol",
+        "description": "Specify policy on how to wrap lines."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "DOT,COMMA",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "SimplifyBooleanExpression",
+    "description": "Checks for over-complicated boolean expressions. Currently, it finds code like \"if (b == true)\", \"b || true\", \"!false\", \"boolean a = q > 12 ? true : false\", etc. Rationale: Complex boolean logic makes",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "SimplifyBooleanReturn",
+    "description": "Checks for over-complicated boolean return or yield statements. For example the following code if (valid()) return false; else return true; \" could be written as return !valid(); \" The idea for this C",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "SingleLineJavadoc",
+    "description": "Checks that a Javadoc block can fit in a single-line and doesn't contain block tags. Javadoc comment that contains at least one block tag should be formatted in a few lines.",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "ignoreInlineTags",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether\n <a href=\"https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html"
+      },
+      {
+        "name": "ignoredTags",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify\n <a href=\"https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html#CHDBEFI"
+      },
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight htm"
+      }
+    ]
+  },
+  {
+    "name": "SingleSpaceSeparator",
+    "description": "Checks that non-whitespace characters are separated by no more than one whitespace. Separating characters by tabs or multiple spaces will be reported. Currently, the check doesn't permit horizontal al",
+    "category": "whitespace",
+    "options": [
+      {
+        "name": "validateComments",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether to validate whitespaces surrounding comments."
+      }
+    ]
+  },
+  {
+    "name": "StaticVariableName",
+    "description": "Checks that \"static\", non-\"final\" variable names conform to a specified pattern.",
+    "category": "naming",
+    "options": [
+      {
+        "name": "applyToPackage",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to package-private members."
+      },
+      {
+        "name": "applyToPrivate",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to private members."
+      },
+      {
+        "name": "applyToProtected",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to protected members."
+      },
+      {
+        "name": "applyToPublic",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to public members."
+      },
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^[a-z][a-zA-Z0-9]*$",
+        "description": "Sets the pattern to match valid identifiers."
+      }
+    ]
+  },
+  {
+    "name": "StringLiteralEquality",
+    "description": "Checks that string literals are not used with \"==\" or \"&#33;=\". Since \"==\" will compare the object references, not the actual value of the strings, \"String.equals()\" should be used. More information c",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "SummaryJavadoc",
+    "description": "Checks that Javadoc summary sentence does not contain phrases that are not recommended to use. Summaries that contain only the \"{@inheritDoc}\" tag are skipped. Summaries that contain a non-empty \"{@re",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "forbiddenSummaryFragments",
+        "type": "java.util.regex.Pattern",
+        "default": "^$",
+        "description": "Specify the regexp for forbidden summary fragments."
+      },
+      {
+        "name": "period",
+        "type": "java.lang.String",
+        "default": ".",
+        "description": "Specify the period symbol. Used to check the first sentence ends with a period.\n Periods that are no"
+      },
+      {
+        "name": "violateExecutionOnNonTightHtml",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control when to print violations if the Javadoc being examined by this check\n violates the tight htm"
+      }
+    ]
+  },
+  {
+    "name": "SuperClone",
+    "description": "Checks that an overriding \"clone()\" method invokes \"super.clone()\". Does not check native methods, as they have no possible java defined implementation. Reference: Object.clone().",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "SuperFinalize",
+    "description": "Checks that an overriding \"finalize()\" method invokes \"super.finalize()\". Does not check native methods, as they have no possible java defined implementation. References: How to Handle Java Finalizati",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "SuppressWarnings",
+    "description": "Allows to specify what warnings that \"@SuppressWarnings\" is not allowed to suppress. You can also specify a list of TokenTypes that the configured warning(s) cannot be suppressed on. Limitations: This",
+    "category": "annotation",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^\\s*+$",
+        "description": "Specify the RegExp to match against warnings. Any warning\n being suppressed matching this pattern wi"
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "CLASS_DEF,INTERFACE_DEF,ENUM_DEF,ANNOTATION_DEF,ANNOTATION_FIELD_DEF,ENUM_CONSTANT_DEF,PARAMETER_DEF,VARIABLE_DEF,METHOD_DEF,CTOR_DEF,COMPACT_CTOR_DEF,RECORD_DEF,PATTERN_VARIABLE_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "SuppressWarningsHolder",
+    "description": "Maintains a set of check suppressions from \"@SuppressWarnings\" annotations. It allows to prevent Checkstyle from reporting violations from parts of code that were annotated with \"@SuppressWarnings\" an",
+    "category": "miscellaneous",
+    "options": [
+      {
+        "name": "aliasList",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify aliases for check names that can be used in code\n within <code>SuppressWarnings</code> in a "
+      }
+    ]
+  },
+  {
+    "name": "ThrowsCount",
+    "description": "Restricts throws statements to a specified count. Methods with \"Override\" or \"java.lang.Override\" annotation are skipped from validation as current class cannot change signature of these methods. Rati",
+    "category": "design",
+    "options": [
+      {
+        "name": "ignorePrivateMethods",
+        "type": "boolean",
+        "default": "true",
+        "description": "Allow private methods to be ignored."
+      },
+      {
+        "name": "max",
+        "type": "int",
+        "default": "4",
+        "description": "Specify maximum allowed number of throws statements."
+      }
+    ]
+  },
+  {
+    "name": "TodoComment",
+    "description": "Checks for \"TODO:\" comments. Actually it is a generic pattern matcher on Java comments. To check for other patterns in Java comments, set the \"format\" property. Using \"TODO:\" comments is a great way t",
+    "category": "coding",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "TODO:",
+        "description": "Specify pattern to match comments against."
+      }
+    ]
+  },
+  {
+    "name": "TrailingComment",
+    "description": "The check to ensure that lines with code do not end with comment. For the case of \"//\" comments that means that the only thing that should precede it is whitespace. It doesn't check comments if they d",
+    "category": "coding",
+    "options": [
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^[\\s});]*$",
+        "description": "Specify pattern for strings allowed before the comment."
+      },
+      {
+        "name": "legalComment",
+        "type": "java.util.regex.Pattern",
+        "default": null,
+        "description": "Define pattern for text allowed in trailing comments.\n This pattern will not be applied to multiline"
+      }
+    ]
+  },
+  {
+    "name": "Translation",
+    "description": "Ensures the correct translation of code by checking property files for consistency regarding their keys. Two property files describing one and the same context are consistent if they contain the same ",
+    "category": "miscellaneous",
+    "options": [
+      {
+        "name": "baseName",
+        "type": "java.util.regex.Pattern",
+        "default": "^messages.*$",
+        "description": "Specify\n <a href=\"https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ResourceBun"
+      },
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default": ".properties",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "requiredTranslations",
+        "type": "java.lang.String[]",
+        "default": "",
+        "description": "Specify language codes of required translations which must exist in project."
+      }
+    ]
+  },
+  {
+    "name": "TypecastParenPad",
+    "description": "Checks the policy on the padding of parentheses for typecasts. That is, whether a space is required after a left parenthesis and before a right parenthesis, or such spaces are forbidden.",
+    "category": "whitespace",
+    "options": [
+      {
+        "name": "option",
+        "type": "com.puppycrawl.tools.checkstyle.checks.whitespace.PadOption",
+        "default": "nospace",
+        "description": "Specify policy on how to pad parentheses."
+      }
+    ]
+  },
+  {
+    "name": "TypeName",
+    "description": "Checks that type names conform to a specified pattern.",
+    "category": "naming",
+    "options": [
+      {
+        "name": "applyToPackage",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to package-private members."
+      },
+      {
+        "name": "applyToPrivate",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to private members."
+      },
+      {
+        "name": "applyToProtected",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to protected members."
+      },
+      {
+        "name": "applyToPublic",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control if check should apply to public members."
+      },
+      {
+        "name": "format",
+        "type": "java.util.regex.Pattern",
+        "default": "^[A-Z][a-zA-Z0-9]*$",
+        "description": "Sets the pattern to match valid identifiers."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "CLASS_DEF,INTERFACE_DEF,ENUM_DEF,ANNOTATION_DEF,RECORD_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "UncommentedMain",
+    "description": "Detects uncommented \"main\" methods. Rationale: A \"main\" method is often used for debugging purposes. When debugging is finished, developers often forget to remove the method, which changes the API and",
+    "category": "coding",
+    "options": [
+      {
+        "name": "excludedClasses",
+        "type": "java.util.regex.Pattern",
+        "default": "^$",
+        "description": "Specify pattern for qualified names of classes which are allowed\n to have a <code>main</code> method"
+      }
+    ]
+  },
+  {
+    "name": "UniqueProperties",
+    "description": "Detects duplicated keys in properties files. Rationale: Multiple property keys usually appear after merge or rebase of several branches. While there are no problems in runtime, there can be a confusio",
+    "category": "miscellaneous",
+    "options": [
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default": ".properties",
+        "description": "Specify the file extensions of the files to process."
+      }
+    ]
+  },
+  {
+    "name": "UnnecessaryNullCheckWithInstanceOf",
+    "description": "Checks for redundant null checks with the instanceof operator. The instanceof operator inherently returns false when the left operand is null, making explicit null checks redundant in boolean expressi",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "UnnecessaryParentheses",
+    "description": "Checks if unnecessary parentheses are used in a statement or expression. The check will flag the following with warnings: return (x); // parens around identifier return (x + 1); // parens around retur",
+    "category": "coding",
+    "options": [
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "EXPR,IDENT,NUM_DOUBLE,NUM_FLOAT,NUM_INT,NUM_LONG,STRING_LITERAL,LITERAL_NULL,LITERAL_FALSE,LITERAL_TRUE,ASSIGN,BAND_ASSIGN,BOR_ASSIGN,BSR_ASSIGN,BXOR_ASSIGN,DIV_ASSIGN,MINUS_ASSIGN,MOD_ASSIGN,PLUS_ASSIGN,SL_ASSIGN,SR_ASSIGN,STAR_ASSIGN,LAMBDA,TEXT_BLOCK_LITERAL_BEGIN,LAND,LOR,LITERAL_INSTANCEOF,GT,LT,GE,LE,EQUAL,NOT_EQUAL,UNARY_MINUS,UNARY_PLUS,INC,DEC,LNOT,BNOT,POST_INC,POST_DEC",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "UnnecessarySemicolonAfterOuterTypeDeclaration",
+    "description": "Checks if unnecessary semicolon is used after type declaration. This check is not applicable to nested type declarations, UnnecessarySemicolonAfterTypeMemberDeclaration is responsible for it.",
+    "category": "coding",
+    "options": [
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "CLASS_DEF,INTERFACE_DEF,ENUM_DEF,ANNOTATION_DEF,RECORD_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "UnnecessarySemicolonAfterTypeMemberDeclaration",
+    "description": "Checks if unnecessary semicolon is used after type member declaration. This check is not applicable to empty statements (unnecessary semicolons inside methods or init blocks), EmptyStatement is respon",
+    "category": "coding",
+    "options": [
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "CLASS_DEF,INTERFACE_DEF,ENUM_DEF,ANNOTATION_DEF,VARIABLE_DEF,ANNOTATION_FIELD_DEF,STATIC_INIT,INSTANCE_INIT,CTOR_DEF,METHOD_DEF,ENUM_CONSTANT_DEF,COMPACT_CTOR_DEF,RECORD_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "UnnecessarySemicolonInEnumeration",
+    "description": "Checks if unnecessary semicolon is in enum definitions. Semicolon is not needed if enum body contains only enum constants.",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "UnnecessarySemicolonInTryWithResources",
+    "description": "Checks if unnecessary semicolon is used in last resource declaration.",
+    "category": "coding",
+    "options": [
+      {
+        "name": "allowWhenNoBraceAfterSemicolon",
+        "type": "boolean",
+        "default": "true",
+        "description": "Allow unnecessary semicolon if closing parenthesis is not on the same line."
+      }
+    ]
+  },
+  {
+    "name": "UnusedCatchParameterShouldBeUnnamed",
+    "description": "Ensures that catch parameters that are not used are declared as an unnamed variable. Rationale: - Improves code readability by clearly indicating which parameters are unused. - Follows Java convention",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "UnusedImports",
+    "description": "Checks for unused import statements. An import statement is considered unused if: - It is not referenced in the file. The algorithm does not support wild-card imports like \"import java.io.*;\". Most ID",
+    "category": "imports",
+    "options": [
+      {
+        "name": "processJavadoc",
+        "type": "boolean",
+        "default": "true",
+        "description": "Control whether to process Javadoc comments."
+      }
+    ]
+  },
+  {
+    "name": "UnusedLambdaParameterShouldBeUnnamed",
+    "description": "Ensures that lambda parameters that are not used are declared as an unnamed variable. Rationale: - Improves code readability by clearly indicating which parameters are unused. - Follows Java conventio",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "UnusedLocalVariable",
+    "description": "Checks that a local variable is declared and/or assigned, but not used. Doesn't support pattern variables yet. Doesn't check array components as array components are classified as different kind of va",
+    "category": "coding",
+    "options": [
+      {
+        "name": "allowUnnamedVariables",
+        "type": "boolean",
+        "default": "true",
+        "description": "Allow variables named with a single underscore\n (known as <a href=\"https://docs.oracle.com/en/java/j"
+      }
+    ]
+  },
+  {
+    "name": "UpperEll",
+    "description": "Checks that long constants are defined with an upper ell. That is \"'L'\" and not \"'l'\". This is in accordance with the Java Language Specification, Section 3.10.1. Rationale: The lower-case ell \"'l'\" l",
+    "category": "miscellaneous",
+    "options": []
+  },
+  {
+    "name": "VariableDeclarationUsageDistance",
+    "description": "Checks the distance between declaration of variable and its first usage. Note: Any additional variables declared or initialized between the declaration and the first usage of the said variable are not",
+    "category": "coding",
+    "options": [
+      {
+        "name": "allowedDistance",
+        "type": "int",
+        "default": "3",
+        "description": "Specify the maximum distance between a variable's declaration and its first usage.\n Value should be "
+      },
+      {
+        "name": "ignoreFinal",
+        "type": "boolean",
+        "default": "true",
+        "description": "Allow to ignore variables with a 'final' modifier."
+      },
+      {
+        "name": "ignoreVariablePattern",
+        "type": "java.util.regex.Pattern",
+        "default": "",
+        "description": "Define RegExp to ignore distance calculation for variables listed in this pattern."
+      },
+      {
+        "name": "validateBetweenScopes",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow to calculate the distance between a variable's declaration\n and its first usage across differe"
+      }
+    ]
+  },
+  {
+    "name": "VisibilityModifier",
+    "description": "Checks visibility of class members. Only static final, immutable or annotated by specified annotation members may be public; other class members must be private unless the property \"protectedAllowed\" ",
+    "category": "design",
+    "options": [
+      {
+        "name": "allowPublicFinalFields",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow final fields to be declared as public."
+      },
+      {
+        "name": "allowPublicImmutableFields",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow immutable fields to be declared as public if defined in final class."
+      },
+      {
+        "name": "ignoreAnnotationCanonicalNames",
+        "type": "java.lang.String[]",
+        "default": "com.google.common.annotations.VisibleForTesting, org.junit.ClassRule, org.junit.Rule",
+        "description": "Specify annotations canonical names which ignore variables\n in consideration."
+      },
+      {
+        "name": "immutableClassCanonicalNames",
+        "type": "java.lang.String[]",
+        "default": "java.io.File, java.lang.Boolean, java.lang.Byte, java.lang.Character, java.lang.Double, java.lang.Float, java.lang.Integer, java.lang.Long, java.lang.Short, java.lang.StackTraceElement, java.lang.String, java.math.BigDecimal, java.math.BigInteger, java.net.Inet4Address, java.net.Inet6Address, java.net.InetSocketAddress, java.net.URI, java.net.URL, java.util.Locale, java.util.UUID",
+        "description": "Specify immutable classes canonical names."
+      },
+      {
+        "name": "packageAllowed",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether package visible members are allowed."
+      },
+      {
+        "name": "protectedAllowed",
+        "type": "boolean",
+        "default": "false",
+        "description": "Control whether protected members are allowed."
+      },
+      {
+        "name": "publicMemberPattern",
+        "type": "java.util.regex.Pattern",
+        "default": "^serialVersionUID$",
+        "description": "Specify pattern for public members that should be ignored."
+      }
+    ]
+  },
+  {
+    "name": "WhenShouldBeUsed",
+    "description": "Ensures that \"when\" is used instead of a single \"if\" statement inside a case block. Rationale: Java 21 has introduced enhancements for switch statements and expressions that allow the use of patterns ",
+    "category": "coding",
+    "options": []
+  },
+  {
+    "name": "WhitespaceAfter",
+    "description": "Checks that a token is followed by whitespace, with the exception that it does not check for whitespace after the semicolon of an empty for iterator. Use Check EmptyForIteratorPad to validate empty fo",
+    "category": "whitespace",
+    "options": [
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "COMMA,SEMI,TYPECAST,LITERAL_IF,LITERAL_ELSE,LITERAL_WHILE,LITERAL_DO,LITERAL_FOR,LITERAL_FINALLY,LITERAL_RETURN,LITERAL_YIELD,LITERAL_CATCH,DO_WHILE,ELLIPSIS,LITERAL_SWITCH,LITERAL_SYNCHRONIZED,LITERAL_TRY,LITERAL_CASE,LAMBDA,LITERAL_WHEN",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "WhitespaceAround",
+    "description": "Checks that a token is surrounded by whitespace. Empty constructor, method, class, enum, interface, loop bodies (blocks), lambdas of the form public MyClass() {} // empty constructor public void func(",
+    "category": "whitespace",
+    "options": [
+      {
+        "name": "allowEmptyCatches",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow empty catch bodies."
+      },
+      {
+        "name": "allowEmptyConstructors",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow empty constructor bodies."
+      },
+      {
+        "name": "allowEmptyLambdas",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow empty lambda bodies."
+      },
+      {
+        "name": "allowEmptyLoops",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow empty loop bodies."
+      },
+      {
+        "name": "allowEmptyMethods",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow empty method bodies."
+      },
+      {
+        "name": "allowEmptySwitchBlockStatements",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow empty switch blocks and block statements."
+      },
+      {
+        "name": "allowEmptyTypes",
+        "type": "boolean",
+        "default": "false",
+        "description": "Allow empty class, interface and enum bodies."
+      },
+      {
+        "name": "ignoreEnhancedForColon",
+        "type": "boolean",
+        "default": "true",
+        "description": "Ignore whitespace around colon in\n <a href=\"https://docs.oracle.com/javase/specs/jls/se11/html/jls-1"
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "ASSIGN,BAND,BAND_ASSIGN,BOR,BOR_ASSIGN,BSR,BSR_ASSIGN,BXOR,BXOR_ASSIGN,COLON,DIV,DIV_ASSIGN,DO_WHILE,EQUAL,GE,GT,LAMBDA,LAND,LCURLY,LE,LITERAL_CATCH,LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_FOR,LITERAL_IF,LITERAL_RETURN,LITERAL_SWITCH,LITERAL_SYNCHRONIZED,LITERAL_TRY,LITERAL_WHILE,LOR,LT,MINUS,MINUS_ASSIGN,MOD,MOD_ASSIGN,NOT_EQUAL,PLUS,PLUS_ASSIGN,QUESTION,RCURLY,SL,SLIST,SL_ASSIGN,SR,SR_ASSIGN,STAR,STAR_ASSIGN,LITERAL_ASSERT,TYPE_EXTENSION_AND,LITERAL_WHEN",
+        "description": "tokens to check"
+      }
+    ]
+  },
+  {
+    "name": "WriteTag",
+    "description": "Requires user defined Javadoc tag to be present in Javadoc comment with defined format. To define the format for a tag, set property tagFormat to a regular expression. Property tagSeverity is used for",
+    "category": "javadoc",
+    "options": [
+      {
+        "name": "tag",
+        "type": "java.lang.String",
+        "default": null,
+        "description": "Specify the name of tag."
+      },
+      {
+        "name": "tagFormat",
+        "type": "java.util.regex.Pattern",
+        "default": null,
+        "description": "Specify the regexp to match tag content."
+      },
+      {
+        "name": "tagSeverity",
+        "type": "com.puppycrawl.tools.checkstyle.api.SeverityLevel",
+        "default": "info",
+        "description": "Specify the severity level when tag is found and printed."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default": "INTERFACE_DEF,CLASS_DEF,ENUM_DEF,ANNOTATION_DEF,RECORD_DEF",
+        "description": "tokens to check"
+      }
+    ]
+  }
+]

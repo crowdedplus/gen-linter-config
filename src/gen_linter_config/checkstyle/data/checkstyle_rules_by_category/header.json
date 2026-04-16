@@ -1,0 +1,116 @@
+[
+  {
+    "name": "Header",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.header.HeaderCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.Checker",
+    "description": "Checks that a source file begins with a specified header. Property \"headerFile\" specifies a file that contains the required header. Alternatively, the header specification can be set directly in the \"header\" property without the need for an external file. In default configuration, if header is not specified, the default value of header is set to \"null\" and the check does not rise any violations.",
+    "options": [
+      {
+        "name": "charset",
+        "type": "java.lang.String",
+        "default_value": null,
+        "description": "Specify the character encoding to use when reading the headerFile."
+      },
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default_value": "",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "header",
+        "type": "java.lang.String",
+        "default_value": null,
+        "description": "Specify the required header specified inline.\n Individual header lines must be separated by the string\n <code>\"\\n\"</code>(even on platforms with a different line separator)."
+      },
+      {
+        "name": "headerFile",
+        "type": "java.net.URI",
+        "default_value": null,
+        "description": "Specify the name of the file containing the required header."
+      },
+      {
+        "name": "ignoreLines",
+        "type": "int[]",
+        "default_value": "",
+        "description": "Specifies the line numbers\n to ignore when matching lines in a content of headerFile."
+      }
+    ],
+    "message_keys": [
+      "header.mismatch",
+      "header.missing"
+    ],
+    "category": "header",
+    "source_file": "HeaderCheck.xml"
+  },
+  {
+    "name": "MultiFileRegexpHeader",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.header.MultiFileRegexpHeaderCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.Checker",
+    "description": "Checks the header of a source file against multiple header files that contain a pattern for each line of the source header.",
+    "options": [
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default_value": "",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "headerFiles",
+        "type": "java.lang.String",
+        "default_value": null,
+        "description": "Specify a comma-separated list of files containing the required headers.\n If a file's header matches none, the violation references\n the first file in this list. Users can order files to set\n a preferred header for such reporting."
+      }
+    ],
+    "message_keys": [
+      "multi.file.regexp.header.mismatch",
+      "multi.file.regexp.header.missing"
+    ],
+    "category": "header",
+    "source_file": "MultiFileRegexpHeaderCheck.xml"
+  },
+  {
+    "name": "RegexpHeader",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.header.RegexpHeaderCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.Checker",
+    "description": "Checks the header of a source file against a header that contains a pattern for each line of the source header.",
+    "options": [
+      {
+        "name": "charset",
+        "type": "java.lang.String",
+        "default_value": null,
+        "description": "Specify the character encoding to use when reading the headerFile."
+      },
+      {
+        "name": "fileExtensions",
+        "type": "java.lang.String[]",
+        "default_value": "",
+        "description": "Specify the file extensions of the files to process."
+      },
+      {
+        "name": "header",
+        "type": "java.lang.String",
+        "default_value": null,
+        "description": "Define the required header specified inline.\n Individual header lines must be separated by the string <code>\"\\n\"</code>\n (even on platforms with a different line separator).\n For header lines containing <code>\"\\n\\n\"</code> checkstyle will forcefully\n expect an empty line to exist. See examples below.\n Regular expressions must not span multiple lines."
+      },
+      {
+        "name": "headerFile",
+        "type": "java.net.URI",
+        "default_value": null,
+        "description": "Specify the name of the file containing the required header."
+      },
+      {
+        "name": "multiLines",
+        "type": "int[]",
+        "default_value": "",
+        "description": "Specify the line numbers to repeat (zero or more times)."
+      }
+    ],
+    "message_keys": [
+      "header.mismatch",
+      "header.missing"
+    ],
+    "category": "header",
+    "source_file": "RegexpHeaderCheck.xml"
+  }
+]

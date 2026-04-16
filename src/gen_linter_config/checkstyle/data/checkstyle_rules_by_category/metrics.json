@@ -1,0 +1,191 @@
+[
+  {
+    "name": "BooleanExpressionComplexity",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.metrics.BooleanExpressionComplexityCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Restricts the number of boolean operators (\"&&\", \"||\", \"&\", \"|\" and \"^\") in an expression. Rationale: Too many conditions leads to code that is difficult to read and hence debug and maintain. Note that the operators \"&\" and \"|\" are not only integer bitwise operators, they are also the non-shortcut versions of the boolean operators \"&&\" and \"||\". Note that \"&\", \"|\" and \"^\" are not checked if they are part of constructor or method call because they can be applied to non-boolean variables and Checkstyle does not know types of methods from different classes.",
+    "options": [
+      {
+        "name": "max",
+        "type": "int",
+        "default_value": "3",
+        "description": "Specify the maximum number of boolean operations allowed in one expression."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "LAND,BAND,LOR,BOR,BXOR",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "booleanExpressionComplexity"
+    ],
+    "category": "metrics",
+    "source_file": "BooleanExpressionComplexityCheck.xml"
+  },
+  {
+    "name": "ClassDataAbstractionCoupling",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.metrics.ClassDataAbstractionCouplingCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Measures the number of distinct classes that are instantiated within the given class or record. This type of coupling is not caused by inheritance or the object-oriented paradigm. Generally speaking, any data type with other data types as members or local variable that is an instantiation (object) of another class has data abstraction coupling (DAC). The higher the DAC, the more complex the structure of the class. This check processes files in the following way: - Iterates over the list of tokens (defined below) and counts all mentioned classes. - PACKAGE_DEF - IMPORT - CLASS_DEF - INTERFACE_DEF - ENUM_DEF - LITERAL_NEW - RECORD_DEF - If a class was imported with direct import (i.e. \"import java.math.BigDecimal\"), or the class was referenced with the package name (i.e. \"java.math.BigDecimal value\") and the package was added to the \"excludedPackages\" parameter, the class does not increase complexity. - If a class name was added to the \"excludedClasses\" parameter, the class does not increase complexity.",
+    "options": [
+      {
+        "name": "excludeClassesRegexps",
+        "type": "java.util.regex.Pattern[]",
+        "default_value": "^$",
+        "description": "Specify user-configured regular expressions to ignore classes."
+      },
+      {
+        "name": "excludedClasses",
+        "type": "java.lang.String[]",
+        "default_value": "ArrayIndexOutOfBoundsException, ArrayList, Boolean, Byte, Character, Class, Collection, Deprecated, Deque, Double, DoubleStream, EnumSet, Exception, Float, FunctionalInterface, HashMap, HashSet, IllegalArgumentException, IllegalStateException, IndexOutOfBoundsException, IntStream, Integer, LinkedHashMap, LinkedHashSet, LinkedList, List, Long, LongStream, Map, NullPointerException, Object, Optional, OptionalDouble, OptionalInt, OptionalLong, Override, Queue, RuntimeException, SafeVarargs, SecurityException, Set, Short, SortedMap, SortedSet, Stream, String, StringBuffer, StringBuilder, SuppressWarnings, Throwable, TreeMap, TreeSet, UnsupportedOperationException, Void, boolean, byte, char, double, float, int, long, short, var, void",
+        "description": "Specify user-configured class names to ignore."
+      },
+      {
+        "name": "excludedPackages",
+        "type": "java.lang.String[]",
+        "default_value": "",
+        "description": "Specify user-configured packages to ignore."
+      },
+      {
+        "name": "max",
+        "type": "int",
+        "default_value": "7",
+        "description": "Specify the maximum threshold allowed."
+      }
+    ],
+    "message_keys": [
+      "classDataAbstractionCoupling"
+    ],
+    "category": "metrics",
+    "source_file": "ClassDataAbstractionCouplingCheck.xml"
+  },
+  {
+    "name": "ClassFanOutComplexity",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.metrics.ClassFanOutComplexityCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks the number of other types a given class/record/interface/enum/annotation relies on. Also, the square of this has been shown to indicate the amount of maintenance required in functional programs (on a file basis) at least. This check processes files in the following way: - Iterates over all tokens that might contain type reference. - If a class was imported with direct import (i.e. \"import java.math.BigDecimal\"), or the class was referenced with the package name (i.e. \"java.math.BigDecimal value\") and the package was added to the \"excludedPackages\" parameter, the class does not increase complexity. - If a class name was added to the \"excludedClasses\" parameter, the class does not increase complexity.",
+    "options": [
+      {
+        "name": "excludeClassesRegexps",
+        "type": "java.util.regex.Pattern[]",
+        "default_value": "^$",
+        "description": "Specify user-configured regular expressions to ignore classes."
+      },
+      {
+        "name": "excludedClasses",
+        "type": "java.lang.String[]",
+        "default_value": "ArrayIndexOutOfBoundsException, ArrayList, Boolean, Byte, Character, Class, Collection, Deprecated, Deque, Double, DoubleStream, EnumSet, Exception, Float, FunctionalInterface, HashMap, HashSet, IllegalArgumentException, IllegalStateException, IndexOutOfBoundsException, IntStream, Integer, LinkedHashMap, LinkedHashSet, LinkedList, List, Long, LongStream, Map, NullPointerException, Object, Optional, OptionalDouble, OptionalInt, OptionalLong, Override, Queue, RuntimeException, SafeVarargs, SecurityException, Set, Short, SortedMap, SortedSet, Stream, String, StringBuffer, StringBuilder, SuppressWarnings, Throwable, TreeMap, TreeSet, UnsupportedOperationException, Void, boolean, byte, char, double, float, int, long, short, var, void",
+        "description": "Specify user-configured class names to ignore."
+      },
+      {
+        "name": "excludedPackages",
+        "type": "java.lang.String[]",
+        "default_value": "",
+        "description": "Specify user-configured packages to ignore."
+      },
+      {
+        "name": "max",
+        "type": "int",
+        "default_value": "20",
+        "description": "Specify the maximum threshold allowed."
+      }
+    ],
+    "message_keys": [
+      "classFanOutComplexity"
+    ],
+    "category": "metrics",
+    "source_file": "ClassFanOutComplexityCheck.xml"
+  },
+  {
+    "name": "CyclomaticComplexity",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.metrics.CyclomaticComplexityCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks cyclomatic complexity against a specified limit. It is a measure of the minimum number of possible paths through the source and therefore the number of required tests, it is not about quality of code! It is only applied to methods, c-tors, static initializers and instance initializers. The complexity is equal to the number of decision points \"+ 1\". Decision points: - \"if\", \"while\", \"do\", \"for\", \"?:\", \"catch\", \"switch\", \"case\" statements. - Operators \"&&\" and \"||\" in the body of target. - \"when\" expression in case labels, also known as guards. By pure theory level 1-4 is considered easy to test, 5-7 OK, 8-10 consider re-factoring to ease testing, and 11+ re-factor now as testing will be painful. When it comes to code quality measurement by this metric level 10 is very good level as a ultimate target (that is hard to archive). Do not be ashamed to have complexity level 15 or even higher, but keep it below 20 to catch really bad-designed code automatically. Please use Suppression to avoid violations on cases that could not be split in few methods without damaging readability of code or encapsulation.",
+    "options": [
+      {
+        "name": "max",
+        "type": "int",
+        "default_value": "10",
+        "description": "Specify the maximum threshold allowed."
+      },
+      {
+        "name": "switchBlockAsSingleDecisionPoint",
+        "type": "boolean",
+        "default_value": "false",
+        "description": "Control whether to treat the whole switch block as a single decision point."
+      },
+      {
+        "name": "tokens",
+        "type": "java.lang.String[]",
+        "default_value": "LITERAL_WHILE,LITERAL_DO,LITERAL_FOR,LITERAL_IF,LITERAL_SWITCH,LITERAL_CASE,LITERAL_CATCH,QUESTION,LAND,LOR,LITERAL_WHEN",
+        "description": "tokens to check"
+      }
+    ],
+    "message_keys": [
+      "cyclomaticComplexity"
+    ],
+    "category": "metrics",
+    "source_file": "CyclomaticComplexityCheck.xml"
+  },
+  {
+    "name": "JavaNCSS",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.metrics.JavaNCSSCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Determines complexity of methods, classes and files by counting the Non Commenting Source Statements (NCSS). This check adheres to the specification for the JavaNCSS-Tool written by Chr. Clemens Lee. Roughly said the NCSS metric is calculated by counting the source lines which are not comments, (nearly) equivalent to counting the semicolons and opening curly braces. The NCSS for a class is summarized from the NCSS of all its methods, the NCSS of its nested classes and the number of member variable declarations. The NCSS for a file is summarized from the ncss of all its top level classes, the number of imports and the package declaration. Rationale: Too large methods and classes are hard to read and costly to maintain. A large NCSS number often means that a method or class has too many responsibilities and/or functionalities which should be decomposed into smaller units.",
+    "options": [
+      {
+        "name": "classMaximum",
+        "type": "int",
+        "default_value": "1500",
+        "description": "Specify the maximum allowed number of non commenting lines in a class."
+      },
+      {
+        "name": "fileMaximum",
+        "type": "int",
+        "default_value": "2000",
+        "description": "Specify the maximum allowed number of non commenting lines\n in a file including all top level and nested classes."
+      },
+      {
+        "name": "methodMaximum",
+        "type": "int",
+        "default_value": "50",
+        "description": "Specify the maximum allowed number of non commenting lines in a method."
+      },
+      {
+        "name": "recordMaximum",
+        "type": "int",
+        "default_value": "150",
+        "description": "Specify the maximum allowed number of non commenting lines in a record."
+      }
+    ],
+    "message_keys": [
+      "ncss.class",
+      "ncss.file",
+      "ncss.method",
+      "ncss.record"
+    ],
+    "category": "metrics",
+    "source_file": "JavaNCSSCheck.xml"
+  },
+  {
+    "name": "NPathComplexity",
+    "fully_qualified_name": "com.puppycrawl.tools.checkstyle.checks.metrics.NPathComplexityCheck",
+    "parent": "com.puppycrawl.tools.checkstyle.TreeWalker",
+    "description": "Checks the NPATH complexity against a specified limit. The NPATH metric computes the number of possible execution paths through a function(method). It takes into account the nesting of conditional statements and multipart boolean expressions (A && B, C || D, E ? F :G and their combinations). The NPATH metric was designed base on Cyclomatic complexity to avoid problem of Cyclomatic complexity metric like nesting level within a function(method). Metric was described at \"NPATH: a measure of execution pathcomplexity and its applications\". If you need detailed description of algorithm, please read that article, it is well written and have number of examples and details. Here is some quotes: An NPATH threshold value of 200 has been established for a function. The value 200 is based on studies done at AT&T Bell Laboratories [1988 year]. Some of the most effective methods of reducing the NPATH value include: - distributing functionality; - implementing multiple if statements as a switch statement; - creating a separate function for logical expressions with a high count of variables and (&&) and or (||) operators. Although strategies to reduce the NPATH complexity of functions are important, care must be taken not to distort the logical clarity of the software by applying a strategy to reduce the complexity of functions. That is, there is a point of diminishing return beyond which a further attempt at reduction of complexity distorts the logical clarity of the system structure. Examples StructureComplexity expression if ([expr]) { [if-range] }NP(if-range) + 1 + NP(expr) if ([expr]) { [if-range] } else { [else-range] } NP(if-range)+ NP(else-range) + NP(expr) while ([expr]) { [while-range] }NP(while-range) + NP(expr) + 1 do { [do-range] } while ([expr])NP(do-range) + NP(expr) + 1 for([expr1]; [expr2]; [expr3]) { [for-range] } NP(for-range) + NP(expr1)+ NP(expr2) + NP(expr3) + 1 switch ([expr]) { case : [case-range] default: [default-range] } S(i=1:i=n)NP(case-range[i]) + NP(default-range) + NP(expr) when[expr]NP(expr) + 1 [expr1] ? [expr2] : [expr3]NP(expr1) + NP(expr2) + NP(expr3) + 2 goto label1break1 Expressions Number of && and || operators in expression. No operators - 0 continue1return1 Statement (even sequential statements)1 Empty block {}1Function call1 Function(Method) declaration or BlockP(i=1:i=N)NP(Statement[i]) Rationale: Nejmeh says that his group had an informal NPATH limit of 200 on individual routines; functions(methods) that exceeded this value were candidates for further decomposition - or at least a closer look. Please do not be fanatic with limit 200 - choose number that suites your project style. Limit 200 is empirical number base on some sources of at AT&T Bell Laboratories of 1988 year.",
+    "options": [
+      {
+        "name": "max",
+        "type": "int",
+        "default_value": "200",
+        "description": "Specify the maximum threshold allowed."
+      }
+    ],
+    "message_keys": [
+      "npathComplexity"
+    ],
+    "category": "metrics",
+    "source_file": "NPathComplexityCheck.xml"
+  }
+]
