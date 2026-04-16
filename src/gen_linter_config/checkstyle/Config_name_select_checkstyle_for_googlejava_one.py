@@ -7,11 +7,10 @@ parentdir = os.path.dirname(currentdir)
 grandparentdir= os.path.dirname(parentdir)
 sys.path.insert(0, parentdir)
 sys.path.insert(0, grandparentdir)
-import util
-import util_java
+from gen_linter_config import util,util_java
 from openai import OpenAI
 from retry import retry
-from gpt_wrapper import GPTAgent
+from gen_linter_config import GPTAgent
 
 
 def preprocess_promt(DSL_Syntax: str, style="RuleSet of Google Java Style Guide", DSLruleset=None, tool = "Checkstyle",toolruleset=None,grammar="Grammar", example=""):

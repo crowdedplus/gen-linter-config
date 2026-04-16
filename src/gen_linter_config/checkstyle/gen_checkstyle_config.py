@@ -6,15 +6,13 @@ import os
 import re
 import json
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-
-from gpt_wrapper import GPTAgent
-from checkstyle import util_java
-from DSL_gpt_google_java_style import preprocess_promt as nl_preprocess, \
+from gen_linter_config import util_java,GPTAgent
+from .DSL_gpt_google_java_style import preprocess_promt as nl_preprocess, \
     Extract_DSL_Repr as DSL_final_extract
-from Config_name_select_checkstyle_for_googlejava_one import preprocess_promt as rule_mapper_preprocess, \
+from .Config_name_select_checkstyle_for_googlejava_one import preprocess_promt as rule_mapper_preprocess, \
     extract_basic_rule
-import Config_set_checkstyle_for_googlejava_ours_o1 as CheckstyleGenerator
+from . import Config_set_checkstyle_for_googlejava_ours_o1 as CheckstyleGenerator
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
 class gen_checkstyle:
     def __init__(self):

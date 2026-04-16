@@ -4,16 +4,10 @@ import shutil
 
 # 将Checkstyle规则的自然语言描述解析为自定义DSL格式。使用GPT模型将Checkstyle规则转换为结构化的DSL规则。
 
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-grandparentdir = os.path.dirname(parentdir)
-sys.path.insert(0, parentdir)
-sys.path.insert(0, grandparentdir)
-import util, util_java
-
+from gen_linter_config import util,util_java
 from openai import OpenAI
 from retry import retry
-from gpt_wrapper import GPTAgent
+from gen_linter_config import GPTAgent
 
 
 # 构建用于将Checkstyle规则描述转换为DSL的GPT提示词

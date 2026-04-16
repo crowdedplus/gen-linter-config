@@ -4,16 +4,12 @@ import shutil
 import inspect
 
 # 转换Google的Java规则为DSL。
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-grandparentdir = os.path.dirname(parentdir)
-sys.path.insert(0, parentdir)
-sys.path.insert(0, grandparentdir)
-import util, copy
 
+import copy
+from gen_linter_config import util
 from openai import OpenAI
 from retry import retry
-from gpt_wrapper import GPTAgent
+from gen_linter_config import GPTAgent
 
 
 #  构建用于将Google Java风格描述转换为DSL的GPT提示词

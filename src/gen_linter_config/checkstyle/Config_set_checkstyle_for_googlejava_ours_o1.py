@@ -3,16 +3,9 @@ import os, json, inspect, sys
 import re
 import shutil
 
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-grandparentdir = os.path.dirname(parentdir)
-sys.path.insert(0, parentdir)
-sys.path.insert(0, grandparentdir)
-import util, util_java
 
-from openai import OpenAI
-from retry import retry
-from gpt_wrapper import GPTAgent
+from gen_linter_config import util,util_java
+from gen_linter_config import GPTAgent
 
 
 # 构建用于生成Checkstyle配置的核心提示词

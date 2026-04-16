@@ -2,16 +2,11 @@ import copy
 import os, json, sys,inspect
 import re
 import shutil
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-grandparentdir= os.path.dirname(parentdir)
-sys.path.insert(0, parentdir)
-sys.path.insert(0, grandparentdir)
-import util
-import util_js
+
+from gen_linter_config import util,util_js
 from openai import OpenAI
 from retry import retry
-from gpt_wrapper import GPTAgent
+from gen_linter_config import GPTAgent
 
 
 

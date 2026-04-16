@@ -6,14 +6,12 @@ import os
 import re
 import json
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-
-from gpt_wrapper import GPTAgent
-import util_js
-from DSL_gpt_google_JSstyle import preprocess_promt as nl_preprocess, \
+from gen_linter_config import GPTAgent,util_js
+from .DSL_gpt_google_JSstyle import preprocess_promt as nl_preprocess, \
     Extract_DSL_Repr as DSL_final_extract
-import gpt_instr_select_eslint_for_googleJS as RuleSelector
-import Config_set_ESLint_for_googleJS as EslintGenerator
+from . import gpt_instr_select_eslint_for_googleJS as RuleSelector
+from . import Config_set_ESLint_for_googleJS as EslintGenerator
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
 class gen_eslint:
     def __init__(self):

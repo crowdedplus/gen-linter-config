@@ -1,16 +1,12 @@
 import os,sys,inspect,copy
 import re,json
 import shutil
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-grandparentdir= os.path.dirname(parentdir)
-sys.path.insert(0, parentdir)
-sys.path.insert(0, grandparentdir)
-import util,util_js
+
+from gen_linter_config import util,util_java
 
 from openai import OpenAI
 from retry import retry
-from gpt_wrapper import GPTAgent
+from gen_linter_config import GPTAgent
 # rule=rule_description, DSL_Syntax=dsl
 def preprocess_promt(rule: str, DSL_Syntax: str, style="ESLint Rule",grammar="Grammar",example=""):
 
