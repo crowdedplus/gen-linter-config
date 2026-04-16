@@ -34,7 +34,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 使用示例:
-  gen-linter-config --tool checkstyle --model dashscope/qwen3-max --input "函数参数不多于5个"
+  gen-linter-config --tool checkstyle --model deepseek/deepseek-chat --input "函数参数不多于5个"
   gen-linter-config -t checkstyle -i rule.txt -o output.json
   gen-linter-config -t eslint -m deepseek/deepseek-chat -i "构造函数中一定要调用父类构造"
 错误用法：
