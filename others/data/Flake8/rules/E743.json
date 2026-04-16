@@ -1,4 +1,0 @@
-{
-  "description": "do not define functions named ‘l’, ‘O’, or ‘I’",
-  "option": {}
-}

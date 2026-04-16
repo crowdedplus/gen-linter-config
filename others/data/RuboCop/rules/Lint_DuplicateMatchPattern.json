@@ -1,6 +1,0 @@
-{
-    "Lint/DuplicateMatchPattern": {
-        "description": "Description\n\nDo not repeat patterns in `in` keywords.",
-        "option": "This rule has no specific options."
-    }
-}

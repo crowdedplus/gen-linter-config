@@ -1,6 +1,0 @@
-{
-    "useVueDefineMacrosOrder": {
-        "description": "Description\n\nEnforce specific order of Vue compiler macros.\nThis rule ensures consistent ordering of Vue’s Composition API compiler macros in<script setup>blocks.\nEnforcing a consistent order improves code readability and maintainability by establishing a predictable structure.\nThese macros must also appear before any other statements (except imports, type declarations, and debugger statements).",
-        "option": "orderSection titled “order”\nAllows specifying the order in which the Vue compiler macros should appear.\nDefault:[\"defineModel\", \"defineProps\", \"defineEmits\"]\nThis is not limited to built-in macros, for example unplug-vue-routerdefinePagecan be listed here as well.\n{  \"linter\": {    \"rules\": {      \"nursery\": {        \"useVueDefineMacrosOrder\": {          \"options\": {            \"order\": [              \"definePage\",              \"defineProps\",              \"defineEmits\",              \"defineModel\"            ]          }        }      }    }  }}"
-    }
-}

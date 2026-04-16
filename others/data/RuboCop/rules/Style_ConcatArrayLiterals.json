@@ -1,6 +1,0 @@
-{
-    "Style/ConcatArrayLiterals": {
-        "description": "Description\n\nEnforces the use of `Array#push(item)` instead of `Array#concat([item])` to avoid redundant array literals.",
-        "option": "This rule has no specific options."
-    }
-}

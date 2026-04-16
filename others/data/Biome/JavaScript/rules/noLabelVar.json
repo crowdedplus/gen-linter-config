@@ -1,6 +1,0 @@
-{
-    "noLabelVar": {
-        "description": "Description\n\nDisallow labels that share a name with a variable",
-        "option": "This rule has no specific options."
-    }
-}

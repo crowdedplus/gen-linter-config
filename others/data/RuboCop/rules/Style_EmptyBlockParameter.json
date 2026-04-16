@@ -1,6 +1,0 @@
-{
-    "Style/EmptyBlockParameter": {
-        "description": "Description\n\nOmit pipes for empty block parameters.",
-        "option": "This rule has no specific options."
-    }
-}

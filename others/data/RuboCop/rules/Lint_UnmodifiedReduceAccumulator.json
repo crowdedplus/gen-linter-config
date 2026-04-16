@@ -1,6 +1,0 @@
-{
-    "Lint/UnmodifiedReduceAccumulator": {
-        "description": "Description\n\nChecks for `reduce` or `inject` blocks that do not update the accumulator each iteration.",
-        "option": "This rule has no specific options."
-    }
-}

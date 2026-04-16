@@ -1,6 +1,0 @@
-{
-    "Style/RequireOrder": {
-        "description": "Description\n\nSort `require` and `require_relative` in alphabetical order.",
-        "option": "This rule has no specific options."
-    }
-}

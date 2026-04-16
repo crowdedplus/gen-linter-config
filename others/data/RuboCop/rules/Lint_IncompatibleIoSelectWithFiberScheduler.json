@@ -1,6 +1,0 @@
-{
-    "Lint/IncompatibleIoSelectWithFiberScheduler": {
-        "description": "Description\n\nChecks for `IO.select` that is incompatible with Fiber Scheduler.",
-        "option": "This rule has no specific options."
-    }
-}

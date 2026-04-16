@@ -1,6 +1,0 @@
-{
-    "Lint/BinaryOperatorWithIdenticalOperands": {
-        "description": "Description\n\nChecks for places where binary operator has identical operands.",
-        "option": "This rule has no specific options."
-    }
-}

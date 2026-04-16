@@ -1,6 +1,0 @@
-{
-    "Lint/LiteralInInterpolation": {
-        "description": "Description\n\nChecks for literals used in interpolation.",
-        "option": "This rule has no specific options."
-    }
-}

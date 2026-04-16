@@ -1,6 +1,0 @@
-{
-    "Lint/DuplicateCaseCondition": {
-        "description": "Description\n\nDo not repeat values in case conditionals.",
-        "option": "This rule has no specific options."
-    }
-}

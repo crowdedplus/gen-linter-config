@@ -1,6 +1,0 @@
-{
-    "Lint/DisjunctiveAssignmentInConstructor": {
-        "description": "Description\n\nIn constructor, plain assignment is preferred over disjunctive.",
-        "option": "This rule has no specific options."
-    }
-}

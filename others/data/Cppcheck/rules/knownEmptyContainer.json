@@ -1,6 +1,0 @@
-{
-    "knownEmptyContainer": {
-        "description": "Description\n\nIterating over container 'var' that is always empty.",
-        "option": "Static analysis does not have options.\n\nSeverity: style\nCWE: 398\nInconclusive: false"
-    }
-}

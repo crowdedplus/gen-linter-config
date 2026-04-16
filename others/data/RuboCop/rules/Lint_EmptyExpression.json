@@ -1,6 +1,0 @@
-{
-    "Lint/EmptyExpression": {
-        "description": "Description\n\nChecks for empty expressions.",
-        "option": "This rule has no specific options."
-    }
-}

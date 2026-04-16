@@ -1,6 +1,0 @@
-{
-    "Style/RedundantSelf": {
-        "description": "Description\n\nDon't use self where it's not needed.",
-        "option": "This rule has no specific options."
-    }
-}

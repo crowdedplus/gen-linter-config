@@ -1,4 +1,0 @@
-{
-  "description": "‘from module import *’ only allowed at module level",
-  "option": {}
-}

@@ -1,6 +1,0 @@
-{
-    "Lint/OutOfRangeRegexpRef": {
-        "description": "Description\n\nChecks for out of range reference for Regexp because it always returns nil.",
-        "option": "This rule has no specific options."
-    }
-}

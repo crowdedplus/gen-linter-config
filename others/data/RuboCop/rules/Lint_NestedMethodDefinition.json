@@ -1,6 +1,0 @@
-{
-    "Lint/NestedMethodDefinition": {
-        "description": "Description\n\nDo not use nested method definitions.",
-        "option": "This rule supports the following parameters in your configuration:\n\nAllowedMethods: [] (type: list)\nAllowedPatterns: [] (type: list)"
-    }
-}

@@ -1,6 +1,0 @@
-{
-    "useAltText": {
-        "description": "Description\n\nEnforce that all elements that require alternative text have meaningful information to relay back to the end user.\nThis is a critical component of accessibility for screen reader users in order for them to understand the content’s purpose on the page.\nBy default, this rule checks for alternative text on the following elements:<img>,<area>,<input type=\"image\">, and<object>.",
-        "option": "This rule has no specific options."
-    }
-}

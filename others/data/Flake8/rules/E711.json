@@ -1,4 +1,0 @@
-{
-  "description": "comparison to None should be ‘if cond is None:’",
-  "option": {}
-}

@@ -1,6 +1,0 @@
-{
-    "Lint/NonDeterministicRequireOrder": {
-        "description": "Description\n\nAlways sort arrays returned by Dir.glob when requiring files.",
-        "option": "This rule has no specific options."
-    }
-}

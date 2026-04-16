@@ -1,6 +1,0 @@
-{
-    "noRestrictedTypes": {
-        "description": "Description\n\nDisallow user defined types.\nThis rule allows you to specify type names that you don’t want to use in your application.\nTo prevent use of commonly misleading types, you can refer tonoBannedTypes",
-        "option": "Use the options to specify additional types that you want to restrict in your\nsource code.\n{  \"linter\": {    \"rules\": {      \"style\": {        \"noRestrictedTypes\": {          \"options\": {            \"types\": {              \"Foo\": {                \"message\": \"Only bar is allowed\",                \"use\": \"bar\"              },              \"OldAPI\": \"Use NewAPI instead\"            }          }        }      }    }  }}\nIn the example above, the rule will emit a diagnostics ifFooorOldAPIare used."
-    }
-}

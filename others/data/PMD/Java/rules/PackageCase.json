@@ -1,6 +1,0 @@
-{
-    "PackageCase": {
-        "description": "Description\n\nDetects when a package definition contains uppercase characters.\n\nExample(s):\n\nUse this rule by referencing it:",
-        "option": "This rule has no specific options."
-    }
-}

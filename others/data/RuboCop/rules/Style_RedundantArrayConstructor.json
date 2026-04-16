@@ -1,6 +1,0 @@
-{
-    "Style/RedundantArrayConstructor": {
-        "description": "Description\n\nChecks for the instantiation of array using redundant `Array` constructor.",
-        "option": "This rule has no specific options."
-    }
-}

@@ -1,6 +1,0 @@
-{
-    "Style/IdenticalConditionalBranches": {
-        "description": "Description\n\nChecks that conditional statements do not have an identical line at the end of each branch, which can validly be moved out of the conditional.",
-        "option": "This rule has no specific options."
-    }
-}

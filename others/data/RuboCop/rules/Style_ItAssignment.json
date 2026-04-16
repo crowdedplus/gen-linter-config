@@ -1,6 +1,0 @@
-{
-    "Style/ItAssignment": {
-        "description": "Description\n\nChecks for local variables and method parameters named `it`.",
-        "option": "This rule has no specific options."
-    }
-}

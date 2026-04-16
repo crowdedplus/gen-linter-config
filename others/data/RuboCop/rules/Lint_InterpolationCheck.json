@@ -1,6 +1,0 @@
-{
-    "Lint/InterpolationCheck": {
-        "description": "Description\n\nChecks for interpolation in a single quoted string.",
-        "option": "This rule has no specific options."
-    }
-}

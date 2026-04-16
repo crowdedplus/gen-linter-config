@@ -1,6 +1,0 @@
-{
-    "Lint/PercentStringArray": {
-        "description": "Description\n\nChecks for unwanted commas and quotes in %w/%W literals.",
-        "option": "This rule has no specific options."
-    }
-}

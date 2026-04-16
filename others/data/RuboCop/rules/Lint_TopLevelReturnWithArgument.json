@@ -1,6 +1,0 @@
-{
-    "Lint/TopLevelReturnWithArgument": {
-        "description": "Description\n\nDetects top level return statements with argument.",
-        "option": "This rule has no specific options."
-    }
-}

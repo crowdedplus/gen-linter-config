@@ -1,6 +1,0 @@
-{
-    "Layout/DotPosition": {
-        "description": "Description\n\nChecks the position of the dot in multi-line method calls.",
-        "option": "This rule supports the following parameters in your configuration:\n\nEnforcedStyle: leading (type: str)\nSupportedStyles: ['leading', 'trailing'] (type: list)"
-    }
-}

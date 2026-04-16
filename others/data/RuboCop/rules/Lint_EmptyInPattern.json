@@ -1,6 +1,0 @@
-{
-    "Lint/EmptyInPattern": {
-        "description": "Description\n\nChecks for the presence of `in` pattern branches without a body.",
-        "option": "This rule supports the following parameters in your configuration:\n\nAllowComments: True (type: bool)"
-    }
-}

@@ -1,6 +1,0 @@
-{
-    "Lint/EmptyInterpolation": {
-        "description": "Description\n\nChecks for empty string interpolation.",
-        "option": "This rule supports the following parameters in your configuration:\n\nAutoCorrect: contextual (type: str)"
-    }
-}

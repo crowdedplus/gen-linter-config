@@ -1,6 +1,0 @@
-{
-    "useConsistentObjectDefinitions": {
-        "description": "Description\n\nRequire the consistent declaration of object literals. Defaults to explicit definitions.\nECMAScript 6 provides two ways to define an object literal:{foo: foo}and{foo}.\nThe two styles are functionally equivalent.\nUsing the same style consistently across your codebase makes it easier to quickly read and understand object definitions.",
-        "option": "Use the options to specify the syntax of object literals to enforce.\n{  \"linter\": {    \"rules\": {      \"style\": {        \"useConsistentObjectDefinitions\": {          \"options\": {            \"syntax\": \"explicit\"          }        }      }    }  }}\nsyntaxSection titled “syntax”\nThe syntax to use:\nshorthand: enforces the use of shorthand object property syntax when possible.\nexplicit: enforces the use of explicit object property syntax in every case.\nDefault:shorthand"
-    }
-}

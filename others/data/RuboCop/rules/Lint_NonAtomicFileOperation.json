@@ -1,6 +1,0 @@
-{
-    "Lint/NonAtomicFileOperation": {
-        "description": "Description\n\nChecks for non-atomic file operations.",
-        "option": "This rule has no specific options."
-    }
-}

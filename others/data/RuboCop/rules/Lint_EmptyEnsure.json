@@ -1,6 +1,0 @@
-{
-    "Lint/EmptyEnsure": {
-        "description": "Description\n\nChecks for empty ensure block.",
-        "option": "This rule supports the following parameters in your configuration:\n\nAutoCorrect: contextual (type: str)"
-    }
-}

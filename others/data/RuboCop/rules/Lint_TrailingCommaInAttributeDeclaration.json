@@ -1,6 +1,0 @@
-{
-    "Lint/TrailingCommaInAttributeDeclaration": {
-        "description": "Description\n\nChecks for trailing commas in attribute declarations.",
-        "option": "This rule supports the following parameters in your configuration:\n\nAutoCorrect: contextual (type: str)"
-    }
-}

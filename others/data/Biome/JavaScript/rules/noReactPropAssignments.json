@@ -1,6 +1,0 @@
-{
-    "noReactPropAssignments": {
-        "description": "Description\n\nDisallow assigning to React component props.\nReact’spropsare assumed to be immutable, and it is considered bad\npractice to assign to properties of thepropsobject. When using the\nReact Compiler, this is even a hard error.",
-        "option": "This rule has no specific options."
-    }
-}

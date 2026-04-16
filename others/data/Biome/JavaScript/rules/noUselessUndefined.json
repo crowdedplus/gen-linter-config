@@ -1,6 +1,0 @@
-{
-    "noUselessUndefined": {
-        "description": "Description\n\nDisallow the use of uselessundefined.\nundefinedis the default value for new variables, parameters, return statements, etc., so specifying it doesn’t make any difference.",
-        "option": "This rule has no specific options."
-    }
-}

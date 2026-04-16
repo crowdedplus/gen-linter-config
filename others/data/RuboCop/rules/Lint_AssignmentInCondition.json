@@ -1,6 +1,0 @@
-{
-    "Lint/AssignmentInCondition": {
-        "description": "Description\n\nDon't use assignment in conditions.",
-        "option": "This rule supports the following parameters in your configuration:\n\nAllowSafeAssignment: True (type: bool)"
-    }
-}

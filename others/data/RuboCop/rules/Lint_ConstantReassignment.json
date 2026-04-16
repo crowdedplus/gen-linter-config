@@ -1,6 +1,0 @@
-{
-    "Lint/ConstantReassignment": {
-        "description": "Description\n\nChecks for constant reassignments.",
-        "option": "This rule has no specific options."
-    }
-}

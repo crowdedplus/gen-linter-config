@@ -1,6 +1,0 @@
-{
-    "Lint/UselessNumericOperation": {
-        "description": "Description\n\nChecks for useless numeric operations.",
-        "option": "This rule has no specific options."
-    }
-}

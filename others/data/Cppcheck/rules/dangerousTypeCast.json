@@ -1,6 +1,0 @@
-{
-    "dangerousTypeCast": {
-        "description": "Description\n\nPotentially invalid type conversion in old-style C cast, clarify/fix with C++ cast",
-        "option": "Static analysis does not have options.\n\nSeverity: warning\nCWE: 398\nInconclusive: false"
-    }
-}

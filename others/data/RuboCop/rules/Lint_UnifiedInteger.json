@@ -1,6 +1,0 @@
-{
-    "Lint/UnifiedInteger": {
-        "description": "Description\n\nUse Integer instead of Fixnum or Bignum.",
-        "option": "This rule has no specific options."
-    }
-}

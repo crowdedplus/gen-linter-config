@@ -1,6 +1,0 @@
-{
-    "Lint/UriRegexp": {
-        "description": "Description\n\nUse `URI::DEFAULT_PARSER.make_regexp` instead of `URI.regexp`.",
-        "option": "This rule has no specific options."
-    }
-}

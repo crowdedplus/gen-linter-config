@@ -1,6 +1,0 @@
-{
-    "Lint/HashCompareByIdentity": {
-        "description": "Description\n\nPrefer using `Hash#compare_by_identity` than using `object_id` for keys.",
-        "option": "This rule has no specific options."
-    }
-}

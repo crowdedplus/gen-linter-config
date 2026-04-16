@@ -1,6 +1,0 @@
-{
-    "Lint/MixedRegexpCaptureTypes": {
-        "description": "Description\n\nDo not mix named captures and numbered captures in a Regexp literal.",
-        "option": "This rule has no specific options."
-    }
-}

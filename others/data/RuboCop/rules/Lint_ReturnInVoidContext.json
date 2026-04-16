@@ -1,6 +1,0 @@
-{
-    "Lint/ReturnInVoidContext": {
-        "description": "Description\n\nChecks for return in void context.",
-        "option": "This rule has no specific options."
-    }
-}

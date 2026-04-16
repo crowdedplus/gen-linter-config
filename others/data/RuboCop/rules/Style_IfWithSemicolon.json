@@ -1,6 +1,0 @@
-{
-    "Style/IfWithSemicolon": {
-        "description": "Description\n\nDo not use if x; .... Use the ternary operator instead.",
-        "option": "This rule has no specific options."
-    }
-}

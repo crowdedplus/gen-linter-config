@@ -1,6 +1,0 @@
-{
-    "Lint/NestedPercentLiteral": {
-        "description": "Description\n\nChecks for nested percent literals.",
-        "option": "This rule has no specific options."
-    }
-}

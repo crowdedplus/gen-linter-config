@@ -1,6 +1,0 @@
-{
-    "Gemspec/OrderedDependencies": {
-        "description": "Description\n\nDependencies in the gemspec should be alphabetically sorted.",
-        "option": "This rule supports the following parameters in your configuration:\n\nTreatCommentsAsGroupSeparators: True (type: bool)\nConsiderPunctuation: False (type: bool)"
-    }
-}

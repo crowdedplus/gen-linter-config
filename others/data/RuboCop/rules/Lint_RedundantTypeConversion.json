@@ -1,6 +1,0 @@
-{
-    "Lint/RedundantTypeConversion": {
-        "description": "Description\n\nChecks for redundantly converting a literal to the same type.",
-        "option": "This rule has no specific options."
-    }
-}

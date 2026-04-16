@@ -1,6 +1,0 @@
-{
-    "noEmptyPattern": {
-        "description": "Description\n\nDisallows empty destructuring patterns.",
-        "option": "This rule has no specific options."
-    }
-}

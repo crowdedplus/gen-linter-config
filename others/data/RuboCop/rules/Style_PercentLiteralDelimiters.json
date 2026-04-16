@@ -1,6 +1,0 @@
-{
-    "Style/PercentLiteralDelimiters": {
-        "description": "Description\n\nUse `%`-literal delimiters consistently.",
-        "option": "This rule supports the following parameters in your configuration:\n\nPreferredDelimiters: {'default': '()', '%i': '[]', '%I': '[]', '%r': '{}', '%w': '[]', '%W': '[]'} (type: dict)"
-    }
-}

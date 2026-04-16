@@ -1,6 +1,0 @@
-{
-    "Lint/TripleQuotes": {
-        "description": "Description\n\nChecks for useless triple quote constructs.",
-        "option": "This rule has no specific options."
-    }
-}

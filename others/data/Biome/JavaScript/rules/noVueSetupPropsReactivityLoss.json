@@ -1,6 +1,0 @@
-{
-    "noVueSetupPropsReactivityLoss": {
-        "description": "Description\n\nDisallow destructuring ofpropspassed tosetupin Vue projects.\nIn Vue’s Composition API, props must be accessed asprops.propertyNameto maintain\nreactivity. Destructuringpropsdirectly in thesetupfunction parameters will\ncause the resulting variables to lose their reactive nature.",
-        "option": "This rule has no specific options."
-    }
-}

@@ -1,6 +1,0 @@
-{
-    "Style/ComparableBetween": {
-        "description": "Description\n\nEnforces the use of `Comparable#between?` instead of logical comparison.",
-        "option": "This rule has no specific options."
-    }
-}

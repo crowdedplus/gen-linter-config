@@ -1,6 +1,0 @@
-{
-    "Layout/SpaceAfterNot": {
-        "description": "Description\n\nTracks redundant space after the ! operator.",
-        "option": "This rule has no specific options."
-    }
-}

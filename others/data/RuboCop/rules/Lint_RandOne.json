@@ -1,6 +1,0 @@
-{
-    "Lint/RandOne": {
-        "description": "Description\n\nChecks for `rand(1)` calls. Such calls always return `0` and most likely a mistake.",
-        "option": "This rule has no specific options."
-    }
-}

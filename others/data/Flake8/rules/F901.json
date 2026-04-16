@@ -1,4 +1,0 @@
-{
-  "description": "raise NotImplemented should be raise NotImplementedError",
-  "option": {}
-}

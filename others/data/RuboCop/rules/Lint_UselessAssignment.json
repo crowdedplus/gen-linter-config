@@ -1,6 +1,0 @@
-{
-    "Lint/UselessAssignment": {
-        "description": "Description\n\nChecks for useless assignment to a local variable.",
-        "option": "This rule supports the following parameters in your configuration:\n\nAutoCorrect: contextual (type: str)"
-    }
-}

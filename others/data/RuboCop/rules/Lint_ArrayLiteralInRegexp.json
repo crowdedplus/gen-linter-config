@@ -1,6 +1,0 @@
-{
-    "Lint/ArrayLiteralInRegexp": {
-        "description": "Description\n\nChecks for an array literal interpolated inside a regexp.",
-        "option": "This rule has no specific options."
-    }
-}

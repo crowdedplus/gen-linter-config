@@ -1,6 +1,0 @@
-{
-    "Layout/IndentationStyle": {
-        "description": "Description\n\nConsistent indentation either with tabs only or spaces only.",
-        "option": "This rule supports the following parameters in your configuration:\n\nIndentationWidth: None (type: NoneType)\nEnforcedStyle: spaces (type: str)\nSupportedStyles: ['spaces', 'tabs'] (type: list)"
-    }
-}

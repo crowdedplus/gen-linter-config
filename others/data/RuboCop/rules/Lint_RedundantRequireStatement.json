@@ -1,6 +1,0 @@
-{
-    "Lint/RedundantRequireStatement": {
-        "description": "Description\n\nChecks for unnecessary `require` statement.",
-        "option": "This rule has no specific options."
-    }
-}

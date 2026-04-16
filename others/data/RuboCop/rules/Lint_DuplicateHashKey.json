@@ -1,6 +1,0 @@
-{
-    "Lint/DuplicateHashKey": {
-        "description": "Description\n\nChecks for duplicate keys in hash literals.",
-        "option": "This rule has no specific options."
-    }
-}

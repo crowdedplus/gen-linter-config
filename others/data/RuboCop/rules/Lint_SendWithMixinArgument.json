@@ -1,6 +1,0 @@
-{
-    "Lint/SendWithMixinArgument": {
-        "description": "Description\n\nChecks for `send` method when using mixin.",
-        "option": "This rule has no specific options."
-    }
-}

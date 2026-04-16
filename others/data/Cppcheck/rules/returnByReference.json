@@ -1,6 +1,0 @@
-{
-    "returnByReference": {
-        "description": "Description\n\nFunction 'func()' should return member 'var' by const reference.",
-        "option": "Static analysis does not have options.\n\nSeverity: performance\nCWE: N/A\nInconclusive: false"
-    }
-}

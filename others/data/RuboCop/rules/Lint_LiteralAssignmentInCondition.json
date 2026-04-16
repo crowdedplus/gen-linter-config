@@ -1,6 +1,0 @@
-{
-    "Lint/LiteralAssignmentInCondition": {
-        "description": "Description\n\nChecks for literal assignments in the conditions.",
-        "option": "This rule has no specific options."
-    }
-}

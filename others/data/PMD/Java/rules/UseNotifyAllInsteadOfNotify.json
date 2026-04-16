@@ -1,6 +1,0 @@
-{
-    "UseNotifyAllInsteadOfNotify": {
-        "description": "Description\n\nThread.notify() awakens a thread monitoring the object. If more than one thread is monitoring, then only\none is chosen.  The thread chosen is arbitrary; thus it’s usually safer to call notifyAll() instead.\n\nExample(s):\n\nUse this rule by referencing it:",
-        "option": "This rule has no specific options."
-    }
-}

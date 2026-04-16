@@ -1,6 +1,0 @@
-{
-    "Lint/NumberedParameterAssignment": {
-        "description": "Description\n\nChecks for uses of numbered parameter assignment.",
-        "option": "This rule has no specific options."
-    }
-}

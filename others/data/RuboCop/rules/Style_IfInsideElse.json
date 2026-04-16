@@ -1,6 +1,0 @@
-{
-    "Style/IfInsideElse": {
-        "description": "Description\n\nFinds if nodes inside else, which can be converted to elsif.",
-        "option": "This rule supports the following parameters in your configuration:\n\nAllowIfModifier: False (type: bool)"
-    }
-}

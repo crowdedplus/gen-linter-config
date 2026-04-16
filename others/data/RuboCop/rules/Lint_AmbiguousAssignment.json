@@ -1,6 +1,0 @@
-{
-    "Lint/AmbiguousAssignment": {
-        "description": "Description\n\nChecks for mistyped shorthand assignments.",
-        "option": "This rule has no specific options."
-    }
-}

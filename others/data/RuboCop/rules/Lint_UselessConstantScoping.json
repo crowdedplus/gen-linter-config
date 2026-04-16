@@ -1,6 +1,0 @@
-{
-    "Lint/UselessConstantScoping": {
-        "description": "Description\n\nChecks for useless constant scoping.",
-        "option": "This rule has no specific options."
-    }
-}

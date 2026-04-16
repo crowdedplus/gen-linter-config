@@ -1,6 +1,0 @@
-{
-    "noUselessFragments": {
-        "description": "Description\n\nDisallow unnecessary fragments",
-        "option": "This rule has no specific options."
-    }
-}

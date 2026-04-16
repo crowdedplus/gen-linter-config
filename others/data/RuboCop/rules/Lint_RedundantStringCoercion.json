@@ -1,6 +1,0 @@
-{
-    "Lint/RedundantStringCoercion": {
-        "description": "Description\n\nChecks for Object#to_s usage in string interpolation.",
-        "option": "This rule has no specific options."
-    }
-}

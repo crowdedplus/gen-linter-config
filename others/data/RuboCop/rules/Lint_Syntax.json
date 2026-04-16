@@ -1,6 +1,0 @@
-{
-    "Lint/Syntax": {
-        "description": "Description\n\nChecks for syntax errors.",
-        "option": "This rule has no specific options."
-    }
-}

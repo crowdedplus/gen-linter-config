@@ -1,6 +1,0 @@
-{
-    "Lint/BooleanSymbol": {
-        "description": "Description\n\nChecks for `:true` and `:false` symbols.",
-        "option": "This rule has no specific options."
-    }
-}

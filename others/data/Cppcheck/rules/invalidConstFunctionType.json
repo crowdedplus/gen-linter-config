@@ -1,6 +1,0 @@
-{
-    "invalidConstFunctionType": {
-        "description": "Description\n\nIt is unspecified behavior to const qualify a function type.",
-        "option": "Static analysis does not have options.\n\nSeverity: portability\nCWE: N/A\nInconclusive: false"
-    }
-}

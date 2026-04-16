@@ -1,6 +1,0 @@
-{
-    "Lint/ToJSON": {
-        "description": "Description\n\nEnsure #to_json includes an optional argument.",
-        "option": "This rule has no specific options."
-    }
-}

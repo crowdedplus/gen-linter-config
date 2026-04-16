@@ -1,6 +1,0 @@
-{
-    "Lint/ElseLayout": {
-        "description": "Description\n\nChecks for odd code arrangement in an else block.",
-        "option": "This rule has no specific options."
-    }
-}

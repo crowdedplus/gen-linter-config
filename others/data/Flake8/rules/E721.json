@@ -1,4 +1,0 @@
-{
-  "description": "do not compare types, use ‘isinstance()’",
-  "option": {}
-}

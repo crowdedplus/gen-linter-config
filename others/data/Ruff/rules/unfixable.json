@@ -1,6 +1,0 @@
-{
-    "unfixable": {
-        "description": "Description\n\nA list of rule codes or prefixes to consider non-fixable.",
-        "option": "Type: array\nStatus: DEPRECATED"
-    }
-}

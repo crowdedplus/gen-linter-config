@@ -1,6 +1,0 @@
-{
-    "Lint/RescueException": {
-        "description": "Description\n\nAvoid rescuing the Exception class.",
-        "option": "This rule has no specific options."
-    }
-}

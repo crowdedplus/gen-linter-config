@@ -1,6 +1,0 @@
-{
-    "noVueDuplicateKeys": {
-        "description": "Description\n\nDisallow duplicate keys in Vue component data, methods, computed properties, and other options.\nThis rule prevents the use of duplicate keys across different Vue component options\nsuch asprops,data,computed,methods, andsetup. Even if keys don’t conflict\nin the script tag, they may cause issues in the template since Vue allows direct\naccess to these keys.",
-        "option": "This rule has no specific options."
-    }
-}

@@ -1,4 +1,0 @@
-{
-  "description": "import module from line N shadowed by loop variable",
-  "option": {}
-}
