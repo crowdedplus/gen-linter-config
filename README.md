@@ -1,5 +1,5 @@
-[![en](https://img.shields.io/badge/lang-en-red.svg)](README.md)
-[![zh-cn](https://img.shields.io/badge/lang-zh--cn-blue.svg)](README.zh-CN.md)
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/crowdedplus/gen-linter-config/blob/main/README.md)
+[![zh-cn](https://img.shields.io/badge/lang-zh--cn-blue.svg)](https://github.com/crowdedplus/gen-linter-config/blob/main/README.zh-CN.md)
 
 # gen-linter-config
 
