@@ -7,13 +7,24 @@
     <property name="charset" value="UTF-8"/>
     <property name="severity" value="warning"/>
     <property name="fileExtensions" value="java, properties, xml"/>
-        
+
   <module name="TreeWalker">
     <module name='ParameterNumber'>
       <property name='max' value='6'/>
+      <property name='tokens' value='METHOD_DEF'/>
+      <property name='ignoreOverriddenMethods' value='false'/>
     </module>
     <module name='CyclomaticComplexity'>
       <property name='max' value='12'/>
+      <property name='tokens' value='LITERAL_WHILE, LITERAL_DO, LITERAL_FOR, LITERAL_IF, LITERAL_SWITCH, LITERAL_CASE, LITERAL_CATCH, QUESTION, LAND, LOR'/>
+      <property name='switchBlockAsSingleDecisionPoint' value='false'/>
+    </module>
+    <module name='MethodLength'>
+      <property name='max' value='40'/>
+      <property name='tokens' value='METHOD_DEF'/>
+    </module>
+    <module name='NPathComplexity'>
+      <property name='max' value='200'/>
     </module>
   </module>
 </module>

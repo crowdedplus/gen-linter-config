@@ -10,9 +10,15 @@
 
   <module name='LineLength'>
     <property name='max' value='120'/>
-    <property name='ignorePattern' value='^(import| *//)'/>
   </module>
   <module name='FileLength'>
     <property name='max' value='500'/>
+  </module>
+
+  <module name="TreeWalker">
+    <module name='MethodCount'>
+      <property name='maxTotal' value='30'/>
+      <property name='tokens' value='CLASS_DEF'/>
+    </module>
   </module>
 </module>

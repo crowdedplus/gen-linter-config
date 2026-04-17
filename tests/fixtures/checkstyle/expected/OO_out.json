@@ -7,13 +7,19 @@
     <property name="charset" value="UTF-8"/>
     <property name="severity" value="warning"/>
     <property name="fileExtensions" value="java, properties, xml"/>
-        
+
   <module name="TreeWalker">
     <module name='ClassDataAbstractionCoupling'>
       <property name='max' value='10'/>
     </module>
     <module name='ClassFanOutComplexity'>
       <property name='max' value='20'/>
+    </module>
+    <module name='NestedIfDepth'>
+      <property name='max' value='3'/>
+    </module>
+    <module name='NestedForDepth'>
+      <property name='max' value='2'/>
     </module>
   </module>
 </module>
