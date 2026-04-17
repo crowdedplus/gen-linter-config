@@ -17,7 +17,6 @@ dependencies = [
     "pip~=25.2",
     "attrs~=25.4.0",
     "distro~=1.9.0",
-    "util~=0.0.1",
     "retry~=0.9.2",
     "PySocks~=1.7.1",
     "pillow~=11.1.0",
