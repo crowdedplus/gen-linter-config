@@ -1,3 +1,4 @@
 # Python Packing
 *.egg-info/
 *.egg
+dist
