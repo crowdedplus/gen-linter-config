@@ -1,18 +1,16 @@
 [![en](https://img.shields.io/badge/lang-en-red.svg)](README.md)
 [![zh-cn](https://img.shields.io/badge/lang-zh--cn-blue.svg)](README.zh-CN.md)
 
-# generate-linter-configuration-beta
+# gen-linter-config
 
-beta edition of a linter configuration generate tool ,mainly use LLM . May need some help while using .
+A LLM-based linter configuration generate tool .
 
-中文
+## 使用方法
 
-## How to use
-
-1. 安装：在根目录下打开终端，使用指令安装
+1. 安装：打开终端：
 
 ```python
-pip install -e .
+pip install gen-linter-config
 ```
 
 2. 配置大模型：本项目使用litellm库进行大模型的统一格式调用，因此在使用前请确保您已经将自己的key配置为环境变量且有充足的token资源。
