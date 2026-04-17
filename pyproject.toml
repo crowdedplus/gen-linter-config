@@ -32,5 +32,10 @@ dependencies = [
 [project.scripts]
 gen-linter-config = "gen_linter_config.generate_linter_config:main"
 
+[project.urls]
+Homepage = "https://github.com/crowdedplus/gen-linter-cAonfig"
+Repository = "https://github.com/crowdedplus/gen-linter-config.git"
+Issues = "https://github.com/crowdedplus/gen-linter-config/issues"
+
 [tool.setuptools.packages.find]
 where = ["src"]
