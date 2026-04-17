@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gen-linter-config"              # 命令行工具名，可带连字符
-version = "1.0.1"
+version = "1.0.2"
 description = "GenerateLinterConfig - 代码检查规则生成工具"
 readme = "README.md"
 authors = [{ name = "crowdedplus", email = "522025330089@smail.nju.edu.cn" }]
@@ -34,7 +34,7 @@ dependencies = [
 gen-linter-config = "gen_linter_config.generate_linter_config:main"
 
 [project.urls]
-Homepage = "https://github.com/crowdedplus/gen-linter-cAonfig"
+Homepage = "https://github.com/crowdedplus/gen-linter-config"
 Repository = "https://github.com/crowdedplus/gen-linter-config.git"
 Issues = "https://github.com/crowdedplus/gen-linter-config/issues"
 
