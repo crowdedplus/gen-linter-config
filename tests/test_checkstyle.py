@@ -39,5 +39,5 @@ def test_checkstyle_generation(case, load_fixture, default_model):
     # 4. 加载期望输出
     expected_output = load_fixture("checkstyle", case, "expected")
 
-    # 5. 断言
+    # TODO:修改   5. 断言
     assert actual_output == expected_output, f"Case '{case}' output mismatch"
