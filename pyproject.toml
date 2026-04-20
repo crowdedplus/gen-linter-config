@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gen-linter-config"              # 命令行工具名，可带连字符
-version = "1.0.5"
+version = "1.0.6"
 description = "GenerateLinterConfig - 代码检查规则生成工具"
 readme = "README.md"
 authors = [{ name = "crowdedplus", email = "522025330089@smail.nju.edu.cn" }]
@@ -42,4 +42,4 @@ Issues = "https://github.com/crowdedplus/gen-linter-config/issues"
 where = ["src"]
 
 [tool.setuptools.package-data]
-"gen_linter_config" = ["**/*.js"]
+"gen_linter_config" = ["**/*.json"]
