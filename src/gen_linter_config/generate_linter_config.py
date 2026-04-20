@@ -1,5 +1,6 @@
 import os
 import argparse
+from gen_linter_config import __version__
 
 
 # 导入项目模块
@@ -41,10 +42,11 @@ def main():
                         help='Specify the code checking tool')
     # 需要添加linter name参数，input改为coding standard
     parser.add_argument('--input', '-i', required=True, help='File path or rule text')
-    parser.add_argument('--model', '-m',default='dashscope/qwen3-max',help='Specify the model to use')
+    parser.add_argument('--model', '-m',default='deepseek/deepseek-reasoner',help='Specify the model to use')
     parser.add_argument('--out', '-o', help='Output file path')
     # parser.add_argument('--format', '-f', choices=['text', 'json'], default='json', help='output format')
     parser.add_argument('--examples', '-e', help='Sample text')
+    parser.add_argument('--version', '-v', action='version', version=f'%(prog)s {__version__}')
 
     args = parser.parse_args()
 
