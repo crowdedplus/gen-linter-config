@@ -4,8 +4,9 @@ import re
 import shutil
 
 
-from gen_linter_config import util,util_java
-from gen_linter_config import GPTAgent
+from gen_linter_config import util
+from . import util_java
+from gen_linter_config.gpt_wrapper import GPTAgent
 
 
 # 构建用于生成Checkstyle配置的核心提示词

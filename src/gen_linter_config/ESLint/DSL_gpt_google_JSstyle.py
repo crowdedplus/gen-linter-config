@@ -1,14 +1,14 @@
 import os,json,sys
-import re
-import shutil
-import inspect
+# import re
+# import shutil
+# import inspect
 
 import copy
 from gen_linter_config import util
 
-from openai import OpenAI
-from retry import retry
-from gen_linter_config import GPTAgent
+# from openai import OpenAI
+# from retry import retry
+from gen_linter_config.gpt_wrapper import GPTAgent
 # rule=rule_description, DSL_Syntax=dsl
 def preprocess_promt(rule: str, DSL_Syntax: str, style="Google Java Style Guide",grammar="Grammar",example="",PL="JavaScript"):
     #then determine formal term of Java for objects of style and determine the appropriate operators between terms. Pay attention to

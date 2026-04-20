@@ -1,12 +1,13 @@
-import copy
+# import copy
 import os, json, sys,inspect
-import re
-import shutil
+# import re
+# import shutil
 
-from gen_linter_config import util,util_js
-from openai import OpenAI
-from retry import retry
-from gen_linter_config import GPTAgent
+from gen_linter_config import util
+from . import util_js
+# from openai import OpenAI
+# from retry import retry
+from gen_linter_config.gpt_wrapper import GPTAgent
 
 
 

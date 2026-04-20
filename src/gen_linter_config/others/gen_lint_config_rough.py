@@ -4,7 +4,7 @@
 import json
 import os
 import re
-from gen_linter_config import GPTAgent
+from gen_linter_config.gpt_wrapper import GPTAgent
 
 
 def generate_lint_config(rule: str, lint_name: str, model: str):

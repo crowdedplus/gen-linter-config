@@ -1,15 +1,15 @@
 import os, json, sys
-import re
-import shutil
-import inspect
+# import re
+# import shutil
+# import inspect
 
 # 转换Google的Java规则为DSL。
 
 import copy
 from gen_linter_config import util
-from openai import OpenAI
-from retry import retry
-from gen_linter_config import GPTAgent
+# from openai import OpenAI
+# from retry import retry
+from gen_linter_config.gpt_wrapper import GPTAgent
 
 
 #  构建用于将Google Java风格描述转换为DSL的GPT提示词

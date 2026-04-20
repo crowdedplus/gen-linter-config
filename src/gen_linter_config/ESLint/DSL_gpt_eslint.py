@@ -1,12 +1,13 @@
 import os,sys,inspect,copy
-import re,json
-import shutil
+# import re,json
+# import shutil
 
-from gen_linter_config import util,util_java
+from gen_linter_config import util
+from . import util_java
 
-from openai import OpenAI
-from retry import retry
-from gen_linter_config import GPTAgent
+# from openai import OpenAI
+# from retry import retry
+from gen_linter_config.gpt_wrapper import GPTAgent
 # rule=rule_description, DSL_Syntax=dsl
 def preprocess_promt(rule: str, DSL_Syntax: str, style="ESLint Rule",grammar="Grammar",example=""):
 

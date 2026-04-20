@@ -1,12 +1,13 @@
 import os, sys, inspect, copy
-import re, json
-import shutil
+# import re, json
+# import shutil
 
 # 将Checkstyle规则的自然语言描述解析为自定义DSL格式。使用GPT模型将Checkstyle规则转换为结构化的DSL规则。
 
-from gen_linter_config import util,util_java
-from openai import OpenAI
-from retry import retry
+from gen_linter_config import util
+from . import util_java
+# from openai import OpenAI
+# from retry import retry
 from gen_linter_config import GPTAgent
 
 

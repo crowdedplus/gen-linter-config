@@ -3,11 +3,12 @@ import os, json, inspect, sys
 import re
 import shutil
 
-from gen_linter_config import util,util_java
+from gen_linter_config import util
+from . import util_java
 
-from openai import OpenAI
-from retry import retry
-from gen_linter_config import GPTAgent
+# from openai import OpenAI
+# from retry import retry
+from gen_linter_config.gpt_wrapper import GPTAgent
 
 
 def preprocess_promt(DSL_Syntax: str, style="RuleSet of Google JavaScript Style Guide", DSLruleset=None, tool="ESLint",

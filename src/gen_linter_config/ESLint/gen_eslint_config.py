@@ -6,7 +6,8 @@ import os
 import re
 import json
 
-from gen_linter_config import GPTAgent,util_js
+from gen_linter_config.gpt_wrapper import GPTAgent
+from . import util_js
 from .DSL_gpt_google_JSstyle import preprocess_promt as nl_preprocess, \
     Extract_DSL_Repr as DSL_final_extract
 from . import gpt_instr_select_eslint_for_googleJS as RuleSelector

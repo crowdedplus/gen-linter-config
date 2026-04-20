@@ -6,7 +6,8 @@ import os
 import re
 import json
 
-from gen_linter_config import util_java,GPTAgent
+from gen_linter_config.gpt_wrapper import GPTAgent
+from . import util_java
 from .DSL_gpt_google_java_style import preprocess_promt as nl_preprocess, \
     Extract_DSL_Repr as DSL_final_extract
 from .Config_name_select_checkstyle_for_googlejava_one import preprocess_promt as rule_mapper_preprocess, \
