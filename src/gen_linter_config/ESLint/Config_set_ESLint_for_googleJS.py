@@ -8,7 +8,7 @@ from . import util_java
 
 # from openai import OpenAI
 # from retry import retry
-from gen_linter_config.gpt_wrapper import GPTAgent
+from . import GPTAgent
 
 
 def preprocess_promt(DSL_Syntax: str, style="RuleSet of Google JavaScript Style Guide", DSLruleset=None, tool="ESLint",

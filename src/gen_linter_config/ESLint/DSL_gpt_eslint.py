@@ -7,7 +7,7 @@ from . import util_java
 
 # from openai import OpenAI
 # from retry import retry
-from gen_linter_config.gpt_wrapper import GPTAgent
+from . import GPTAgent
 # rule=rule_description, DSL_Syntax=dsl
 def preprocess_promt(rule: str, DSL_Syntax: str, style="ESLint Rule",grammar="Grammar",example=""):
 

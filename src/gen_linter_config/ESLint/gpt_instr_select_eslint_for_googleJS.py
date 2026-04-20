@@ -7,7 +7,7 @@ from gen_linter_config import util
 from . import util_js
 # from openai import OpenAI
 # from retry import retry
-from gen_linter_config.gpt_wrapper import GPTAgent
+from . import GPTAgent
 
 
 

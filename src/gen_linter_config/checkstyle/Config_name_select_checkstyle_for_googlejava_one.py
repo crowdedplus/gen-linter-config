@@ -1,7 +1,7 @@
-import copy
+# import copy
 import os, json, sys,inspect
-import re
-import shutil
+# import re
+# import shutil
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 grandparentdir= os.path.dirname(parentdir)
@@ -9,9 +9,9 @@ sys.path.insert(0, parentdir)
 sys.path.insert(0, grandparentdir)
 from gen_linter_config import util
 from . import util_java
-from openai import OpenAI
-from retry import retry
-from gen_linter_config.gpt_wrapper import GPTAgent
+# from openai import OpenAI
+# from retry import retry
+from . import GPTAgent
 
 
 def preprocess_promt(DSL_Syntax: str, style="RuleSet of Google Java Style Guide", DSLruleset=None, tool = "Checkstyle",toolruleset=None,grammar="Grammar", example=""):

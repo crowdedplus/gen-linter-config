@@ -1,12 +1,12 @@
 import copy
 import os, json, inspect, sys
-import re
-import shutil
+# import re
+# import shutil
 
 
 from gen_linter_config import util
 from . import util_java
-from gen_linter_config.gpt_wrapper import GPTAgent
+from . import GPTAgent
 
 
 # 构建用于生成Checkstyle配置的核心提示词
@@ -366,12 +366,12 @@ Explanation:
 Mapping 2: No'''
     '''2. Optional: [ColumnLimit] is [100] not for [ImportStatement]  
    >>>  
-   Optional: No [Line] longer than [100], except for lines matching [^import\s+.*;] 
+   Optional: No [Line] longer than [100], except for lines matching [^import\\s+.*;] 
    3. Optional: [ColumnLimit] is [100] not for [PackageStatement]  
     >>>  
 Optional: No [Line] longer than [100] except for lines matching [^package\s+.*;]'''
 
-    '''Mapping 3: Yes Explanation: The StyleSEM rule indicates that the [ColumnLimit] is [100] but does not apply to [PackageStatement], while the ToolSEM rule specifies that no [Line] should be longer than [100], except for lines matching the pattern [^package\s+.*;]. Both rules effectively exempt PackageStatement from the column limit, making their subjects equivalent in scope. Hence, the answer is Yes, as the subject of the StyleSEM rule is not narrower than that of the ToolSEM rule.'''
+    '''Mapping 3: Yes Explanation: The StyleSEM rule indicates that the [ColumnLimit] is [100] but does not apply to [PackageStatement], while the ToolSEM rule specifies that no [Line] should be longer than [100], except for lines matching the pattern [^package\\s+.*;]. Both rules effectively exempt PackageStatement from the column limit, making their subjects equivalent in scope. Hence, the answer is Yes, as the subject of the StyleSEM rule is not narrower than that of the ToolSEM rule.'''
     '''3. Mandatory: No [LineBreaks] is [LineWrapping]  
    >>>  
    Mandatory: No [line wrap] for [IMPORT] and [PACKAGE_DEF] statements

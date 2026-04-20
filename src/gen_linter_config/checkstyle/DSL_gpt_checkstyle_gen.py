@@ -8,7 +8,7 @@ from gen_linter_config import util
 from . import util_java
 # from openai import OpenAI
 # from retry import retry
-from gen_linter_config import GPTAgent
+from . import GPTAgent
 
 
 # 构建用于将Checkstyle规则描述转换为DSL的GPT提示词

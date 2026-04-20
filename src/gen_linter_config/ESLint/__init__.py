@@ -1,2 +1,3 @@
 from gen_linter_config.ESLint import util_js
 from gen_linter_config.ESLint.gen_eslint_config import gen_eslint
+from gen_linter_config.gpt_wrapper import GPTAgent
