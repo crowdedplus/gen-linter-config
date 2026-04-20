@@ -49,26 +49,26 @@ def main():
     parser.add_argument('--input', '-i', required=True, help='File path or rule text')
     parser.add_argument('--model', '-m',default='dashscope/qwen3-max',help='Specify the model to use')
     parser.add_argument('--out', '-o', help='Output file path')
-    parser.add_argument('--format', '-f', choices=['text', 'json'], default='json', help='output format')
+    # parser.add_argument('--format', '-f', choices=['text', 'json'], default='json', help='output format')
     parser.add_argument('--examples', '-e', help='Sample text')
 
     args = parser.parse_args()
 
     input_content = _get_input_content(args.input)
     # format and example may be None
-    if args.format is None:
-        args.format = 'json'
+    # if args.format is None:
+    #     args.format = 'json'
     if args.examples is None:
         args.examples = ""
     try:
         if args.tool == "checkstyle":
-            gen_ckstyle_config = gen_checkstyle()
-            result = gen_ckstyle_config.process_input(input_content, args.model, args.format, args.examples,)
+            gen_checkstyle_config = gen_checkstyle()
+            result = gen_checkstyle_config.process_input(input_content=input_content,model= args.model,examples= args.examples,)
         elif args.tool == "eslint":
             gen_eslint_config_ = gen_eslint()
-            result = gen_eslint_config_.process_input(input_content, args.model, args.format, args.examples)
+            result = gen_eslint_config_.process_input(input_content=input_content,model= args.model,examples= args.examples)
         else:
-            result = gen_lint_config_rough.generate_lint_config(input_content,args.tool,args.model)
+            result = gen_lint_config_rough.generate_lint_config(rule=input_content,lint_name=args.tool,model=args.model)
 
         # 输出结果
         if args.out:
