@@ -25,9 +25,8 @@ pip install gen-linter-config
    # Cppcheck does not apply to the attribute name system, so it will not actually return the content containing the attribute name.
    ```
    
-   If you don't specify an output file, the output will directly printed in the console.
 
-## Configure key as a system-level environment variable
+### Configure key as a system-level environment variable
 
 Windows：Through the system property settings. Find system-properties, find advanced system settings-environment variable, and then create a new user variable with the variable named OPENAI_API_KEY and the value of the key in the user environment variable above.
 
@@ -54,8 +53,22 @@ Then save and exit. Make the changes take effect:
 source ~/.bashrc
 # Zsh
 source ~/.zshrc
-# 其它的shell可能需要查阅相关文档确定具体指令。
+# 其它的shell可能需要查阅相关文档确定具体指令。          
 ```
+
+## Parameter Introduction
+
+| Parameter      | introduce                              | must | default           |
+| -------------- | -------------------------------------- | ---- | ----------------- |
+| -h, --help     | show help message and exit             | n    | -                 |
+| --tool, -t     | Specify the code checking tool         | y    | -                 |
+| --input, -i    | File path or rule text                 | y    | -                 |
+| --model, -m    | Specify the model to use               | n    | deepseek-reasoner |
+| --out, -o      | Output file path                       | n    | -                 |
+| --examples, -e | Sample text                            | n    | -                 |
+| --version, -v  | show program's version number and exit | n    | -                 |
+
+If you don't specify an output file, the output will directly printed in the console.
 
 ## List of supported tools
 

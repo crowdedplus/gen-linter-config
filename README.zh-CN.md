@@ -25,9 +25,8 @@ pip install gen-linter-config
    # cppcheck不适用属性名系统所以实际上不会返回包含属性名的内容。
    ```
 
-   如果不指定输出文件则直接输出在控制台中。
 
-## 将key配置为系统级环境变量
+### 将key配置为系统级环境变量
 
 Windows：通过系统属性设置。找到系统-属性，找到高级系统设置-环境变量，然后在上方的用户环境变量中新建一个变量名为OPENAI_API_KEY，值为密钥的值的用户变量。
 
@@ -57,20 +56,34 @@ source ~/.zshrc
 # 其它的shell可能需要查阅相关文档确定具体指令。
 ```
 
+## 参数介绍
+
+| 参数           | 介绍                           | 是否必须 | 默认值            |
+| -------------- | ------------------------------ | -------- | ----------------- |
+| -h, --help     | 打印帮助信息并退出             | 否       | -                 |
+| --tool, -t     | 指定代码检查工具               | 是       | -                 |
+| --input, -i    | 代码规范的文本路径或者文字描述 | 是       | -                 |
+| --model, -m    | 指定使用模型                   | 否       | deepseek-reasoner |
+| --out, -o      | 输出文件路径                   | 否       | -                 |
+| --examples, -e | 文本示例                       | 否       | -                 |
+| --version, -v  | 打印包版本并退出               | 否       | -                 |
+
+当不指定输出文件只会直接输出在控制台中。
+
 ## 支持的工具清单
 
-| Tool       | Y/N  |
-| :--------- | ---- |
-| Checkstyle | Y    |
-| ESLint     | Y    |
-| Biome      | Y    |
-| ClangTidy  | Y    |
-| CppCheck   | Y    |
-| Flake8     | Y    |
-| PMD        | Y    |
-| Pylint     | Y    |
-| Reek       | Y    |
-| RuboCop    | Y    |
-| Ruff       | Y    |
+| 工具       | 是否支持 |
+| :--------- | -------- |
+| Checkstyle | 是       |
+| ESLint     | 是       |
+| Biome      | 是       |
+| ClangTidy  | 是       |
+| CppCheck   | 是       |
+| Flake8     | 是       |
+| PMD        | 是       |
+| Pylint     | 是       |
+| Reek       | 是       |
+| RuboCop    | 是       |
+| Ruff       | 是       |
 
 其中Checkstyle和ESLint支持较为完善的生成机制，其余工具则不支持，更多工具的配置生成还在开发中。
