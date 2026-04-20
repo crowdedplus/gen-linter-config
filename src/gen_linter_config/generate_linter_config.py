@@ -1,17 +1,11 @@
-
 import os
-import sys
 import argparse
-import json
-import re
-import inspect
-import json
 
 
 # 导入项目模块
-from gen_linter_config.checkstyle.gen_checkstyle_config import gen_checkstyle
-from gen_linter_config.ESLint.gen_eslint_config import gen_eslint
-from others import gen_lint_config_rough
+# from gen_linter_config.checkstyle.gen_checkstyle_config import gen_checkstyle
+# from gen_linter_config.ESLint.gen_eslint_config import gen_eslint
+# from others import gen_lint_config_rough
 
 def _get_input_content(input_arg):
     """获取输入内容"""
@@ -62,12 +56,15 @@ def main():
         args.examples = ""
     try:
         if args.tool == "checkstyle":
+            from gen_linter_config.checkstyle.gen_checkstyle_config import gen_checkstyle
             gen_checkstyle_config = gen_checkstyle()
             result = gen_checkstyle_config.process_input(input_content=input_content,model= args.model,examples= args.examples,)
         elif args.tool == "eslint":
+            from gen_linter_config.ESLint.gen_eslint_config import gen_eslint
             gen_eslint_config_ = gen_eslint()
             result = gen_eslint_config_.process_input(input_content=input_content,model= args.model,examples= args.examples)
         else:
+            from gen_linter_config.others import gen_lint_config_rough
             result = gen_lint_config_rough.generate_lint_config(rule=input_content,lint_name=args.tool,model=args.model)
 
         # 输出结果

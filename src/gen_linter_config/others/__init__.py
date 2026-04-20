@@ -1,0 +1,1 @@
+from gen_linter_config.others.gen_lint_config_rough import generate_lint_config
