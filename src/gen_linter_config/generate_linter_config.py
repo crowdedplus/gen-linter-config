@@ -33,24 +33,24 @@ def main():
         description="代码检查工具配置生成器",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-使用示例:
-  gen-linter-config --tool checkstyle --model deepseek/deepseek-chat --input "函数参数不多于5个"
-  gen-linter-config -t checkstyle -i rule.txt -o output.json
-  gen-linter-config -t eslint -m deepseek/deepseek-chat -i "构造函数中一定要调用父类构造"
-错误用法：
-  gen-linter-config -t eslint -m deepseek/deepseek-chat -i "意大利面搅拌42号混凝土"
-  gen-linter-config -t checkstyle -i "你抚琵琶奏琴弦"
+**Examples:**
+  gen-linter-config --tool checkstyle --model deepseek/deepseek-chat --input "No more than 5 function parameters."
+  gen-linter-config -t checkstyle -i path/to/rule.txt -o path/to/output.json
+  gen-linter-config -t eslint -m deepseek/deepseek-chat -i "The parent class construction must be called in the constructor."
+**Wrong Usages:**
+  gen-linter-config -t eslint -m deepseek/deepseek-chat -- no input
+  gen-linter-config  -i "My coding rules" -- no tool name
         """
     )
 
     parser.add_argument('--tool', '-t', required=True,
-                        help='指定代码检查工具')
+                        help='Specify the code checking tool')
     # 需要添加linter name参数，input改为coding standard
-    parser.add_argument('--input', '-i', required=True, help='输入文件路径或规则文本')
-    parser.add_argument('--model', '-m',default='dashscope/qwen3-max',help='指定使用的模型')
-    parser.add_argument('--out', '-o', help='输出文件路径')
-    parser.add_argument('--format', '-f', choices=['text', 'json'], default='json', help='输出格式')
-    parser.add_argument('--examples', '-e', help='示例文本')
+    parser.add_argument('--input', '-i', required=True, help='File path or rule text')
+    parser.add_argument('--model', '-m',default='dashscope/qwen3-max',help='Specify the model to use')
+    parser.add_argument('--out', '-o', help='Output file path')
+    parser.add_argument('--format', '-f', choices=['text', 'json'], default='json', help='output format')
+    parser.add_argument('--examples', '-e', help='Sample text')
 
     args = parser.parse_args()
 
