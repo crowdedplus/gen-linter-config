@@ -16,9 +16,9 @@ from . import Config_set_checkstyle_for_googlejava_ours_o1 as CheckstyleGenerato
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 class gen_checkstyle:
-    def __init__(self):
+    def __init__(self, api_key=None):
         self.dsl_syntax = util_java.dsl
-        self.gpt_agent = GPTAgent() if GPTAgent else None
+        self.gpt_agent = GPTAgent(api_key) if GPTAgent else None
 
     # 处理代码规范的总入口
     def process_input(self,  input_content, model, output_format="text", examples=""):

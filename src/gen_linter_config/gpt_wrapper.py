@@ -18,10 +18,8 @@ import httpx
 import re
 wrapper = None
 class GPTAgent:
-    def __init__(self) -> None:
-        # 不再需要任何初始化，使用litellm库直接解析模型接入点
-        # 自动读取环境中的key，简化了和模型通信的过程。
-        pass
+    def __init__(self, api_key=None) -> None:
+        self._api_key = api_key
 
     @retry(delay=0, tries=6, backoff=1, max_delay=120)
     def ask(self, content,examples=None,model="dashscope/qwen3-max",temperature=0,previous_msg=[]):
@@ -60,11 +58,10 @@ class GPTAgent:
         # print(">>>>messages: ",messages)
 
         try:
-            response = completion(
-                model=model,
-                messages=messages,
-                temperature=temperature
-            )
+            kwargs = {"model": model, "messages": messages, "temperature": temperature}
+            if self._api_key:
+                kwargs["api_key"] = self._api_key
+            response = completion(**kwargs)
         except Exception as e:
             print(f"Error calling model {model} : {e}")
             raise e
