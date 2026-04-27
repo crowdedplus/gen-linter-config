@@ -4,7 +4,7 @@ import re
 import shutil
 
 from gen_linter_config import util
-from . import util_java
+from . import util_js
 
 # from openai import OpenAI
 # from retry import retry
