@@ -94,7 +94,7 @@ class gen_eslint:
             for rule in relevant_rules
         ])
 
-        print(f"提示：已从 {len(all_eslint_rules)} 条规则中筛选出 {len(relevant_rules)} 条相关规则用于映射。")
+        print("="*15+f"提示：已从 {len(all_eslint_rules)} 条规则中筛选出 {len(relevant_rules)} 条相关规则用于映射。")
 
         # 4. 生成 Prompt
         prompt = RuleSelector.preprocess_promt(

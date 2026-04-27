@@ -75,14 +75,30 @@ class gen_checkstyle:
 
         return self._format_output(final_response, output_format)
 
-    # 第二步，映射DSL到checkstyle
+# 第二步，映射DSL到checkstyle
     def map_to_checkstyle(self, dsl_ruleset, model, checkstyle_ruleset=None, output_format="text", examples=""):
         """
         映射DSL规则到Checkstyle规则
         """
-        # 如果没有提供checkstyle规则集，加载默认的
+        # 1. 获取所有规则的原始数据列表
+        all_checkstyle_rules = self._load_default_checkstyle_rules(return_raw=True)
+
+        # 2. 针对当前的 DSL 规则集，筛选出相关的 Checkstyle 规则
+        relevant_rules = self._filter_relevant_rules(dsl_ruleset, all_checkstyle_rules, top_k=30)
+
+        # 3. 将筛选出的规则转换为字符串格式
+        filtered_ruleset_text = "\n".join([
+            f"RuleName: {rule.get('name', 'Unknown')}\n"
+            f"Description: {rule.get('description', 'No description')}\n"
+            f"Category: {rule.get('category', 'Unknown')}\n"
+            for rule in relevant_rules
+        ])
+
+        print("="*15+f"提示：已从 {len(all_checkstyle_rules)} 条规则中筛选出 {len(relevant_rules)} 条相关规则用于映射。")
+
+        # 如果没有提供checkstyle规则集，使用筛选后的规则
         if checkstyle_ruleset is None:
-            checkstyle_ruleset = self._load_checkstyle_dsl()
+            checkstyle_ruleset = filtered_ruleset_text
 
         prompt = rule_mapper_preprocess(
             DSL_Syntax=self.dsl_syntax,
@@ -240,11 +256,14 @@ class gen_checkstyle:
         # 使用分隔符聚合，作为 Step 3 Prompt 中的 {{toolruleset}}
         return "\n\n*********************\n\n".join(detailed_results)
 
-    # 加载checkstyle规则集
-    def _load_default_checkstyle_rules(self):
-        """加载默认的Checkstyle规则集"""
-        # rules_dir = os.path.join(current_dir, "checkstyle", "data", "checkstyle_rules_by_category")
-        rule_file = os.path.join(current_dir,"data", "checkstyle_rules_complete.json")
+# 加载checkstyle规则集
+    def _load_default_checkstyle_rules(self, return_raw=False):
+        """
+        加载默认的Checkstyle规则集
+        Args:
+            return_raw: 如果为True，返回列表对象；否则返回格式化后的字符串
+        """
+        rule_file = os.path.join(current_dir, "data", "checkstyle_rules_complete.json")
         all_rules = []
 
         try:
@@ -254,15 +273,57 @@ class gen_checkstyle:
         except Exception as e:
             print(f"警告: 无法加载规则文件 {rule_file}: {e}")
 
-        # 转换为规则集字符串
+        if return_raw:
+            return all_rules
+
+        # 默认行为：返回格式化后的字符串
         ruleset_text = "\n".join([
             f"RuleName: {rule.get('name', 'Unknown')}\n"
             f"Description: {rule.get('description', 'No description')}\n"
             f"Category: {rule.get('category', 'Unknown')}\n"
-            for rule in all_rules  # 去除了数量限制可能导致提示词太长，原本all_rules[:50]
+            for rule in all_rules
         ])
-        # 实际上根据测试，去除数量限制不会导致提示词过长，在测试中这部分的长度大约为20k。
         return ruleset_text
+
+    # 根据 DSL 关键词筛选相关规则
+    def _filter_relevant_rules(self, dsl_text, all_rules_data, top_k=30):
+        """
+        根据 DSL 文本中的关键词，从所有规则中筛选出最相关的 top_k 条规则。
+        这是一个简单的关键词匹配实现，也可以换成向量检索。
+        """
+        # 1. 提取 DSL 中的关键词 (去掉常见停用词)
+        keywords = set(re.findall(r"[a-zA-Z]+", dsl_text))
+        stop_words = {"Mandatory", "Optional", "Rule", "is", "not", "of", "in", "the", "and", "or", "if", "then",
+                      "Java", "Google", "Style", "Guide", "class", "method", "field", "variable"}
+        keywords = {k for k in keywords if k not in stop_words and len(k) > 2}
+
+        scored_rules = []
+
+        for rule in all_rules_data:
+            score = 0
+            rule_content = (rule.get('name', '') + " " + rule.get('description', '')).lower()
+
+            # 2. 计算匹配分数
+            for kw in keywords:
+                if kw.lower() in rule_content:
+                    score += 1
+
+            # 优先保留完全匹配规则名的
+            if any(kw.lower() == rule.get('name', '').lower() for kw in keywords):
+                score += 5
+
+            if score > 0:
+                scored_rules.append((score, rule))
+
+        # 3. 排序并取前 K 个
+        scored_rules.sort(key=lambda x: x[0], reverse=True)
+        selected_rules = [r[1] for r in scored_rules[:top_k]]
+
+        # 如果没匹配到任何规则，返回全部规则的前 top_k 个作为保底
+        if not selected_rules:
+            return all_rules_data[:top_k]
+
+        return selected_rules
 
     # 加载checkstyle的DSL规则集
     def _load_checkstyle_dsl(self):
