@@ -10,12 +10,9 @@ requires openai == 1.25.0
 #     {"explanation":"Simplify the fraction on the right side by dividing both the numerator and the denominator by their greatest common divisor, which is 2.","output":"x = -15/4"}],
 #     "final_answer":"x = -15/4"}
 
-from openai import OpenAI
-from retry import retry
 from litellm import completion
 from retry import retry
-import httpx
-import re
+
 wrapper = None
 class GPTAgent:
     def __init__(self, api_key=None) -> None:
