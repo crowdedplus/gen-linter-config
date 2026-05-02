@@ -51,7 +51,7 @@ Final RuleSet Representation:
     prompt = prompt.replace("(", " ")
     prompt = prompt.replace(") ", ", ")
     prompt = prompt.replace(").", ".")
-    prompt = prompt.replace(": ", " is ")
+    # prompt = prompt.replace(": ", " is ")
     # prompt = prompt.replace(", ", " ")
     prompt = prompt.replace("{{Example}}", example)
     prompt = prompt.replace("{{Style}}", style)
