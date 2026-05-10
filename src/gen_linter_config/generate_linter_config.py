@@ -75,12 +75,12 @@ def main():
             with open(args.out, 'w', encoding='utf-8') as f:
                 f.write(result)
             print(f"\n" + "=" * 60)
-            print(f"结果已保存到: {args.out}")
+            print(f"Result have been saved to: {args.out}")
             print("=" * 60)
         else:
             # 如果没有指定输出文件，才在控制台显示最终合并结果
             print("\n" + "=" * 60)
-            print("最终合并结果")
+            print("Configuration")
             print("=" * 60)
             print(result)
 

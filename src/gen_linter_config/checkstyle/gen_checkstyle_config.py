@@ -23,27 +23,27 @@ class gen_checkstyle:
     # 处理代码规范的总入口
     def process_input(self,  input_content, model, output_format="text", examples=""):
         print("=" * 60)
-        print("步骤1: NL代码规范转换为DSL")
+        print("Step 1: NL-to-DSL Parsing")
         print("=" * 60)
         dsl_result = self.process_nl_rule(input_content, model, output_format, examples)
         print(dsl_result)
 
         print("\n" + "=" * 60)
-        print("步骤2: DSL规则映射到Checkstyle规则")
+        print("Step 2: Selection of the configuration name.")
         print("=" * 60)
         mapping_result = self.map_to_checkstyle(dsl_result,model, output_format=output_format, examples=examples)
         print(mapping_result)
 
         # --- 步骤3：详细选项映射 (子配置项生成) ---
         print("\n" + "=" * 60)
-        print("步骤3: 详细子配置项映射 (Sub-options Mapping)")
+        print("Step 3: Option Rule Configuration")
         print("=" * 60)
         detailed_mapping = self.detailed_mapping(dsl_result, mapping_result, model, examples)
         print(detailed_mapping)
 
         # ---  步骤4：配置生成 ---
         print("\n" + "=" * 60)
-        print("步骤4: 生成 Checkstyle 配置")
+        print("Step 4: Alignment Check & Configuration Generation")
         print("=" * 60)
         config_result = self.generate_config(detailed_mapping, model, output_format=output_format, examples=examples)
         final_res = self.generate_full_checkstyle_xml(config_result)
@@ -94,7 +94,7 @@ class gen_checkstyle:
             for rule in relevant_rules
         ])
 
-        print("="*15+f"提示：已从 {len(all_checkstyle_rules)} 条规则中筛选出 {len(relevant_rules)} 条相关规则用于映射。")
+        print("="*15 + f"Prompt: Filtered out {len(relevant_rules)} relevant rules from {len(all_checkstyle_rules)} rules for mapping.")
 
         # 如果没有提供checkstyle规则集，使用筛选后的规则
         if checkstyle_ruleset is None:
