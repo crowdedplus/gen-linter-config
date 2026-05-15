@@ -289,6 +289,7 @@ Step 1: Compare the rule type :
 Step 2: Compare Semantics:
  - If their semantics are identical, the mapping result is Yes. 
  - Or if the semantics of one rule are a subset of or superset within the semantics of the other, the mapping result is Yes.
+ Note: If the StyleSEM rule is Optional but the ToolSEM Basic Rule is Mandatory, check the option rules: if any option rule's type matches the StyleSEM's type, treat the mapping as valid by overriding the basic rule's type with the matching option rule's type.Only if no option rule matches, return No.
  - Otherwise, If the semantics are not identical and no subset of or superset relationship exists, the mapping result is No.
 
 Note for Comparison:
@@ -369,7 +370,7 @@ Mapping 2: No'''
    Optional: No [Line] longer than [100], except for lines matching [^import\\s+.*;] 
    3. Optional: [ColumnLimit] is [100] not for [PackageStatement]  
     >>>  
-Optional: No [Line] longer than [100] except for lines matching [^package\s+.*;]'''
+Optional: No [Line] longer than [100] except for lines matching [^package\\s+.*;]'''
 
     '''Mapping 3: Yes Explanation: The StyleSEM rule indicates that the [ColumnLimit] is [100] but does not apply to [PackageStatement], while the ToolSEM rule specifies that no [Line] should be longer than [100], except for lines matching the pattern [^package\\s+.*;]. Both rules effectively exempt PackageStatement from the column limit, making their subjects equivalent in scope. Hence, the answer is Yes, as the subject of the StyleSEM rule is not narrower than that of the ToolSEM rule.'''
     '''3. Mandatory: No [LineBreaks] is [LineWrapping]  

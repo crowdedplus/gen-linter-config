@@ -44,6 +44,7 @@ Response Format:
 Final RuleSet Representation:
 ...
 
+examples(important):
 {{Example}}'''
     # '''
     prompt = prompt.replace("{{Description}}", rule)

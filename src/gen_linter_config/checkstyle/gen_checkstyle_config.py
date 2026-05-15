@@ -55,6 +55,56 @@ class gen_checkstyle:
         """
         处理自然语言代码风格转换为DSL
         """
+        # examples = '''For Example, Analyze the following {{Style}}, please parse the style using the given {{grammar}}.
+        #
+        # {{Style}}:
+        # The column limit, Section 4.4, Column limit: 100, does not apply to package statements.
+        # Braces are used with `if` , `else` , `for` , `do` and `while` statements (even when the body is empty or contains only a single statement).
+        # Each type variable is named in one of two styles:
+        # A single capital letter, optionally followed by a single numeral (such as `E` , `T` , `X` , `T2` )
+        # A name in the form used for classes (see Section 5.2.2, Class names ), followed by the capital letter `T` (examples: `RequestT` , `FooBarT` ).
+        # A single blank line always appears:
+        # Between consecutive members or initializers of a class: fields, constructors, methods, nested classes, static initializers, and instance initializers.
+        # Exception: A blank line between two consecutive fields (having no other code between them) is optional. Such blank lines are used as needed to create logical groupings of fields.
+        # Exception: Blank lines between enum constants are covered in Section 4.8.1 .
+        # Any of the standard "block tags" that are used appear in the order `@param` , `@return` , `@throws` , `@deprecated` , and these four types never appear with an empty description.
+        #
+        # Final RuleSet Representation:
+        # Mandatory: [ColumnLimit] is [100]
+        # ;
+        # Optional: [ColumnLimit] not for [PackageStatement]
+        # ;
+        # Mandatory: [IfStatement], [ElseStatement], [ForStatement], [DoStatement], [WhileStatement] have [Brace]
+        # Or
+        # Mandatory: if [body] of [IfStatement], [ElseStatement], [ForStatement], [DoStatement], [WhileStatement] is [Null]
+        #            then [IfStatement], [ElseStatement], [ForStatement], [DoStatement], [WhileStatement] have [Brace]
+        # Or
+        # Mandatory: if Number of [statement] of [body] of [IfStatement], [ElseStatement], [ForStatement], [DoStatement], [WhileStatement] = 1
+        #            then [IfStatement], [ElseStatement], [ForStatement], [DoStatement], [WhileStatement] have [Brace]
+        # ;
+        # Mandatory: [TypeVariable] is [CapitalLetter]
+        # Or
+        # Mandatory: [TypeVariable] is [CapitalLetter] + [Numeral]
+        # Or
+        # Mandatory: [TypeVariable] is [ClassName] + [CapitalLetterT]
+        # ;
+        # Mandatory: [BlankLine] between [ConsecutiveMembers] or [Initializers] of [Class] : [fields, constructors, methods, nested classes, static initializers, and instance initializers]
+        # And
+        # Mandatory: Number of [BlankLine] between [ConsecutiveMembers] or [Initializers] of [Class] : [fields, constructors, methods, nested classes, static initializers, and instance initializers] = 1
+        # Or
+        # Optional: [BlankLine] between [two consecutive fields] that not have [other code] between [two consecutive fields]
+        # Or
+        # Optional: [BlankLine] between [enum constants] in Section 4.8.1
+        # ;
+        # Mandatory: Order of [BlockTag] is [@param, @return, @throws, @deprecated]
+        # And
+        # Mandatory: No [EmptyDescription] for [@param, @return, @throws, @deprecated
+        # '''
+        examples="""{{Style}}:
+The column limit, Section 4.4, Column limit: 100, does not apply to package statements.
+
+Final RuleSet Representation:
+Optional: [ColumnLimit] is [100] not for [PackageStatement]"""
         prompt = nl_preprocess(
             rule=rule_description,
             DSL_Syntax=self.dsl_syntax,
@@ -64,6 +114,7 @@ class gen_checkstyle:
         # 第一次转为带思考过程的DSL，后一次提取DSL。
         if self.gpt_agent:
             gpt_response = self.gpt_agent.get_response(prompt, model=model)
+            # print("="*60+"\n"+gpt_response+"="*60)
             final_ruleset = DSL_final_extract(gpt_response)
             final_response = self.gpt_agent.get_response(final_ruleset, model=model)
         else:
@@ -84,6 +135,10 @@ class gen_checkstyle:
         all_checkstyle_rules = self._load_default_checkstyle_rules(return_raw=True)
 
         # 2. 针对当前的 DSL 规则集，筛选出相关的 Checkstyle 规则
+        # 在 map_to_checkstyle 之前，将 DSL 中的 PascalCase 转成小写
+        dsl_ruleset = re.sub(r'\[([A-Z][a-z]+(?:[A-Z][a-z]+)*)\]',
+                                lambda m: '[' + re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', m.group(1)).lower() + ']',
+                                dsl_ruleset)
         relevant_rules = self._filter_relevant_rules(dsl_ruleset, all_checkstyle_rules, top_k=30)
 
         # 3. 将筛选出的规则转换为字符串格式
