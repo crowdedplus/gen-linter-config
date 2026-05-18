@@ -7,7 +7,7 @@ name = "gen-linter-config"              # 命令行工具名，可带连字符
 version = "1.1.0"
 description = "GenerateLinterConfig - 代码检查规则生成工具"
 readme = "README.md"
-authors = [{ name = "crowdedplus", email = "522025330089@smail.nju.edu.cn" }]
+authors = [{ name = "crowdedplus", email = "yi.tang@smail.nju.edu.cn" }]
 license = { text = "MIT" }
 requires-python = ">=3.7"
 dependencies = [
