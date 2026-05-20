@@ -16,21 +16,26 @@ from . import Config_set_checkstyle_for_googlejava_ours_o1 as CheckstyleGenerato
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 class gen_checkstyle:
-    def __init__(self, api_key=None):
+    def __init__(self, api_key=None, debug=False):
         self.dsl_syntax = util_java.dsl
-        self.gpt_agent = GPTAgent(api_key) if GPTAgent else None
+        self.gpt_agent = GPTAgent(api_key, debug=debug) if GPTAgent else None
+        self.debugger = self.gpt_agent.debugger if self.gpt_agent else None
 
     # 处理代码规范的总入口
     def process_input(self,  input_content, model, output_format="text", examples=""):
         print("=" * 60)
         print("Step 1: NL-to-DSL Parsing")
         print("=" * 60)
+        if self.debugger:
+            self.debugger.step("Step 1: NL-to-DSL Parsing")
         dsl_result = self.process_nl_rule(input_content, model, output_format, examples)
         print(dsl_result)
 
         print("\n" + "=" * 60)
         print("Step 2: Selection of the configuration name.")
         print("=" * 60)
+        if self.debugger:
+            self.debugger.step("Step 2: Selection of the configuration name")
         mapping_result = self.map_to_checkstyle(dsl_result,model, output_format=output_format, examples=examples)
         print(mapping_result)
 
@@ -38,6 +43,8 @@ class gen_checkstyle:
         print("\n" + "=" * 60)
         print("Step 3: Option Rule Configuration")
         print("=" * 60)
+        if self.debugger:
+            self.debugger.step("Step 3: Option Rule Configuration")
         detailed_mapping = self.detailed_mapping(dsl_result, mapping_result, model, examples)
         print(detailed_mapping)
 
@@ -45,6 +52,8 @@ class gen_checkstyle:
         print("\n" + "=" * 60)
         print("Step 4: Alignment Check & Configuration Generation")
         print("=" * 60)
+        if self.debugger:
+            self.debugger.step("Step 4: Alignment Check & Configuration Generation")
         config_result = self.generate_config(detailed_mapping, model, output_format=output_format, examples=examples)
         final_res = self.generate_full_checkstyle_xml(config_result)
         print(final_res)

@@ -1,58 +1,137 @@
 # encoding=utf-8
 """
 requires openai == 1.25.0
-
 """
-# {"steps":[
-#     {"explanation":"Start by isolating the term with the variable. Subtract 7 from both sides to do this.","output":"8x + 7 - 7 = -23 - 7"},
-#     {"explanation":"Simplify both sides. On the left side, 7 - 7 cancels out, and on the right side, -23 - 7 equals -30.","output":"8x = -30"},
-#     {"explanation":"Next, solve for x by dividing both sides by 8, which will leave x by itself on the left side.","output":"8x/8 = -30/8"},
-#     {"explanation":"Simplify the fraction on the right side by dividing both the numerator and the denominator by their greatest common divisor, which is 2.","output":"x = -15/4"}],
-#     "final_answer":"x = -15/4"}
+import os
+import re
+from datetime import datetime
 
 from litellm import completion
 from retry import retry
 
 wrapper = None
-class GPTAgent:
-    def __init__(self, api_key=None) -> None:
+
+
+class DebugLogger:
+    def __init__(self, enabled=False, api_key=None):
+        self.enabled = enabled
         self._api_key = api_key
+        self.log_file = None
+        if enabled:
+            try:
+                import colorama
+                colorama.init()
+            except ImportError:
+                pass
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            os.makedirs(os.path.join(os.getcwd(), "logs"), exist_ok=True)
+            log_path = os.path.join(os.getcwd(), "logs", f"gen_linter_debug_{timestamp}.log")
+            self.log_file = open(log_path, "w", encoding="utf-8")
+            self._file(f"Debug log started at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+    def _mask_key(self, text):
+        if not self._api_key:
+            return text
+        return text.replace(self._api_key, "***API_KEY***")
+
+    def _file(self, msg):
+        if self.log_file:
+            self.log_file.write(msg + "\n")
+            self.log_file.flush()
+
+    def separator(self, char="=", length=60):
+        if not self.enabled:
+            return
+        line = char * length
+        self._file(line)
+        try:
+            import colorama
+            print(colorama.Style.DIM + line + colorama.Style.RESET_ALL)
+        except ImportError:
+            pass
+
+    def step(self, title):
+        if not self.enabled:
+            return
+        msg = f">>>>> {title}"
+        self._file(f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {msg}")
+        try:
+            import colorama
+            print(colorama.Fore.YELLOW + colorama.Style.BRIGHT + msg + colorama.Style.RESET_ALL)
+        except ImportError:
+            print(msg)
+
+    def prompt(self, model, messages):
+        if not self.enabled:
+            return
+        full = self._messages_to_text(messages)
+        masked = self._mask_key(full)
+        self._file(f"PROMPT (model: {model}):\n{masked}")
+        try:
+            import colorama
+            preview = masked[:200]
+            if len(masked) > 200:
+                preview += "\n...(truncated, see log file for full content)"
+            print(colorama.Fore.CYAN + colorama.Style.BRIGHT + "──── PROMPT ────" + colorama.Style.RESET_ALL)
+            print(colorama.Fore.CYAN + preview + colorama.Style.RESET_ALL)
+            print(colorama.Fore.CYAN + "──────────────" + colorama.Style.RESET_ALL)
+        except ImportError:
+            pass
+
+    def response(self, model, text):
+        if not self.enabled:
+            return
+        masked = self._mask_key(text)
+        self._file(f"RESPONSE (model: {model}):\n{masked}")
+        try:
+            import colorama
+            preview = masked[:500]
+            if len(masked) > 500:
+                preview += "\n...(truncated, see log file for full content)"
+            print(colorama.Fore.GREEN + colorama.Style.BRIGHT + "──── RESPONSE ────" + colorama.Style.RESET_ALL)
+            print(colorama.Fore.GREEN + preview + colorama.Style.RESET_ALL)
+            print(colorama.Fore.GREEN + "────────────────" + colorama.Style.RESET_ALL)
+        except ImportError:
+            pass
+
+    def _messages_to_text(self, messages):
+        parts = []
+        for m in messages:
+            role = m.get("role", "unknown")
+            content = m.get("content", "")
+            parts.append(f"<{role}>\n{content}\n</{role}>")
+        return "\n".join(parts)
+
+    def close(self):
+        if self.log_file:
+            self._file(f"Debug log ended at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            self.log_file.close()
+            self.log_file = None
+
+
+class GPTAgent:
+    def __init__(self, api_key=None, debug=False) -> None:
+        self._api_key = api_key
+        self.debugger = DebugLogger(enabled=debug, api_key=api_key)
 
     @retry(delay=0, tries=6, backoff=1, max_delay=120)
-    def ask(self, content,examples=None,model="dashscope/qwen3-max",temperature=0,previous_msg=[]):
-        """
-        :param content:
-        :param examples:
-        :param model: 完整模型名称，例如"dashscope/qwen3-max"或者"deepseek/deepseek-chat"
-        :param temperature:
-        :param previous_msg:
-        :return:
-        """
+    def ask(self, content, examples=None, model="deepseek/deepseek-v4-flash", temperature=0, previous_msg=[]):
         messages = []
-        # messages.extend(previous_msg)
-
-        # 1.上下文处理
         if isinstance(previous_msg, list):
             for i, each_prompt in enumerate(previous_msg):
                 role = "user" if i % 2 else "assistant"
                 messages.append({"role": role, "content": each_prompt})
 
-        #  2.处理Few-shot实例
         if examples:
-            '''
-            https://github.com/openai/openai-cookbook/blob/main/examples/How_to_format_inputs_to_ChatGPT_models.ipynb
-              {"role": "user", "content": "Help me translate the following corporate jargon into plain English."},
-            {"role": "assistant", "content": "Sure, I'd be happy to!"},
-            '''
             for user_prompt, response in examples:
                 messages.extend([
-                    {"role": "user",
-                     "content": user_prompt},
-                    {"role": "assistant",
-                     "content": str(response)}])
-        # 3.添加当前的用户提问
+                    {"role": "user", "content": user_prompt},
+                    {"role": "assistant", "content": str(response)}])
+
         messages.append({"role": "user", "content": content})
-        # print(">>>>messages: ",messages)
+
+        self.debugger.separator()
+        self.debugger.prompt(model, messages)
 
         try:
             kwargs = {"model": model, "messages": messages, "temperature": temperature}
@@ -62,17 +141,12 @@ class GPTAgent:
         except Exception as e:
             print(f"Error calling model {model} : {e}")
             raise e
-        return response.choices[0].message.content
 
-
-    def get_response(self, prompt,examples=None,model="dashscope/qwen3-max",temperature=0,previous_msg=[]):
-        answer = self.ask(prompt,examples,model,temperature,previous_msg)
+        answer = response.choices[0].message.content
+        self.debugger.response(model, answer)
         return answer
-        # if len(eslint_rules_simple) > 0:
-        #     # question = "Given a rule:\n\n"
-        #     # question += rule
-        #     # question += "Can you find a corresponding rule in the following rule set?\n\n"
-        #     # question += eslint_rules_simple
-        #     answer = self.wrapper.ask(prompt)
-        #     print(answer)
+
+    def get_response(self, prompt, examples=None, model="deepseek/deepseek-v4-flash", temperature=0, previous_msg=[]):
+        answer = self.ask(prompt, examples, model, temperature, previous_msg)
+        return answer
 

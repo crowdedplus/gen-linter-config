@@ -15,33 +15,42 @@ from . import Config_set_ESLint_for_googleJS as EslintGenerator
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 class gen_eslint:
-    def __init__(self, api_key=None):
+    def __init__(self, api_key=None, debug=False):
         self.dsl_syntax = util_js.dsl
-        self.gpt_agent = GPTAgent(api_key) if GPTAgent else None
+        self.gpt_agent = GPTAgent(api_key, debug=debug) if GPTAgent else None
+        self.debugger = self.gpt_agent.debugger if self.gpt_agent else None
 
     # 处理代码规范的总入口
     def process_input(self, input_content, model, output_format="text", examples=""):
         print("=" * 60)
         print("步骤1: NL代码规范转换为DSL  --  1轮对话")
         print("=" * 60)
+        if self.debugger:
+            self.debugger.step("Step 1: NL-to-DSL Parsing")
         dsl_result = self.process_nl_rule(input_content, model, output_format, examples)
         print(dsl_result)
 
         print("\n" + "=" * 60)
         print("步骤2: 提取候选规则名  --  1轮对话")
         print("=" * 60)
+        if self.debugger:
+            self.debugger.step("Step 2: Candidate Rule Name Selection")
         mapping_result = self.map_to_eslint(dsl_result, model, output_format=output_format, examples=examples)
         print(mapping_result)
 
         print("\n" + "=" * 60)
         print("步骤3: 详细选项映射  --  1轮对话")
         print("=" * 60)
+        if self.debugger:
+            self.debugger.step("Step 3: Option Rule Configuration")
         detailed_mapping = self.step_3_detailed_mapping(dsl_result,mapping_result,model,examples)
         print(detailed_mapping)
 
         print("\n" + "=" * 60)
         print("步骤4: 生成ESLint配置  --  4轮对话")
         print("=" * 60)
+        if self.debugger:
+            self.debugger.step("Step 4: Alignment Check & Configuration Generation")
         config_result = self.generate_config(detailed_mapping, model, output_format=output_format, examples=examples)
 
         final_res = self.generate_full_eslint_js(config_result)

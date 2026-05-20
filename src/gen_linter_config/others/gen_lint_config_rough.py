@@ -7,11 +7,11 @@ import re
 from gen_linter_config.gpt_wrapper import GPTAgent
 
 
-def generate_lint_config(rule: str, lint_name: str, model: str, api_key: str = None):
+def generate_lint_config(rule: str, lint_name: str, model: str, api_key: str = None, debug: bool = False):
     """
     一键整合函数：输入自然语言规则、工具名和模型名，输出最终配置文件内容。
     """
-    gpt_agent = GPTAgent(api_key)
+    gpt_agent = GPTAgent(api_key, debug=debug)
 
     print("\n" + "=" * 60)
     print("步骤 1: 将自然语言规范转换为 DSL")

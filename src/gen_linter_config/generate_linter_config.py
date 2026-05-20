@@ -45,6 +45,7 @@ def main():
     parser.add_argument('--model', '-m',default='deepseek/deepseek-reasoner',help='Specify the model to use')
     parser.add_argument('--out', '-o', help='Output file path')
     parser.add_argument('--api-key', '-k', help='API key for LLM (optional, falls back to env var)')
+    parser.add_argument('--debug', '-d', action='store_true', help='Enable debug mode: print colored prompts/responses and save log')
     # parser.add_argument('--format', '-f', choices=['text', 'json'], default='json', help='output format')
     parser.add_argument('--examples', '-e', help='Sample text')
     parser.add_argument('--version', '-v', action='version', version=f'%(prog)s {__version__}')
@@ -60,15 +61,15 @@ def main():
     try:
         if args.tool == "checkstyle":
             from gen_linter_config.checkstyle.gen_checkstyle_config import gen_checkstyle
-            gen_checkstyle_config = gen_checkstyle(api_key=args.api_key)
+            gen_checkstyle_config = gen_checkstyle(api_key=args.api_key, debug=args.debug)
             result = gen_checkstyle_config.process_input(input_content=input_content,model= args.model,examples= args.examples,)
         elif args.tool == "eslint":
             from gen_linter_config.ESLint.gen_eslint_config import gen_eslint
-            gen_eslint_config_ = gen_eslint(api_key=args.api_key)
+            gen_eslint_config_ = gen_eslint(api_key=args.api_key, debug=args.debug)
             result = gen_eslint_config_.process_input(input_content=input_content,model= args.model,examples= args.examples)
         else:
             from gen_linter_config.others import gen_lint_config_rough
-            result = gen_lint_config_rough.generate_lint_config(rule=input_content,lint_name=args.tool,model=args.model,api_key=args.api_key)
+            result = gen_lint_config_rough.generate_lint_config(rule=input_content,lint_name=args.tool,model=args.model,api_key=args.api_key,debug=args.debug)
 
         # 输出结果
         if args.out:
