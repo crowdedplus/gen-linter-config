@@ -197,9 +197,27 @@ class gen_checkstyle:
         )
         if self.gpt_agent:
             mapping_res = self.gpt_agent.get_response(prompt, model=model)
-            # 执行一遍提取，获得纯净的 "Style -> Tool (Detailed)" 映射关系
             extract_prompt = CheckstyleGenerator.extract_config_promt(mapping_res)
             final_mapping = self.gpt_agent.get_response(extract_prompt, model=model)
+            # 步骤3.1: 提取非空配置映射
+            extract_non_empty_prompt = CheckstyleGenerator.extract_non_empty_config_promt(final_mapping)
+            final_mapping = self.gpt_agent.get_response(extract_non_empty_prompt, model=model)
+            if "Yes" not in final_mapping:
+                return "No valid mappings found."
+            # 步骤3.2: 正则表达式占位符处理
+            if "regular expression" in final_mapping.lower():
+                set_value_answer = self.gpt_agent.get_response(
+                    f'For each mapping, if it contains "regular expression", set specific regular expression of option names to match rule\n\n        {final_mapping}',
+                    model=model)
+                answer_map_with_value = self.gpt_agent.get_response(
+                    f'Based on the following Analysis, Replace "regular expression" with setting regular expression values for the following mapping. And then give new Mappings.\n'
+                    f'1. Extract specific regular expression values for "regular expression" value from the following Analysis.\n'
+                    f'2. Replace "regular expression" value with corresponding specific regular expression values within the following mapping.\n\n'
+                    f'Analysis:\n{set_value_answer}\n\n'
+                    f'Mapping:\n{final_mapping}\n        ',
+                    model=model)
+                extract_with_value = CheckstyleGenerator.extract_config_promt(answer_map_with_value)
+                final_mapping = self.gpt_agent.get_response(extract_with_value, model=model)
             return final_mapping
         return candidate_names
 
@@ -211,15 +229,32 @@ class gen_checkstyle:
         if checkstyle_ruleset is None:
             checkstyle_ruleset = self._load_default_checkstyle_rules()
 
-        # 1.验证语义匹配
-        prompt = CheckstyleGenerator.validation_config_superset_semantics(
-            mapping=dsl_ruleset,
-            tool="Checkstyle",
-            style="Google Java Style",
-            toolruleset=checkstyle_ruleset
-        )
-
         if self.gpt_agent:
+            # 将 Basic Rule 和 Option Rule 合并为一条精简的 ToolSEM 规则
+            tool_sem_rules = self.gpt_agent.get_response(
+                f'For the following mappings,before ">>>" is StyleSEM rule, after ">>>" is ToolSEM rule. You only excerpt toolSEM rule consisting of Rulename, Basic rule and Option rules.\n\n'
+                f'{dsl_ruleset}\n\n'
+                f'Response Format: Please do not give explanation.\n'
+                f'1. RuleName: ...\n'
+                f'   Basic Rule: ...\n'
+                f'   Option Rule: \n'
+                f'     ...\n'
+                f'2. ...\n'
+                f'...\n',
+                model=model)
+            merg_prompt = CheckstyleGenerator.merge_basic_option_rules(tool_sem_rules)
+            merge_answer_map = self.gpt_agent.get_response(merg_prompt, model=model)
+            prompt_extract_merge = CheckstyleGenerator.extract_merge_mappings_promt(
+                text=merge_answer_map, answer_map=dsl_ruleset)
+            dsl_ruleset = self.gpt_agent.get_response(prompt_extract_merge, model=model)
+
+            # 1.验证语义匹配
+            prompt = CheckstyleGenerator.validation_config_superset_semantics(
+                mapping=dsl_ruleset,
+                tool="Checkstyle",
+                style="Google Java Style",
+                toolruleset=checkstyle_ruleset
+            )
             val_response = self.gpt_agent.get_response(prompt, model=model)
             # 2.提取正确映射
             filter_prompt = CheckstyleGenerator.extract_correct_mapping(
@@ -227,7 +262,6 @@ class gen_checkstyle:
                 correct_information=val_response
             )
             val_mapping = self.gpt_agent.get_response(filter_prompt, model=model)
-            # 快速检查一下
             if "Yes" not in val_mapping and "Mapping:" not in val_mapping:
                 print("Warning: No valid mappings found after validation.")
                 return None
@@ -249,11 +283,9 @@ class gen_checkstyle:
             if match:
                 return match.group(1)
             else:
-                # 如果正则没匹配到，尝试直接返回（有时 GPT 会只返回 XML）
                 return final_res.replace("Configuration:", "").strip()
         else:
             final_response = {
-                "prompt": prompt,
                 "dsl_ruleset": dsl_ruleset,
                 "type": "checkstyle_config_generation"
             }

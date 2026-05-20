@@ -141,6 +141,30 @@ class gen_eslint:
             mapping_res = self.gpt_agent.get_response(prompt,model=model)
             extract_prompt = EslintGenerator.extract_config_promt(mapping_res)
             final_mapping = self.gpt_agent.get_response(extract_prompt,model=model)
+            # 步骤3.1: 提取非空配置映射
+            extract_non_empty_prompt = EslintGenerator.extract_non_empty_config_promt(final_mapping)
+            final_mapping = self.gpt_agent.get_response(extract_non_empty_prompt, model=model)
+            if "Yes" not in final_mapping:
+                return "No valid mappings found."
+            # 步骤3.2: 正则表达式占位符处理
+            if "regular expression" in final_mapping.lower():
+                set_value_answer = self.gpt_agent.get_response(
+                    f'For each mapping, if any option name value is "regular expression", only set specific regular expression value of option names to match rule\n'
+                    f' Must set specific regular expression values!\n\n'
+                    f'        {final_mapping}',
+                    model=model)
+                answer_map_with_value = self.gpt_agent.get_response(
+                    f'Based on the following Analysis, only Replace "regular expression" with setting regular expression values for the following mapping. And then give new Mappings.\n'
+                    f'1. Extract specific regular expression values for "regular expression" value from the following Analysis.\n'
+                    f'2. Replace "regular expression" value with corresponding specific regular expression values within the following mapping.\n'
+                    f'Must set specific specific regular expression values!\n\n'
+                    f'Finally give new Mappings with same number of mappings.\n\n'
+                    f'Analysis:\n{set_value_answer}\n\n'
+                    f'Mapping:\n{final_mapping}\n        ',
+                    model=model)
+                extract_with_value = EslintGenerator.extract_config_promt(answer_map_with_value)
+                final_mapping = self.gpt_agent.get_response(extract_with_value, model=model)
+            return final_mapping
         else :
             final_mapping = {
                 "prompt": prompt,
@@ -157,27 +181,40 @@ class gen_eslint:
         if eslint_ruleset is None:
             eslint_ruleset = self._load_default_eslint_rules()
 
-        # 1.验证语义匹配
-        prompt = EslintGenerator.validation_config_superset_semantics(
-            mapping=detailed_mappings,
-            tool="ESLint",
-            style="Google JavaScript Style",
-            toolruleset=eslint_ruleset
-        )
-
         if self.gpt_agent:
+            # 步骤4.0: 合并选项规则 —— 将 Basic Rule 和 Option Rule 合并为一条精简的 ToolSEM 规则
+            tool_sem_rules = self.gpt_agent.get_response(
+                f'For the following mappings,before ">>>" is StyleSEM rule, after ">>>" is ToolSEM rule. \n'
+                f'You only excerpt ToolSEM rule consisting of Rulename, Basic rule and Option rules.\n\n'
+                f'Mappings:\n{detailed_mappings}\n\n'
+                f'Response Format: Please do not give explanation.\n'
+                f'1. RuleName: ...\n'
+                f'   Basic Rule: ...\n'
+                f'   Option Rule: \n'
+                f'     ...\n'
+                f'2. ...\n'
+                f'...\n',
+                model=model)
+            merg_prompt = EslintGenerator.merge_basic_option_rules(tool_sem_rules)
+            merge_answer_map = self.gpt_agent.get_response(merg_prompt, model=model)
+            prompt_extract_merge = EslintGenerator.extract_merge_mappings_promt(
+                text=merge_answer_map, answer_map=detailed_mappings)
+            detailed_mappings = self.gpt_agent.get_response(prompt_extract_merge, model=model)
+
+            # 1.验证语义匹配
+            prompt = EslintGenerator.validation_config_superset_semantics(
+                mapping=detailed_mappings,
+                tool="ESLint",
+                style="Google JavaScript Style",
+                toolruleset=eslint_ruleset
+            )
             val_response = self.gpt_agent.get_response(prompt, model=model)
-            # print("\n" + "="*30+"语义验证分析结果 :")
-            # print("\n" + val_response)
             # 2.提取正确映射
             filter_prompt = EslintGenerator.extract_correct_mapping(
                 mapping=detailed_mappings,
                 correct_information=val_response
             )
             val_mapping = self.gpt_agent.get_response(filter_prompt, model=model)
-            # print("\n" + "="*30+"正确映射结果 :")
-            # print("\n" + val_mapping)
-            # 快速检查
             if "Yes" not in val_mapping and "Mapping:" not in val_mapping:
                 print("Warning: No valid mappings found after validation.")
                 return None
@@ -189,8 +226,6 @@ class gen_eslint:
                 format="JSON"
             )
             raw_config = self.gpt_agent.get_response(gen_prompt, model=model)
-            # print("\n" + "="*30+"json初稿 :")
-            # print(raw_config)
 
             # 4.纯净配置提取
             clean_prompt = EslintGenerator.extract_specific_config_promt(
@@ -200,8 +235,6 @@ class gen_eslint:
             final_res = self.gpt_agent.get_response(clean_prompt, model=model)
             final_res = util_js.process_ESLint_Json(final_res)
             final_res = re.search(r'\{[^{}]*\}', final_res, re.DOTALL).group() if re.search(r'\{[^{}]*\}', final_res, re.DOTALL) else ""
-            # print("\n" + "="*30+"提取的所谓纯净配置(util) :")
-            # print(final_res)
 
             # 5. 清洗 Markdown 标记
             final_res = final_res.replace("```json", "").replace("```", "").strip()
