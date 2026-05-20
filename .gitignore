@@ -3,4 +3,5 @@
 *.egg
 dist
 __pycache__/
+logs/
 *.py[cod]
