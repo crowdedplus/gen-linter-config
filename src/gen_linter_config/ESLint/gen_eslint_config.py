@@ -269,28 +269,6 @@ class gen_eslint:
         ])
         return ruleset_text
 
-    # 加载ESLint的DSL规则集 (用于映射)
-    def _load_eslint_dsl(self):
-        dsl_file = os.path.join(current_dir, "data", "DSL_ESLint_all.json")
-
-        try:
-            with open(dsl_file, 'r', encoding='utf-8') as f:
-                rules = json.load(f)
-        except Exception as e:
-            print(f"警告: 无法加载DSL规则集{dsl_file}: {e}\n")
-            return ""
-
-        formatted_rules = []
-        for item in rules:
-            # 假设结构: [url, rule_name, dsl_content]
-            if isinstance(item, list) and len(item) >= 3:
-                rule_name = item[1]
-                dsl_content = item[2]
-                clean_dsl = dsl_content.replace("Final RuleSet Representation:", "").strip()
-                formatted_rules.append(f"RuleName: {rule_name}\n{clean_dsl}")
-
-        dsl_rules = "\n\n".join(formatted_rules)
-        return dsl_rules
 
     def _load_eslint_dsl_basic_rules(self):
         dsl_file = os.path.join(current_dir, "data", "DSL_ESLint_all.json")
@@ -350,48 +328,6 @@ class gen_eslint:
             "]);"
         )
 
-    def _filter_relevant_rules(self, dsl_text, all_rules_data, top_k=20):
-        """
-        根据 DSL 文本中的关键词，从所有规则中筛选出最相关的 top_k 条规则。
-        这是一个简单的关键词匹配实现，也可以换成向量检索。
-        """
-        # 1. 提取 DSL 中的关键词 (去掉常见停用词)
-        # 简单的分词：提取所有字母组成的单词
-        keywords = set(re.findall(r"[a-zA-Z]+", dsl_text))
-        # 过滤掉一些通用词 (根据需要补充)
-        stop_words = {"Mandatory", "Optional", "Rule", "is", "not", "of", "in", "the", "and", "or", "if", "then"}
-        keywords = {k for k in keywords if k not in stop_words and len(k) > 2}
-
-        scored_rules = []
-
-        for rule in all_rules_data:
-            score = 0
-            rule_content = (rule.get('name', '') + " " + rule.get('description', '')).lower()
-
-            # 2. 计算匹配分数
-            for kw in keywords:
-                if kw.lower() in rule_content:
-                    score += 1
-
-            # 优先保留完全匹配规则名的
-            if any(kw.lower() == rule.get('name', '').lower() for kw in keywords):
-                score += 5
-
-            if score > 0:
-                scored_rules.append((score, rule))
-
-        # 3. 排序并取前 K 个
-        # 按分数降序排列
-        scored_rules.sort(key=lambda x: x[0], reverse=True)
-
-        # 如果匹配到的太少，补一些通用的或者直接返回前几个
-        selected_rules = [r[1] for r in scored_rules[:top_k]]
-
-        # 如果没匹配到任何规则，为了防止空上下文，返回全部规则的前20个作为保底
-        if not selected_rules:
-            return all_rules_data[:top_k]
-
-        return selected_rules
 
     def _get_detailed_tool_rules(self, name_list_str):
         # 根据选中的名字从DSL_ESLint_all.json文件中提取包含Option Rule的详细DSL
