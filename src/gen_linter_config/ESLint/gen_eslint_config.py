@@ -244,7 +244,6 @@ class gen_eslint:
             return final_res
         else:
             final_response = {
-                "prompt": prompt,
                 "dsl_ruleset": detailed_mappings,
                 "type": "eslint_config_generation"
             }
