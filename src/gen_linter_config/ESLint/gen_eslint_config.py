@@ -11,6 +11,7 @@ from . import util_js
 from .DSL_gpt_google_JSstyle import preprocess_promt as nl_preprocess, \
     Extract_DSL_Repr as DSL_final_extract
 from . import gpt_instr_select_eslint_for_googleJS as RuleSelector
+extract_basic_rule = RuleSelector.extract_basic_rule
 from . import Config_set_ESLint_for_googleJS as EslintGenerator
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -89,29 +90,16 @@ class gen_eslint:
         """
         映射DSL规则到ESLint规则
         """
-        # 1. 获取所有规则的原始数据列表
-        all_eslint_rules = self._load_default_eslint_rules(return_raw=True)
+        dsl_basic_rules = self._load_eslint_dsl_basic_rules()
 
-        # 2. 针对当前的 DSL 规则集，筛选出相关的 ESLint 规则
-        relevant_rules = self._filter_relevant_rules(dsl_ruleset, all_eslint_rules, top_k=30)  # 选出最相关的30条
+        print("="*15 + f"使用 {len(dsl_basic_rules.splitlines())} 条 ESLint DSL Basic Rule 进行映射。")
 
-        # 3. 将筛选出的规则转换为字符串格式
-        filtered_ruleset_text = "\n".join([
-            f"RuleName: {rule.get('name', 'Unknown')}\n"
-            f"Description: {rule.get('description', 'No description')}\n"
-            f"Options: {json.dumps(rule.get('options', []), ensure_ascii=False)}\n"  # 加上 Options 有助于模型判断
-            for rule in relevant_rules
-        ])
-
-        print("="*15+f"提示：已从 {len(all_eslint_rules)} 条规则中筛选出 {len(relevant_rules)} 条相关规则用于映射。")
-
-        # 4. 生成 Prompt
         prompt = RuleSelector.preprocess_promt(
             DSL_Syntax=self.dsl_syntax,
             style="RuleSet of Google JavaScript Style Guide",
             DSLruleset=dsl_ruleset,
             tool="ESLint",
-            toolruleset=filtered_ruleset_text,  # 传入筛选后的文本
+            toolruleset=dsl_basic_rules,
             example=examples
         )
 
@@ -304,46 +292,63 @@ class gen_eslint:
         dsl_rules = "\n\n".join(formatted_rules)
         return dsl_rules
 
-    def generate_full_eslint_js(self, snippet: str) -> str:
-        """
-        将生成的 JSON 规则片段包装成完整的 eslint.config.js 文件格式。
+    def _load_eslint_dsl_basic_rules(self):
+        dsl_file = os.path.join(current_dir, "data", "DSL_ESLint_all.json")
+        try:
+            with open(dsl_file, 'r', encoding='utf-8') as f:
+                rules = json.load(f)
+        except Exception as e:
+            print(f"警告: 无法加载DSL规则集{dsl_file}: {e}\n")
+            return ""
 
-        Args:
-            snippet: 大模型生成的 JSON 规则片段，例如 { "rule-name": ["error", ...] }
-        Returns:
-            完整的 JS 配置文件字符串
-        """
+        basic_rules_lines = []
+        for item in rules:
+            if isinstance(item, list) and len(item) >= 3:
+                rule_name = item[1]
+                dsl_content = item[2]
+                basic_rule = extract_basic_rule(dsl_content)
+                basic_rules_lines.append(f"RuleName: {rule_name}\n{basic_rule}")
+        return "\n".join(basic_rules_lines)
+
+    def generate_full_eslint_js(self, snippet: str) -> str:
         if not snippet:
             return "// Error: No configuration generated."
 
-        # 尝试解析 JSON 以便重新格式化（如果需要美化），或者直接使用字符串
         try:
             rules_obj = json.loads(snippet)
-            formatted_rules = json.dumps(rules_obj, indent=12) # 增加缩进以匹配模板
-            # 去掉最外层的大括号，因为我们要把它放进 rules: { ... } 里面
-            formatted_rules = formatted_rules.strip()[1:-1].strip()
+            formatted = json.dumps(rules_obj, indent=4)
+            # 去掉最外层 { 和 }，保留内部每行的原始缩进
+            lines = formatted.strip().split("\n")[1:-1]
+            indented = "\n".join("        " + line for line in lines)
         except json.JSONDecodeError:
-            # 如果不是严格的 JSON (可能是 JS 对象格式)，则直接使用文本处理
-            formatted_rules = snippet.strip()
-            if formatted_rules.startswith("{"):
-                formatted_rules = formatted_rules[1:]
-            if formatted_rules.endswith("}"):
-                formatted_rules = formatted_rules[:-1]
-            formatted_rules = formatted_rules.strip()
+            try:
+                import ast
+                obj = ast.literal_eval(snippet.strip())
+                formatted = json.dumps(obj, indent=4)
+                lines = formatted.strip().split("\n")[1:-1]
+                indented = "\n".join("        " + line for line in lines)
+            except Exception:
+                # 最后兜底：直接按行处理
+                inner = snippet.strip()
+                if inner.startswith("{") and inner.endswith("}"):
+                    inner = inner[1:-1].strip()
+                indented = "\n".join(
+                    "            " + line.strip()
+                    for line in inner.replace(",", ",\n").split("\n") if line.strip()
+                )
 
-        # ESLint Flat Config 模板
-        js_template = """// eslint.config.js
-import { defineConfig } from "eslint/config";
-
-export default defineConfig([
-    {
-        rules: {
-            %s
-        }
-    }
-]);"""
-
-        return js_template % formatted_rules
+        return (
+            "// eslint.config.js\n"
+            "import { defineConfig } from \"eslint/config\";\n"
+            "\n"
+            "export default defineConfig([\n"
+            "    {\n"
+            "        rules: {\n"
+            + indented + "\n"
+            "        }\n"
+            "    }\n"
+            "]);"
+        )
 
     def _filter_relevant_rules(self, dsl_text, all_rules_data, top_k=20):
         """
