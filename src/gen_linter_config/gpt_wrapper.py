@@ -134,7 +134,7 @@ class GPTAgent:
         self.debugger.prompt(model, messages)
 
         try:
-            kwargs = {"model": model, "messages": messages, "temperature": temperature}
+            kwargs = {"model": model, "messages": messages, "temperature": temperature, "timeout": 120}
             if self._api_key:
                 kwargs["api_key"] = self._api_key
             response = completion(**kwargs)
