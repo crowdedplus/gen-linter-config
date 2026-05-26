@@ -73,8 +73,12 @@ class gen_eslint:
 
         # 第一次转为带思考过程的DSL，后一次提取DSL。
         if self.gpt_agent:
+            if self.debugger:
+                self.debugger.sub_step("1.1 NL分析→DSL")
             gpt_response = self.gpt_agent.get_response(prompt, model=model)
             final_ruleset = DSL_final_extract(gpt_response)
+            if self.debugger:
+                self.debugger.sub_step("1.2 提取纯DSL规则")
             final_response = self.gpt_agent.get_response(final_ruleset, model=model)
         else:
             final_response = {
@@ -104,6 +108,8 @@ class gen_eslint:
         )
 
         if self.gpt_agent:
+            if self.debugger:
+                self.debugger.sub_step("2.1 候选规则名选择")
             # 大模型应该只会返回规则名列表。
             final_response = self.gpt_agent.get_response(prompt, model=model)
         else:
@@ -126,21 +132,31 @@ class gen_eslint:
             example=examples
         )
         if self.gpt_agent:
+            if self.debugger:
+                self.debugger.sub_step("3.1 详细选项映射")
             mapping_res = self.gpt_agent.get_response(prompt,model=model)
             extract_prompt = EslintGenerator.extract_config_promt(mapping_res)
+            if self.debugger:
+                self.debugger.sub_step("3.2 提取映射")
             final_mapping = self.gpt_agent.get_response(extract_prompt,model=model)
             # 步骤3.1: 提取非空配置映射
             extract_non_empty_prompt = EslintGenerator.extract_non_empty_config_promt(final_mapping)
+            if self.debugger:
+                self.debugger.sub_step("3.3 过滤空映射")
             final_mapping = self.gpt_agent.get_response(extract_non_empty_prompt, model=model)
             if "Yes" not in final_mapping:
                 return "No valid mappings found."
             # 步骤3.2: 正则表达式占位符处理
             if "regular expression" in final_mapping.lower():
+                if self.debugger:
+                    self.debugger.sub_step("3.4 正则值分析")
                 set_value_answer = self.gpt_agent.get_response(
                     f'For each mapping, if any option name value is "regular expression", only set specific regular expression value of option names to match rule\n'
                     f' Must set specific regular expression values!\n\n'
                     f'        {final_mapping}',
                     model=model)
+                if self.debugger:
+                    self.debugger.sub_step("3.5 替换正则占位符")
                 answer_map_with_value = self.gpt_agent.get_response(
                     f'Based on the following Analysis, only Replace "regular expression" with setting regular expression values for the following mapping. And then give new Mappings.\n'
                     f'1. Extract specific regular expression values for "regular expression" value from the following Analysis.\n'
@@ -151,6 +167,8 @@ class gen_eslint:
                     f'Mapping:\n{final_mapping}\n        ',
                     model=model)
                 extract_with_value = EslintGenerator.extract_config_promt(answer_map_with_value)
+                if self.debugger:
+                    self.debugger.sub_step("3.6 提取正则替换后映射")
                 final_mapping = self.gpt_agent.get_response(extract_with_value, model=model)
             return final_mapping
         else :
@@ -171,6 +189,8 @@ class gen_eslint:
 
         if self.gpt_agent:
             # 步骤4.0: 合并选项规则 —— 将 Basic Rule 和 Option Rule 合并为一条精简的 ToolSEM 规则
+            if self.debugger:
+                self.debugger.sub_step("4.0 提取ToolSEM规则")
             tool_sem_rules = self.gpt_agent.get_response(
                 f'For the following mappings,before ">>>" is StyleSEM rule, after ">>>" is ToolSEM rule. \n'
                 f'You only excerpt ToolSEM rule consisting of Rulename, Basic rule and Option rules.\n\n'
@@ -184,9 +204,13 @@ class gen_eslint:
                 f'...\n',
                 model=model)
             merg_prompt = EslintGenerator.merge_basic_option_rules(tool_sem_rules)
+            if self.debugger:
+                self.debugger.sub_step("4.1 合并选项规则")
             merge_answer_map = self.gpt_agent.get_response(merg_prompt, model=model)
             prompt_extract_merge = EslintGenerator.extract_merge_mappings_promt(
                 text=merge_answer_map, answer_map=detailed_mappings)
+            if self.debugger:
+                self.debugger.sub_step("4.2 提取合并后映射")
             detailed_mappings = self.gpt_agent.get_response(prompt_extract_merge, model=model)
 
             # 1.验证语义匹配
@@ -196,12 +220,16 @@ class gen_eslint:
                 style="Google JavaScript Style",
                 toolruleset=eslint_ruleset
             )
+            if self.debugger:
+                self.debugger.sub_step("4.3 语义验证")
             val_response = self.gpt_agent.get_response(prompt, model=model)
             # 2.提取正确映射
             filter_prompt = EslintGenerator.extract_correct_mapping(
                 mapping=detailed_mappings,
                 correct_information=val_response
             )
+            if self.debugger:
+                self.debugger.sub_step("4.4 提取正确映射")
             val_mapping = self.gpt_agent.get_response(filter_prompt, model=model)
             if "Yes" not in val_mapping and "Mapping:" not in val_mapping:
                 print("Warning: No valid mappings found after validation.")
@@ -213,6 +241,8 @@ class gen_eslint:
                 tool="ESLint",
                 format="JSON"
             )
+            if self.debugger:
+                self.debugger.sub_step("4.5 生成JSON初稿")
             raw_config = self.gpt_agent.get_response(gen_prompt, model=model)
 
             # 4.纯净配置提取
@@ -220,6 +250,8 @@ class gen_eslint:
                 text=raw_config,
                 format="JSON"
             )
+            if self.debugger:
+                self.debugger.sub_step("4.6 提取纯净JSON")
             final_res = self.gpt_agent.get_response(clean_prompt, model=model)
             final_res = util_js.process_ESLint_Json(final_res)
             final_res = re.search(r'\{[^{}]*\}', final_res, re.DOTALL).group() if re.search(r'\{[^{}]*\}', final_res, re.DOTALL) else ""

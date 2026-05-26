@@ -17,6 +17,9 @@ def generate_lint_config(rule: str, lint_name: str, model: str, api_key: str = N
     print("步骤 1: 将自然语言规范转换为 DSL")
     print("=" * 60)
     prompt_dsl = nl_2_dsl(rule)
+    if gpt_agent.debugger:
+        gpt_agent.debugger.step("Step 1: NL-to-DSL Parsing")
+        gpt_agent.debugger.sub_step("1.1 NL→DSL")
     dsl_result = gpt_agent.get_response(prompt_dsl, model=model)
     print("="*30+"LLM 返回 DSL 结果:\n", dsl_result)
 
@@ -30,6 +33,8 @@ def generate_lint_config(rule: str, lint_name: str, model: str, api_key: str = N
         print("执行终止: 暂时不支持该工具！")
         return None
 
+    if gpt_agent.debugger:
+        gpt_agent.debugger.sub_step("2.1 DSL→规则名列表")
     rule_list_str = gpt_agent.get_response(prompt_rule_list, model=model)
     print("="*30+"LLM 返回规则名列表:\n", rule_list_str)
 
@@ -43,6 +48,8 @@ def generate_lint_config(rule: str, lint_name: str, model: str, api_key: str = N
         print("="*30+"执行终止 error :", prompt_config)
         return None
 
+    if gpt_agent.debugger:
+        gpt_agent.debugger.sub_step("3.1 规则列表→配置")
     llm_response = gpt_agent.get_response(prompt_config, model=model)
     print("="*30+"LLM 返回原始配置生成结果 (Part A & Part B):\n", llm_response)
 
