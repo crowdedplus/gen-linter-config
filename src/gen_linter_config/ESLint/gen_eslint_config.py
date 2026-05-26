@@ -96,7 +96,8 @@ class gen_eslint:
         """
         dsl_basic_rules = self._load_eslint_dsl_basic_rules()
 
-        print("="*15 + f"使用 {len(dsl_basic_rules.splitlines())} 条 ESLint DSL Basic Rule 进行映射。")
+        rule_count = dsl_basic_rules.count("RuleName:") if dsl_basic_rules else 0
+        print("="*15 + f"使用 {rule_count} 条 ESLint DSL Basic Rule 进行映射。")
 
         prompt = RuleSelector.preprocess_promt(
             DSL_Syntax=self.dsl_syntax,

@@ -144,29 +144,13 @@ class gen_checkstyle:
         """
         映射DSL规则到Checkstyle规则
         """
-        # 1. 获取所有规则的原始数据列表
-        all_checkstyle_rules = self._load_default_checkstyle_rules(return_raw=True)
+        dsl_basic_rules = self._load_checkstyle_dsl_basic_rules()
 
-        # 2. 针对当前的 DSL 规则集，筛选出相关的 Checkstyle 规则
-        # 在 map_to_checkstyle 之前，将 DSL 中的 PascalCase 转成小写
-        dsl_ruleset = re.sub(r'\[([A-Z][a-z]+(?:[A-Z][a-z]+)*)\]',
-                                lambda m: '[' + re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', m.group(1)).lower() + ']',
-                                dsl_ruleset)
-        relevant_rules = self._filter_relevant_rules(dsl_ruleset, all_checkstyle_rules, top_k=30)
+        rule_count = dsl_basic_rules.count("RuleName:") if dsl_basic_rules else 0
+        print("="*15 + f"使用 {rule_count} 条 Checkstyle DSL Basic Rule 进行映射。")
 
-        # 3. 将筛选出的规则转换为字符串格式
-        filtered_ruleset_text = "\n".join([
-            f"RuleName: {rule.get('name', 'Unknown')}\n"
-            f"Description: {rule.get('description', 'No description')}\n"
-            f"Category: {rule.get('category', 'Unknown')}\n"
-            for rule in relevant_rules
-        ])
-
-        print("="*15 + f"Prompt: Filtered out {len(relevant_rules)} relevant rules from {len(all_checkstyle_rules)} rules for mapping.")
-
-        # 如果没有提供checkstyle规则集，使用筛选后的规则
         if checkstyle_ruleset is None:
-            checkstyle_ruleset = filtered_ruleset_text
+            checkstyle_ruleset = dsl_basic_rules
 
         prompt = rule_mapper_preprocess(
             DSL_Syntax=self.dsl_syntax,
@@ -473,6 +457,24 @@ class gen_checkstyle:
                 formatted_rules.append(f"RuleName: {rule_name}\n{clean_dsl}")
         dsl_rules = "\n\n".join(formatted_rules)
         return dsl_rules
+
+    def _load_checkstyle_dsl_basic_rules(self):
+        dsl_file = os.path.join(current_dir, "data", "DSL_Checkstyle_all.json")
+        try:
+            with open(dsl_file, 'r', encoding='utf-8') as f:
+                rules = json.load(f)
+        except Exception as e:
+            print(f"警告: 无法加载DSL规则集{dsl_file}: {e}\n")
+            return ""
+
+        basic_rules_lines = []
+        for item in rules:
+            if isinstance(item, list) and len(item) >= 3:
+                rule_name = item[1]
+                dsl_content = item[2]
+                basic_rule = extract_basic_rule(dsl_content)
+                basic_rules_lines.append(f"RuleName: {rule_name}\n{basic_rule}")
+        return "\n".join(basic_rules_lines)
 
     def generate_full_checkstyle_xml(self, snippet: str) -> str:
         """
