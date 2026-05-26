@@ -17,6 +17,7 @@ class DebugLogger:
         self.enabled = enabled
         self._api_key = api_key
         self.log_file = None
+        self._label = None
         if enabled:
             try:
                 import colorama
@@ -24,8 +25,8 @@ class DebugLogger:
             except ImportError:
                 pass
             timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            os.makedirs(os.path.join(os.getcwd(), "logs"), exist_ok=True)
             log_path = os.path.join(os.getcwd(), "logs", f"gen_linter_debug_{timestamp}.log")
+            os.makedirs(os.path.dirname(log_path), exist_ok=True)
             self.log_file = open(log_path, "w", encoding="utf-8")
             self._file(f"Debug log started at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
@@ -61,18 +62,24 @@ class DebugLogger:
         except ImportError:
             print(msg)
 
+    def sub_step(self, label):
+        if not self.enabled:
+            return
+        self._label = label
+
     def prompt(self, model, messages):
         if not self.enabled:
             return
         full = self._messages_to_text(messages)
         masked = self._mask_key(full)
-        self._file(f"PROMPT (model: {model}):\n{masked}")
+        tag = f"PROMPT [{self._label}]" if self._label else "PROMPT"
+        self._file(f"{tag} (model: {model}):\n{masked}")
         try:
             import colorama
             preview = masked[:200]
             if len(masked) > 200:
                 preview += "\n...(truncated, see log file for full content)"
-            print(colorama.Fore.CYAN + colorama.Style.BRIGHT + "──── PROMPT ────" + colorama.Style.RESET_ALL)
+            print(colorama.Fore.CYAN + colorama.Style.BRIGHT + f"──── {tag} ────" + colorama.Style.RESET_ALL)
             print(colorama.Fore.CYAN + preview + colorama.Style.RESET_ALL)
             print(colorama.Fore.CYAN + "──────────────" + colorama.Style.RESET_ALL)
         except ImportError:
@@ -82,13 +89,14 @@ class DebugLogger:
         if not self.enabled:
             return
         masked = self._mask_key(text)
-        self._file(f"RESPONSE (model: {model}):\n{masked}")
+        tag = f"RESPONSE [{self._label}]" if self._label else "RESPONSE"
+        self._file(f"{tag} (model: {model}):\n{masked}")
         try:
             import colorama
             preview = masked[:500]
             if len(masked) > 500:
                 preview += "\n...(truncated, see log file for full content)"
-            print(colorama.Fore.GREEN + colorama.Style.BRIGHT + "──── RESPONSE ────" + colorama.Style.RESET_ALL)
+            print(colorama.Fore.GREEN + colorama.Style.BRIGHT + f"──── {tag} ────" + colorama.Style.RESET_ALL)
             print(colorama.Fore.GREEN + preview + colorama.Style.RESET_ALL)
             print(colorama.Fore.GREEN + "────────────────" + colorama.Style.RESET_ALL)
         except ImportError:
