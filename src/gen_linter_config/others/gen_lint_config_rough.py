@@ -1,5 +1,5 @@
 """
-一个粗糙的生成lint配置的代码。
+Rough implementation for generating lint configuration.
 """
 import json
 import os
@@ -9,62 +9,62 @@ from gen_linter_config.gpt_wrapper import GPTAgent
 
 def generate_lint_config(rule: str, lint_name: str, model: str, api_key: str = None, debug: bool = False):
     """
-    一键整合函数：输入自然语言规则、工具名和模型名，输出最终配置文件内容。
+    One-stop function: input NL rule, tool name, and model name; output final config content.
     """
     gpt_agent = GPTAgent(api_key, debug=debug)
 
     print("\n" + "=" * 60)
-    print("步骤 1: 将自然语言规范转换为 DSL")
+    print("Step 1: NL -> DSL")
     print("=" * 60)
     prompt_dsl = nl_2_dsl(rule)
     if gpt_agent.debugger:
         gpt_agent.debugger.step("Step 1: NL-to-DSL Parsing")
-        gpt_agent.debugger.sub_step("1.1 NL→DSL")
+        gpt_agent.debugger.sub_step("1.1 NL -> DSL")
     dsl_result = gpt_agent.get_response(prompt_dsl, model=model)
-    print("="*30+"LLM 返回 DSL 结果:\n", dsl_result)
+    print("="*30+"LLM DSL Result:\n", dsl_result)
 
     print("\n" + "=" * 60)
-    print(f"步骤 2: 根据 DSL 从 {lint_name} 中检索相关的规则名列表")
+    print(f"Step 2: Retrieve rule names from {lint_name}")
     print("=" * 60)
     prompt_rule_list = dsl_2_rule_list(dsl_result, lint_name)
 
-    # 如果该工具目录不存在，提前终止
-    if prompt_rule_list == "暂时不支持该工具！":
-        print("执行终止: 暂时不支持该工具！")
+    # Early exit if tool directory does not exist
+    if prompt_rule_list == "Error: tool not supported.":
+        print("Error: tool not supported.")
         return None
 
     if gpt_agent.debugger:
-        gpt_agent.debugger.sub_step("2.1 DSL→规则名列表")
+        gpt_agent.debugger.sub_step("2.1 DSL -> Rule Name List")
     rule_list_str = gpt_agent.get_response(prompt_rule_list, model=model)
-    print("="*30+"LLM 返回规则名列表:\n", rule_list_str)
+    print("="*30+"LLM Rule Name List:\n", rule_list_str)
 
     print("\n" + "=" * 60)
-    print("步骤 3: 获取详细 JSON 文档并生成最终配置")
+    print("Step 3: Load detailed docs and generate config")
     print("=" * 60)
     prompt_config = rule_list_2_config(rule_list_str, lint_name, rule)
 
-    # 如果正则提取规则名失败，提前终止
+    # Early exit if regex extraction of rule names fails
     if prompt_config.startswith("error"):
-        print("="*30+"执行终止 error :", prompt_config)
+        print("="*30+"Error: ", prompt_config)
         return None
 
     if gpt_agent.debugger:
-        gpt_agent.debugger.sub_step("3.1 规则列表→配置")
+        gpt_agent.debugger.sub_step("3.1 Rule List -> Config")
     llm_response = gpt_agent.get_response(prompt_config, model=model)
-    print("="*30+"LLM 返回原始配置生成结果 (Part A & Part B):\n", llm_response)
+    print("="*30+"LLM Config Generation Result (Part A & B):\n", llm_response)
 
     print("\n" + "=" * 60)
-    print("步骤 4: 提取并清洗最终的配置文件")
+    print("Step 4: Extract and clean final config")
     print("=" * 60)
     final_config = extract_config_from_llm(llm_response)
 
     if final_config:
-        print("="*30+"提取成功，最终配置如下:\n")
+        print("="*30+"Extraction successful, final config:\n")
         print(final_config)
         return final_config
     else:
-        print("警告: 未能从大模型回答中通过正则提取到代码块。")
-        print("降级处理: 返回大模型原始回答。")
+        print("Warning: failed to extract code block from LLM response.")
+        print("Fallback: returning raw LLM response.")
         return llm_response
 
 def nl_2_dsl(rule: str):
@@ -115,45 +115,45 @@ rulen:Optional / [PLTerm of/at/within/is/ PLTerm] / **Before** / [NonAssignmentO
     return prompt
 
 def dsl_2_rule_list(dsl:str,lint_name:str):
-    # 1. 处理路径逻辑：保持目录层级结构
-    # 例如 "PMD/Java" -> 目录路径为 data/PMD/Java
+    # 1. Build path: preserve directory structure
+    # e.g. "PMD/Java" -> directory path: data/PMD/Java
     dir_parts = lint_name.split("/")
     dir_path = os.path.join(os.getcwd(),"others", "data", *dir_parts)
 
-    # 2. 处理文件名逻辑：将 / 替换为 _
-    # 例如 "PMD/Java" -> 文件名前缀为 PMD_Java
+    # 2. Build filename: replace / with _
+    # e.g. "PMD/Java" -> filename prefix: PMD_Java
     filename_prefix = lint_name.replace("/", "_")
     target_filename_lower = f"{filename_prefix}Index.json".lower()
 
-    # 基础检查：目录必须存在
+    # Basic check: directory must exist
     if not os.path.isdir(dir_path):
-        print(f"目录不存在: {dir_path}")
-        return "暂时不支持该工具！"
+        print(f"Directory not found: {dir_path}")
+        return "Error: tool not supported."
 
     index_data = None
     target_file_path = None
 
     try:
-        # 3. 在目标目录中忽略大小写寻找匹配的文件
+        # 3. Case-insensitive file matching in target directory
         files = os.listdir(dir_path)
         for file_name in files:
             if file_name.lower() == target_filename_lower:
                 target_file_path = os.path.join(dir_path, file_name)
                 break
 
-        # 4. 读取文件
+        # 4. Read file
         if target_file_path and os.path.isfile(target_file_path):
             with open(target_file_path, 'r', encoding='utf-8') as f:
-                print("="*30+"成功读取文件 : \n" + target_file_path)
+                print("="*30+"Successfully loaded file : \n" + target_file_path)
                 index_data = json.load(f)
         else:
-            # 这里的打印信息包含了预期的文件名，方便调试
-            print(f"未在 {dir_path} 中找到索引文件: {filename_prefix}Index.json")
+            # The print includes expected filename for debugging
+            print(f"Index file not found in {dir_path}: {filename_prefix}Index.json")
 
     except Exception as e:
-        print(f"读取索引文件时出错: {e}")
+        print(f"Error reading index file: {e}")
         return None
-    # 此时index_data中含有指定工具的所有Index内容。
+    # index_data now contains all index content for the specified tool.
     prompt = """
 The Configuration file is organized as follows :
 {
@@ -189,31 +189,31 @@ Here is the coding rule :
 
 
 def rule_list_2_config(rule_list_str: str, lint_name: str, original_rule: str):
-    # --- 1. 解析规则名 ---
+    # --- 1. Parse rule names ---
     selected_names = []
     try:
-        # 如果是大模型返回的标准 JSON 格式
+        # If LLM returned standard JSON format
         data = json.loads(rule_list_str)
         if isinstance(data, dict):
-            # 兼容 {"rules": {"a":1}} 或 {"a":1}
+            # Compatible with {"rules": {"a":1}} or {"a":1}
             target = data.get("rules", data)
             selected_names = list(target.keys())
     except:
-        # 如果是字符串形式 {rule1, rule2}
+        # If string form {rule1, rule2}
         match = re.search(r'\{(.*?)\}', rule_list_str, re.DOTALL)
         if match:
             raw_content = match.group(1)
-            # 提取单词，过滤掉引号
+            # Extract words, filter out quotes
             selected_names = re.findall(r'[a-zA-Z0-9\-_/]+', raw_content)
 
-    # 清洗：去重、去空、转小写比对前保留原始格式用于显示
+    # Clean: dedup, remove empties, keep original case for display
     selected_names = list(
         set([n.strip() for n in selected_names if n.strip() and n.lower() not in ["rules", "severity"]]))
 
-    # --- 2. 确定工具类型与格式指导 ---
+    # --- 2. Determine tool type and format guide ---
     name_up = lint_name.upper()
 
-    # 默认配置
+    # Default config
     fmt = "JSON"
     boilerplate = "Include standard environment and parser options."
     syntax = '"rule-name": ["error", { "option": value }]'
@@ -240,12 +240,12 @@ def rule_list_2_config(rule_list_str: str, lint_name: str, original_rule: str):
         syntax = '"ruleName": { "options": { "key": "value" } }'
     elif "CPPCHECK" in name_up:
         fmt = "CPPCHECK"
-        # TODO : cppcheck其实没有广义上的配置文件，其使用方法类似：cppcheck --enable=warning,performance file.cpp
+        # TODO: cppcheck does not really have a general config file; usage: cppcheck --enable=warning,performance file.cpp
     else :
-        print("="*10+"调用大模型生成pmt"+"="*10)
-        # 调用prompt
+        print("="*10+"Calling LLM to generate prompt"+"="*10)
+        # Call prompt
 
-    # --- 3. 读取详细 JSON 信息 ---
+    # --- 3. Load detailed JSON info ---
     dir_parts = lint_name.split("/")
     rules_base_dir = os.path.join(os.getcwd(),"others", "data", *dir_parts, "rules")
     rules_detailed_context = []
@@ -257,18 +257,18 @@ def rule_list_2_config(rule_list_str: str, lint_name: str, original_rule: str):
                 if file_name.lower() == target_json_lower:
                     try:
                         with open(os.path.join(rules_base_dir, file_name), 'r', encoding='utf-8') as f:
-                            inner = list(json.load(f).values())[0]  # 获取内部第一个对象
+                            inner = list(json.load(f).values())[0]  # Get the inner first object
                             rules_detailed_context.append(
                                 f"### RULE: {rule_name}\n[DESC]: {inner.get('description')}\n[OPTS]: {inner.get('option')}"
                             )
-                            print("成功读取详细配置文件 : ",os.path.join(rules_base_dir, file_name))
+                            print("Successfully loaded detailed rule file : ",os.path.join(rules_base_dir, file_name))
                     except:
                         pass
                     break
 
     all_rules_info = "\n\n".join(rules_detailed_context) if rules_detailed_context else "NO DATA FOUND."
-    print("="*30+"所有rules内容 : \n",all_rules_info)
-    # --- 4. 构建最终 Prompt ---
+    print("="*30+"All rules content : \n",all_rules_info)
+    # --- 4. Build final Prompt ---
     final_prompt = f"""
         You are a senior DevOps expert specialized in **{lint_name}**.
 
@@ -298,10 +298,10 @@ def rule_list_2_config(rule_list_str: str, lint_name: str, original_rule: str):
     return final_prompt
 
 def extract_config_from_llm(llm_response):
-    # 提取 Markdown 代码块中的内容
+    # Extract content from Markdown code blocks
     code_blocks = re.findall(r'```(?:\w+)?\n(.*?)\n```', llm_response, re.DOTALL)
     if code_blocks:
-        return code_blocks[-1] # 通常返回最后一个代码块（Part B）
+        return code_blocks[-1] # Usually returns the last code block (Part B)
     return None
 
 # if __name__ == "__main__":

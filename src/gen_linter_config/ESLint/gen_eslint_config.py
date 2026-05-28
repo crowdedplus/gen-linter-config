@@ -1,6 +1,5 @@
 """
-该文件需要实现的功能：
-读取指令的所有参数之后返回eslint配置。
+Generates ESLint configuration from user-provided rules and model parameters.
 """
 import os
 import re
@@ -21,10 +20,10 @@ class gen_eslint:
         self.gpt_agent = GPTAgent(api_key, debug=debug) if GPTAgent else None
         self.debugger = self.gpt_agent.debugger if self.gpt_agent else None
 
-    # 处理代码规范的总入口
+    # Main entry point for processing coding standards
     def process_input(self, input_content, model, output_format="text", examples=""):
         print("=" * 60)
-        print("步骤1: NL代码规范转换为DSL  --  1轮对话")
+        print("Step 1: NL-to-DSL Parsing")
         print("=" * 60)
         if self.debugger:
             self.debugger.step("Step 1: NL-to-DSL Parsing")
@@ -32,7 +31,7 @@ class gen_eslint:
         print(dsl_result)
 
         print("\n" + "=" * 60)
-        print("步骤2: 提取候选规则名  --  1轮对话")
+        print("Step 2: Candidate Rule Name Selection")
         print("=" * 60)
         if self.debugger:
             self.debugger.step("Step 2: Candidate Rule Name Selection")
@@ -40,7 +39,7 @@ class gen_eslint:
         print(mapping_result)
 
         print("\n" + "=" * 60)
-        print("步骤3: 详细选项映射  --  1轮对话")
+        print("Step 3: Option Rule Configuration")
         print("=" * 60)
         if self.debugger:
             self.debugger.step("Step 3: Option Rule Configuration")
@@ -48,7 +47,7 @@ class gen_eslint:
         print(detailed_mapping)
 
         print("\n" + "=" * 60)
-        print("步骤4: 生成ESLint配置  --  4轮对话")
+        print("Step 4: Configuration Generation")
         print("=" * 60)
         if self.debugger:
             self.debugger.step("Step 4: Alignment Check & Configuration Generation")
@@ -59,10 +58,10 @@ class gen_eslint:
         print(final_res)
         return final_res
 
-    # 第一步，自然语言转DSL
+    # Step 1: NL to DSL
     def process_nl_rule(self, rule_description, model, output_format="text", examples=""):
         """
-        处理自然语言代码风格转换为DSL
+        Convert natural language coding style rules to DSL
         """
         prompt = nl_preprocess(
             rule=rule_description,
@@ -71,14 +70,14 @@ class gen_eslint:
             PL="JavaScript"
         )
 
-        # 第一次转为带思考过程的DSL，后一次提取DSL。
+        # First call: NL analysis -> DSL with reasoning steps. Second call: extract pure DSL.
         if self.gpt_agent:
             if self.debugger:
-                self.debugger.sub_step("1.1 NL分析→DSL")
+                self.debugger.sub_step("1.1 NL Analysis -> DSL")
             gpt_response = self.gpt_agent.get_response(prompt, model=model)
             final_ruleset = DSL_final_extract(gpt_response)
             if self.debugger:
-                self.debugger.sub_step("1.2 提取纯DSL规则")
+                self.debugger.sub_step("1.2 Extract Pure DSL")
             final_response = self.gpt_agent.get_response(final_ruleset, model=model)
         else:
             final_response = {
@@ -89,15 +88,15 @@ class gen_eslint:
 
         return self._format_output(final_response, output_format)
 
-    # 第二步，映射DSL到ESLint的DSL规则集中
+    # Step 2: Map DSL to ESLint DSL rule set
     def map_to_eslint(self, dsl_ruleset, model, output_format="text", examples=""):
         """
-        映射DSL规则到ESLint规则
+        Map DSL rules to ESLint rules
         """
         dsl_basic_rules = self._load_eslint_dsl_basic_rules()
 
         rule_count = dsl_basic_rules.count("RuleName:") if dsl_basic_rules else 0
-        print("="*15 + f"使用 {rule_count} 条 ESLint DSL Basic Rule 进行映射。")
+        print("="*15 + f"Mapping against {rule_count} ESLint DSL Basic Rules.")
 
         prompt = RuleSelector.preprocess_promt(
             DSL_Syntax=self.dsl_syntax,
@@ -110,8 +109,8 @@ class gen_eslint:
 
         if self.gpt_agent:
             if self.debugger:
-                self.debugger.sub_step("2.1 候选规则名选择")
-            # 大模型应该只会返回规则名列表。
+                self.debugger.sub_step("2.1 Candidate Rule Name Selection")
+            # The model should only return a list of rule names.
             final_response = self.gpt_agent.get_response(prompt, model=model)
         else:
             final_response = {
@@ -121,7 +120,7 @@ class gen_eslint:
             }
         return self._format_output(final_response, output_format)
 
-    # 第三步，匹配子配置选项
+    # Step 3: Map sub configuration options
     def step_3_detailed_mapping(self,dsl_ruleset, candidate_names, model, examples=""):
         filtered_tool_rules = self._get_detailed_tool_rules(candidate_names)
         prompt = EslintGenerator.preprocess_promt(
@@ -134,30 +133,30 @@ class gen_eslint:
         )
         if self.gpt_agent:
             if self.debugger:
-                self.debugger.sub_step("3.1 详细选项映射")
+                self.debugger.sub_step("3.1 Detailed Option Mapping")
             mapping_res = self.gpt_agent.get_response(prompt,model=model)
             extract_prompt = EslintGenerator.extract_config_promt(mapping_res)
             if self.debugger:
-                self.debugger.sub_step("3.2 提取映射")
+                self.debugger.sub_step("3.2 Extract Mappings")
             final_mapping = self.gpt_agent.get_response(extract_prompt,model=model)
-            # 步骤3.1: 提取非空配置映射
+            # Step 3.1: Extract non-empty config mappings
             extract_non_empty_prompt = EslintGenerator.extract_non_empty_config_promt(final_mapping)
             if self.debugger:
-                self.debugger.sub_step("3.3 过滤空映射")
+                self.debugger.sub_step("3.3 Filter Empty Mappings")
             final_mapping = self.gpt_agent.get_response(extract_non_empty_prompt, model=model)
             if "Yes" not in final_mapping:
                 return "No valid mappings found."
-            # 步骤3.2: 正则表达式占位符处理
+            # Step 3.2: Regex placeholder processing
             if "regular expression" in final_mapping.lower():
                 if self.debugger:
-                    self.debugger.sub_step("3.4 正则值分析")
+                    self.debugger.sub_step("3.4 Regex Value Analysis")
                 set_value_answer = self.gpt_agent.get_response(
                     f'For each mapping, if any option name value is "regular expression", only set specific regular expression value of option names to match rule\n'
                     f' Must set specific regular expression values!\n\n'
                     f'        {final_mapping}',
                     model=model)
                 if self.debugger:
-                    self.debugger.sub_step("3.5 替换正则占位符")
+                    self.debugger.sub_step("3.5 Replace Regex Placeholder")
                 answer_map_with_value = self.gpt_agent.get_response(
                     f'Based on the following Analysis, only Replace "regular expression" with setting regular expression values for the following mapping. And then give new Mappings.\n'
                     f'1. Extract specific regular expression values for "regular expression" value from the following Analysis.\n'
@@ -169,7 +168,7 @@ class gen_eslint:
                     model=model)
                 extract_with_value = EslintGenerator.extract_config_promt(answer_map_with_value)
                 if self.debugger:
-                    self.debugger.sub_step("3.6 提取正则替换后映射")
+                    self.debugger.sub_step("3.6 Extract Regex-Replaced Mappings")
                 final_mapping = self.gpt_agent.get_response(extract_with_value, model=model)
             return final_mapping
         else :
@@ -180,18 +179,18 @@ class gen_eslint:
             }
         return final_mapping
 
-    # 第四步，语义验证 & 生成ESLint配置
+    # Step 4: Semantic validation & generate ESLint config
     def generate_config(self, detailed_mappings, model, eslint_ruleset=None, output_format="text", examples=""):
         """
-        生成ESLint配置 (JSON片段)
+        Generate ESLint configuration (JSON snippet)
         """
         if eslint_ruleset is None:
             eslint_ruleset = self._load_default_eslint_rules()
 
         if self.gpt_agent:
-            # 步骤4.0: 合并选项规则 —— 将 Basic Rule 和 Option Rule 合并为一条精简的 ToolSEM 规则
+            # Step 4.0: Merge option rules — combine Basic Rule and Option Rule into one compact ToolSEM rule
             if self.debugger:
-                self.debugger.sub_step("4.0 提取ToolSEM规则")
+                self.debugger.sub_step("4.0 Extract ToolSEM Rules")
             tool_sem_rules = self.gpt_agent.get_response(
                 f'For the following mappings,before ">>>" is StyleSEM rule, after ">>>" is ToolSEM rule. \n'
                 f'You only excerpt ToolSEM rule consisting of Rulename, Basic rule and Option rules.\n\n'
@@ -206,15 +205,15 @@ class gen_eslint:
                 model=model)
             merg_prompt = EslintGenerator.merge_basic_option_rules(tool_sem_rules)
             if self.debugger:
-                self.debugger.sub_step("4.1 合并选项规则")
+                self.debugger.sub_step("4.1 Merge Option Rules")
             merge_answer_map = self.gpt_agent.get_response(merg_prompt, model=model)
             prompt_extract_merge = EslintGenerator.extract_merge_mappings_promt(
                 text=merge_answer_map, answer_map=detailed_mappings)
             if self.debugger:
-                self.debugger.sub_step("4.2 提取合并后映射")
+                self.debugger.sub_step("4.2 Extract Merged Mappings")
             detailed_mappings = self.gpt_agent.get_response(prompt_extract_merge, model=model)
 
-            # 1.验证语义匹配
+            # 1. Validate semantic match
             prompt = EslintGenerator.validation_config_superset_semantics(
                 mapping=detailed_mappings,
                 tool="ESLint",
@@ -222,42 +221,42 @@ class gen_eslint:
                 toolruleset=eslint_ruleset
             )
             if self.debugger:
-                self.debugger.sub_step("4.3 语义验证")
+                self.debugger.sub_step("4.3 Semantic Validation")
             val_response = self.gpt_agent.get_response(prompt, model=model)
-            # 2.提取正确映射
+            # 2. Extract correct mappings
             filter_prompt = EslintGenerator.extract_correct_mapping(
                 mapping=detailed_mappings,
                 correct_information=val_response
             )
             if self.debugger:
-                self.debugger.sub_step("4.4 提取正确映射")
+                self.debugger.sub_step("4.4 Extract Correct Mappings")
             val_mapping = self.gpt_agent.get_response(filter_prompt, model=model)
             if "Yes" not in val_mapping and "Mapping:" not in val_mapping:
                 print("Warning: No valid mappings found after validation.")
                 return None
 
-            # 3.JSON初稿
+            # 3. JSON first draft
             gen_prompt = EslintGenerator.gen_config_format(
                 mapping=val_mapping,
                 tool="ESLint",
                 format="JSON"
             )
             if self.debugger:
-                self.debugger.sub_step("4.5 生成JSON初稿")
+                self.debugger.sub_step("4.5 Generate JSON Draft")
             raw_config = self.gpt_agent.get_response(gen_prompt, model=model)
 
-            # 4.纯净配置提取
+            # 4. Extract clean config
             clean_prompt = EslintGenerator.extract_specific_config_promt(
                 text=raw_config,
                 format="JSON"
             )
             if self.debugger:
-                self.debugger.sub_step("4.6 提取纯净JSON")
+                self.debugger.sub_step("4.6 Extract Clean JSON")
             final_res = self.gpt_agent.get_response(clean_prompt, model=model)
             final_res = util_js.process_ESLint_Json(final_res)
             final_res = re.search(r'\{[^{}]*\}', final_res, re.DOTALL).group() if re.search(r'\{[^{}]*\}', final_res, re.DOTALL) else ""
 
-            # 5. 清洗 Markdown 标记
+            # 5. Clean Markdown markers
             final_res = final_res.replace("```json", "").replace("```", "").strip()
             if "Configuration:" in final_res:
                 final_res = final_res.replace("Configuration:", "").strip()
@@ -271,12 +270,12 @@ class gen_eslint:
 
         return self._format_output(final_response, output_format)
 
-    # 加载ESLint规则集 (用于语义验证等)
+    # Load ESLint rules (for semantic validation etc.)
     def _load_default_eslint_rules(self, return_raw=False):
         """
-        加载默认的ESLint规则集
+        Load default ESLint rules
         Args:
-            return_raw: 如果为True，返回列表对象；否则返回格式化后的字符串
+            return_raw: if True, return list; otherwise return formatted string
         """
         rule_file = os.path.join(current_dir, "data", "eslint_rules_complete.json")
         all_rules = []
@@ -289,12 +288,12 @@ class gen_eslint:
                 elif isinstance(rules, dict):
                     all_rules.extend(rules.values())
         except Exception as e:
-            print(f"警告: 无法加载规则文件 {rule_file}: {e}")
+            print(f"Warning: failed to load rules file {rule_file}: {e}")
 
         if return_raw:
             return all_rules
 
-        # 默认行为保持不变（为了兼容其他可能的调用，虽然下面我们会改 map_to_eslint）
+        # Default behavior remains (for compatibility, though we modify map_to_eslint below)
         ruleset_text = "\n".join([
             f"RuleName: {rule.get('name', 'Unknown')}\n"
             f"Description: {rule.get('description', 'No description')}\n"
@@ -309,7 +308,7 @@ class gen_eslint:
             with open(dsl_file, 'r', encoding='utf-8') as f:
                 rules = json.load(f)
         except Exception as e:
-            print(f"警告: 无法加载DSL规则集{dsl_file}: {e}\n")
+            print(f"Warning: failed to load DSL rule file {dsl_file}: {e}\n")
             return ""
 
         basic_rules_lines = []
@@ -328,7 +327,7 @@ class gen_eslint:
         try:
             rules_obj = json.loads(snippet)
             formatted = json.dumps(rules_obj, indent=4)
-            # 去掉最外层 { 和 }，保留内部每行的原始缩进
+            # Remove outer { and }, keep original indentation of each internal line
             lines = formatted.strip().split("\n")[1:-1]
             indented = "\n".join("        " + line for line in lines)
         except json.JSONDecodeError:
@@ -339,7 +338,7 @@ class gen_eslint:
                 lines = formatted.strip().split("\n")[1:-1]
                 indented = "\n".join("        " + line for line in lines)
             except Exception:
-                # 最后兜底：直接按行处理
+                # Final fallback: handle line by line
                 inner = snippet.strip()
                 if inner.startswith("{") and inner.endswith("}"):
                     inner = inner[1:-1].strip()
@@ -363,30 +362,30 @@ class gen_eslint:
 
 
     def _get_detailed_tool_rules(self, name_list_str):
-        # 根据选中的名字从DSL_ESLint_all.json文件中提取包含Option Rule的详细DSL
+        # Extract detailed DSL containing Option Rule from DSL_ESLint_all.json by selected rule names
         """
-            根据 Step 2 返回的候选规则名列表，从 ESLint DSL 库中提取包含子配置项（Option Rule）的详细信息。
+            Based on the candidate rule name list returned by Step 2, extract detailed information from ESLint DSL library.
 
             Args:
-                name_list_str (str): GPT 返回的规则名称信息，可能是 "1. rule-a\n2. rule-b"
-                                     或 "['rule-a', 'rule-b']" 等格式。
+                name_list_str (str): rule name info returned by GPT, may be "1. rule-a\n2. rule-b"
+                                      or "['rule-a', 'rule-b']".
             Returns:
-                str: 格式化后的详细 DSL 规则文本，用于 Step 3 的 Prompt。
+                str: formatted detailed DSL rule text for Step 3 Prompt.
             """
-        # 1. 解析输入的规则名列表
-        # 使用正则表达式提取所有符合 ESLint 命名的字符串 (小写字母、数字、中划线)
+        # 1. Parse input rule name list
+        # Use regex to extract all strings matching ESLint naming (lowercase letters, digits, hyphens)
         if isinstance(name_list_str, list):
             candidate_names = [str(n).strip() for n in name_list_str]
         else:
-            # 兼容处理：提取 GPT 输出文本中的规则名，过滤掉序号、括号等
+            # Compatible handling: extract rule names from GPT output text, filter serial numbers and brackets
             candidate_names = re.findall(r'([a-z0-9\-]+)', name_list_str.lower())
 
         unique_candidates = set(candidate_names)
         if not unique_candidates:
             return "No candidate rules provided."
 
-        # 2. 加载 DSL 数据文件
-        # 路径确保指向 DSL_ESLint_all.json
+        # 2. Load DSL data file
+        # Path should point to DSL_ESLint_all.json
         dsl_file_path = os.path.join(current_dir, "data", "DSL_ESLint_all.json")
 
         try:
@@ -396,12 +395,12 @@ class gen_eslint:
             print(f"Error loading DSL data: {e}")
             return ""
 
-        # 3. 遍历库文件，查找匹配的详细信息
+        # 3. Iterate library to find matching details
         detailed_results = []
         found_names = set()
 
         for entry in all_dsl_data:
-            # entry 格式: [url, rule_name, dsl_content]
+            # entry format: [url, rule_name, dsl_content]
             if len(entry) < 3:
                 continue
 
@@ -410,10 +409,10 @@ class gen_eslint:
             dsl_content = entry[2]
 
             if rule_name in unique_candidates:
-                # 清理 DSL 内容（移除冗余的标题，保留核心规则结构）
+                # Clean DSL content, remove redundant headers, keep core rule structure
                 clean_dsl = dsl_content.replace("Final RuleSet Representation:", "").strip()
 
-                # 构造 Step 3 识别的格式
+                # Construct Step 3-compatible format
                 rule_info = (
                     f"RuleName: {rule_name}\n"
                     f"{clean_dsl}"
@@ -421,15 +420,15 @@ class gen_eslint:
                 detailed_results.append(rule_info)
                 found_names.add(rule_name)
 
-        # 4. 如果没找到，尝试模糊匹配（可选逻辑，根据实际需求决定）
+        # 4. If not found, try fuzzy match (optional logic, adjust based on needs)
         if not detailed_results:
             return "No matching detailed rules found in DSL database."
 
-        # 返回聚合后的长文本，作为 Step 3 Prompt 中的 {{toolruleset}}
+        # Return aggregated text as {{toolruleset}} for Step 3 Prompt
         return "\n\n*********************\n\n".join(detailed_results)
 
     def _format_output(self, content, output_format):
-        """格式化输出"""
+        """Format output"""
         if output_format == "json":
             if isinstance(content, str):
                 try:

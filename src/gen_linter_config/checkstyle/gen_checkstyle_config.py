@@ -1,6 +1,6 @@
 """
-该文件需要实现的功能：
-读取指令的所有参数之后返回checkstyle配置。
+Core functionality:
+Generate a Checkstyle XML configuration from natural language style instructions.
 """
 import os
 import re
@@ -21,7 +21,7 @@ class gen_checkstyle:
         self.gpt_agent = GPTAgent(api_key, debug=debug) if GPTAgent else None
         self.debugger = self.gpt_agent.debugger if self.gpt_agent else None
 
-    # 处理代码规范的总入口
+    # Main entry point for processing code style rules
     def process_input(self,  input_content, model, output_format="text", examples=""):
         print("=" * 60)
         print("Step 1: NL-to-DSL Parsing")
@@ -39,7 +39,7 @@ class gen_checkstyle:
         mapping_result = self.map_to_checkstyle(dsl_result,model, output_format=output_format, examples=examples)
         print(mapping_result)
 
-        # --- 步骤3：详细选项映射 (子配置项生成) ---
+        # --- Step 3: Detailed Option Mapping (sub-option config generation) ---
         print("\n" + "=" * 60)
         print("Step 3: Option Rule Configuration")
         print("=" * 60)
@@ -48,7 +48,7 @@ class gen_checkstyle:
         detailed_mapping = self.detailed_mapping(dsl_result, mapping_result, model, examples)
         print(detailed_mapping)
 
-        # ---  步骤4：配置生成 ---
+        # --- Step 4: Configuration Generation ---
         print("\n" + "=" * 60)
         print("Step 4: Alignment Check & Configuration Generation")
         print("=" * 60)
@@ -59,10 +59,10 @@ class gen_checkstyle:
         print(final_res)
         return final_res
 
-    # 第一步，自然语言转DSL
+    # Step 1: Convert natural language to DSL
     def process_nl_rule(self, rule_description, model, output_format="text", examples=""):
         """
-        处理自然语言代码风格转换为DSL
+        Convert natural language code style to DSL
         """
         examples = '''For Example, Analyze the following {{Style}}, please parse the style using the given {{grammar}}.
 
@@ -120,15 +120,15 @@ class gen_checkstyle:
             example=examples
         )
 
-        # 第一次转为带思考过程的DSL，后一次提取DSL。
+        # First pass: NL to DSL with reasoning; second pass: extract pure DSL.
         if self.gpt_agent:
             if self.debugger:
-                self.debugger.sub_step("1.1 NL分析→DSL")
+                self.debugger.sub_step("1.1 NL Analysis -> DSL")
             gpt_response = self.gpt_agent.get_response(prompt, model=model)
             # print("="*60+"\n"+gpt_response+"="*60)
             final_ruleset = DSL_final_extract(gpt_response)
             if self.debugger:
-                self.debugger.sub_step("1.2 提取纯DSL规则")
+                self.debugger.sub_step("1.2 Extract Pure DSL")
             final_response = self.gpt_agent.get_response(final_ruleset, model=model)
         else:
             final_response = {
@@ -139,15 +139,15 @@ class gen_checkstyle:
 
         return self._format_output(final_response, output_format)
 
-# 第二步，映射DSL到checkstyle
+# Step 2: Map DSL to Checkstyle
     def map_to_checkstyle(self, dsl_ruleset, model, checkstyle_ruleset=None, output_format="text", examples=""):
         """
-        映射DSL规则到Checkstyle规则
+        Map DSL rules to Checkstyle rules
         """
         dsl_basic_rules = self._load_checkstyle_dsl_basic_rules()
 
         rule_count = dsl_basic_rules.count("RuleName:") if dsl_basic_rules else 0
-        print("="*15 + f"使用 {rule_count} 条 Checkstyle DSL Basic Rule 进行映射。")
+        print("="*15 + f"Mapping against {rule_count} Checkstyle DSL Basic Rules.")
 
         if checkstyle_ruleset is None:
             checkstyle_ruleset = dsl_basic_rules
@@ -163,7 +163,7 @@ class gen_checkstyle:
 
         if self.gpt_agent:
             if self.debugger:
-                self.debugger.sub_step("2.1 候选规则名选择")
+                self.debugger.sub_step("2.1 Candidate Rule Name Selection")
             final_response = self.gpt_agent.get_response(prompt, model=model)
         else:
             final_response = {
@@ -174,10 +174,10 @@ class gen_checkstyle:
 
         return self._format_output(final_response, output_format)
 
-    # 第三步，映射子配置项
+    # Step 3: Map sub-option rules
     def detailed_mapping(self, dsl_ruleset, candidate_names, model, examples=""):
         filtered_tool_rules = self._get_detailed_tool_rules(candidate_names)
-        prompt = CheckstyleGenerator.preprocess_promt(  # 调用 O1 版本的 Generator Prompt
+        prompt = CheckstyleGenerator.preprocess_promt(
             DSL_Syntax=self.dsl_syntax,
             style="RuleSet of Google Java Style Guide",
             DSLruleset=dsl_ruleset,
@@ -186,31 +186,28 @@ class gen_checkstyle:
             example=examples
         )
         if self.gpt_agent:
-            # 步骤3.1: 详细选项映射
             if self.debugger:
-                self.debugger.sub_step("3.1 详细选项映射")
+                self.debugger.sub_step("3.1 Detailed Option Mapping")
             mapping_res = self.gpt_agent.get_response(prompt, model=model)
             extract_prompt = CheckstyleGenerator.extract_config_promt(mapping_res)
-            # 步骤3.2: 提取映射
             if self.debugger:
-                self.debugger.sub_step("3.2 提取映射")
+                self.debugger.sub_step("3.2 Extract Mappings")
             final_mapping = self.gpt_agent.get_response(extract_prompt, model=model)
             extract_non_empty_prompt = CheckstyleGenerator.extract_non_empty_config_promt(final_mapping)
-            # 步骤3.3 过滤空映射
             if self.debugger:
-                self.debugger.sub_step("3.3 过滤空映射")
+                self.debugger.sub_step("3.3 Filter Empty Mappings")
             final_mapping = self.gpt_agent.get_response(extract_non_empty_prompt, model=model)
             if "Yes" not in final_mapping:
                 return "No valid mappings found."
 
             if "regular expression" in final_mapping.lower():
                 if self.debugger:
-                    self.debugger.sub_step("3.4 正则值分析")
+                    self.debugger.sub_step("3.4 Regex Value Analysis")
                 set_value_answer = self.gpt_agent.get_response(
                     f'For each mapping, if it contains "regular expression", set specific regular expression of option names to match rule\n\n        {final_mapping}',
                     model=model)
                 if self.debugger:
-                    self.debugger.sub_step("3.5 替换正则占位符")
+                    self.debugger.sub_step("3.5 Replace Regex Placeholder")
                 answer_map_with_value = self.gpt_agent.get_response(
                     f'Based on the following Analysis, Replace "regular expression" with setting regular expression values for the following mapping. And then give new Mappings.\n'
                     f'1. Extract specific regular expression values for "regular expression" value from the following Analysis.\n'
@@ -220,23 +217,23 @@ class gen_checkstyle:
                     model=model)
                 extract_with_value = CheckstyleGenerator.extract_config_promt(answer_map_with_value)
                 if self.debugger:
-                    self.debugger.sub_step("3.6 提取正则替换后映射")
+                    self.debugger.sub_step("3.6 Extract Regex-Replaced Mappings")
                 final_mapping = self.gpt_agent.get_response(extract_with_value, model=model)
             return final_mapping
         return candidate_names
 
-    # 第四步，生成checkstyle配置
+    # Step 4: Generate Checkstyle configuration
     def generate_config(self, dsl_ruleset, model, checkstyle_ruleset=None, output_format="text", examples=""):
         """
-        生成Checkstyle配置
+        Generate Checkstyle configuration
         """
         if checkstyle_ruleset is None:
             checkstyle_ruleset = self._load_default_checkstyle_rules()
 
         if self.gpt_agent:
-            # 将 Basic Rule 和 Option Rule 合并为一条精简的 ToolSEM 规则
+            # Merge Basic Rule and Option Rule into a single concise ToolSEM rule
             if self.debugger:
-                self.debugger.sub_step("4.0 提取ToolSEM规则")
+                self.debugger.sub_step("4.0 Extract ToolSEM Rules")
             tool_sem_rules = self.gpt_agent.get_response(
                 f'For the following mappings,before ">>>" is StyleSEM rule, after ">>>" is ToolSEM rule. You only excerpt toolSEM rule consisting of Rulename, Basic rule and Option rules.\n\n'
                 f'{dsl_ruleset}\n\n'
@@ -250,15 +247,15 @@ class gen_checkstyle:
                 model=model)
             merg_prompt = CheckstyleGenerator.merge_basic_option_rules(tool_sem_rules)
             if self.debugger:
-                self.debugger.sub_step("4.1 合并选项规则")
+                self.debugger.sub_step("4.1 Merge Option Rules")
             merge_answer_map = self.gpt_agent.get_response(merg_prompt, model=model)
             prompt_extract_merge = CheckstyleGenerator.extract_merge_mappings_promt(
                 text=merge_answer_map, answer_map=dsl_ruleset)
             if self.debugger:
-                self.debugger.sub_step("4.2 提取合并后映射")
+                self.debugger.sub_step("4.2 Extract Merged Mappings")
             dsl_ruleset = self.gpt_agent.get_response(prompt_extract_merge, model=model)
 
-            # 1.验证语义匹配
+            # 1. Validate semantic match
             prompt = CheckstyleGenerator.validation_config_superset_semantics(
                 mapping=dsl_ruleset,
                 tool="Checkstyle",
@@ -266,37 +263,37 @@ class gen_checkstyle:
                 toolruleset=checkstyle_ruleset
             )
             if self.debugger:
-                self.debugger.sub_step("4.3 语义验证")
+                self.debugger.sub_step("4.3 Semantic Validation")
             val_response = self.gpt_agent.get_response(prompt, model=model)
-            # 2.提取正确映射
+            # 2. Extract correct mappings
             filter_prompt = CheckstyleGenerator.extract_correct_mapping(
                 mapping=dsl_ruleset,
                 correct_information=val_response
             )
             if self.debugger:
-                self.debugger.sub_step("4.4 提取正确映射")
+                self.debugger.sub_step("4.4 Extract Correct Mappings")
             val_mapping = self.gpt_agent.get_response(filter_prompt, model=model)
             if "Yes" not in val_mapping and "Mapping:" not in val_mapping:
                 print("Warning: No valid mappings found after validation.")
                 return None
-            # 3.XML初稿
+            # 3. Generate XML draft
             gen_prompt = CheckstyleGenerator.gen_config_format(
                 mapping=val_mapping,
                 tool="Checkstyle",
                 format="XML"
             )
             if self.debugger:
-                self.debugger.sub_step("4.5 生成XML初稿")
+                self.debugger.sub_step("4.5 Generate XML Draft")
             raw_config = self.gpt_agent.get_response(gen_prompt, model=model)
-            # 4.纯净配置
+            # 4. Extract clean XML
             clean_prompt = CheckstyleGenerator.extract_specific_config_promt(
                 text=raw_config,
                 format="XML"
             )
             if self.debugger:
-                self.debugger.sub_step("4.6 提取纯净XML")
+                self.debugger.sub_step("4.6 Extract Clean XML")
             final_res = self.gpt_agent.get_response(clean_prompt, model=model)
-            # 5.正则提取
+            # 5. Regex extraction
             match = re.search(r"(<module.*</module>)", final_res, re.DOTALL)
             if match:
                 return match.group(1)
@@ -312,24 +309,23 @@ class gen_checkstyle:
 
     def _get_detailed_tool_rules(self, name_list_str):
         """
-        根据 Step 2 返回的候选规则名列表，从 Checkstyle DSL 库中提取包含子配置项（Option Rule）的详细信息。
-        逻辑完全对齐 gen_eslint_config.py。
+        Extract detailed rules (with sub-option rules) from the Checkstyle DSL library
+        based on the candidate rule name list from Step 2.
+        Logic is aligned with gen_eslint_config.py.
         """
-        # 1. 解析输入的规则名列表
+        # 1. Parse the input rule name list
         if isinstance(name_list_str, list):
             candidate_names = [str(n).strip() for n in name_list_str]
         else:
-            # 兼容处理：提取 GPT 输出文本中的规则名
-            # 注意：Checkstyle 的规则名通常是大驼峰（如 NeedBraces），所以正则不加 .lower()
-            # 匹配字母和数字组成的单词
+            # Extract rule names from GPT output text
+            # Match words composed of letters and digits
             candidate_names = re.findall(r'([a-zA-Z0-9]+)', name_list_str)
 
         unique_candidates = set(candidate_names)
         if not unique_candidates:
             return "No candidate rules provided."
 
-        # 2. 加载 Checkstyle DSL 数据文件 (对应原项目的存储路径)
-        # 确保此路径指向 gen_checkstyle_config.py 同级或 data 目录下的 JSON
+        # 2. Load Checkstyle DSL data file
         dsl_file_path = os.path.join(current_dir, "data", "DSL_checkstyle_all.json")
 
         try:
@@ -339,12 +335,12 @@ class gen_checkstyle:
             print(f"Error loading Checkstyle DSL data from {dsl_file_path}: {e}")
             return ""
 
-        # 3. 遍历库文件，查找匹配的详细信息 (包含 Basic Rule 和 Option Rule)
+        # 3. Iterate through the library, find matching detailed rules (Basic Rule + Option Rule)
         detailed_results = []
         found_names = set()
 
         for entry in all_dsl_data:
-            # entry 结构符合原项目逻辑: [url, rule_name, dsl_content]
+            # Entry structure: [url, rule_name, dsl_content]
             if len(entry) < 3:
                 continue
 
@@ -352,10 +348,10 @@ class gen_checkstyle:
             dsl_content = entry[2]
 
             if rule_name in unique_candidates:
-                # 清理 DSL 内容，去除冗余标题
+                # Clean DSL content, remove redundant title
                 clean_dsl = dsl_content.replace("Final RuleSet Representation:", "").strip()
 
-                # 构造 Step 3 (Generator) 识别的格式
+                # Build the format recognized by Step 3 (Generator)
                 rule_info = (
                     f"RuleName: {rule_name}\n"
                     f"{clean_dsl}"
@@ -363,19 +359,19 @@ class gen_checkstyle:
                 detailed_results.append(rule_info)
                 found_names.add(rule_name)
 
-        # 4. 如果没找到任何匹配项，返回提示以免 Step 3 的 Prompt 为空
+        # 4. If no matches found, return a hint so Step 3 prompt is not empty
         if not detailed_results:
             return "No matching detailed rules found in Checkstyle DSL database."
 
-        # 使用分隔符聚合，作为 Step 3 Prompt 中的 {{toolruleset}}
+        # Use separator to aggregate, as {{toolruleset}} in Step 3 Prompt
         return "\n\n*********************\n\n".join(detailed_results)
 
-# 加载checkstyle规则集
+    # Load Checkstyle rule set
     def _load_default_checkstyle_rules(self, return_raw=False):
         """
-        加载默认的Checkstyle规则集
+        Load the default Checkstyle rule set
         Args:
-            return_raw: 如果为True，返回列表对象；否则返回格式化后的字符串
+            return_raw: if True, return raw list; otherwise return formatted string
         """
         rule_file = os.path.join(current_dir, "data", "checkstyle_rules_complete.json")
         all_rules = []
@@ -385,12 +381,12 @@ class gen_checkstyle:
                 rules = json.load(f)
                 all_rules.extend(rules)
         except Exception as e:
-            print(f"警告: 无法加载规则文件 {rule_file}: {e}")
+            print(f"Warning: failed to load rules file {rule_file}: {e}")
 
         if return_raw:
             return all_rules
 
-        # 默认行为：返回格式化后的字符串
+        # Default: return formatted string
         ruleset_text = "\n".join([
             f"RuleName: {rule.get('name', 'Unknown')}\n"
             f"Description: {rule.get('description', 'No description')}\n"
@@ -399,13 +395,13 @@ class gen_checkstyle:
         ])
         return ruleset_text
 
-    # 根据 DSL 关键词筛选相关规则
+    # Filter relevant rules by DSL keywords
     def _filter_relevant_rules(self, dsl_text, all_rules_data, top_k=30):
         """
-        根据 DSL 文本中的关键词，从所有规则中筛选出最相关的 top_k 条规则。
-        这是一个简单的关键词匹配实现，也可以换成向量检索。
+        Filter the top_k most relevant rules from all rules based on DSL keyword matching.
+        Simple keyword match implementation; can be replaced with vector retrieval.
         """
-        # 1. 提取 DSL 中的关键词 (去掉常见停用词)
+        # 1. Extract keywords from DSL (excluding common stop words)
         keywords = set(re.findall(r"[a-zA-Z]+", dsl_text))
         stop_words = {"Mandatory", "Optional", "Rule", "is", "not", "of", "in", "the", "and", "or", "if", "then",
                       "Java", "Google", "Style", "Guide", "class", "method", "field", "variable"}
@@ -417,29 +413,29 @@ class gen_checkstyle:
             score = 0
             rule_content = (rule.get('name', '') + " " + rule.get('description', '')).lower()
 
-            # 2. 计算匹配分数
+            # 2. Calculate match score
             for kw in keywords:
                 if kw.lower() in rule_content:
                     score += 1
 
-            # 优先保留完全匹配规则名的
+            # Prefer exact rule name matches
             if any(kw.lower() == rule.get('name', '').lower() for kw in keywords):
                 score += 5
 
             if score > 0:
                 scored_rules.append((score, rule))
 
-        # 3. 排序并取前 K 个
+        # 3. Sort and take top K
         scored_rules.sort(key=lambda x: x[0], reverse=True)
         selected_rules = [r[1] for r in scored_rules[:top_k]]
 
-        # 如果没匹配到任何规则，返回全部规则的前 top_k 个作为保底
+        # Fallback: if no rules matched, return first top_k of all rules
         if not selected_rules:
             return all_rules_data[:top_k]
 
         return selected_rules
 
-    # 加载checkstyle的DSL规则集
+    # Load Checkstyle DSL rule set
     def _load_checkstyle_dsl(self):
         dsl_file = os.path.join(current_dir, "data", "DSL_checkstyle_all.json")
 
@@ -447,7 +443,7 @@ class gen_checkstyle:
             with open(dsl_file, 'r', encoding='utf-8') as f:
                 rules = json.load(f)
         except Exception as e:
-            print(f"警告: 无法加载DSL规则集{dsl_file}: {e}\n")
+            print(f"Warning: failed to load DSL rule file {dsl_file}: {e}\n")
             return ""
         formatted_rules = []
         for item in rules:
@@ -455,7 +451,7 @@ class gen_checkstyle:
                 rule_name = item[1]
                 dsl_content = item[2]
                 clean_dsl = dsl_content.replace("Final RuleSet Representation:", "").strip()
-                # 格式化为清晰的文本块，仅保留规则名和规则逻辑
+                # Format as clean text blocks, keeping only rule name and logic
                 formatted_rules.append(f"RuleName: {rule_name}\n{clean_dsl}")
         dsl_rules = "\n\n".join(formatted_rules)
         return dsl_rules
@@ -466,7 +462,7 @@ class gen_checkstyle:
             with open(dsl_file, 'r', encoding='utf-8') as f:
                 rules = json.load(f)
         except Exception as e:
-            print(f"警告: 无法加载DSL规则集{dsl_file}: {e}\n")
+            print(f"Warning: failed to load DSL rule file {dsl_file}: {e}\n")
             return ""
 
         basic_rules_lines = []
@@ -480,17 +476,17 @@ class gen_checkstyle:
 
     def generate_full_checkstyle_xml(self, snippet: str) -> str:
         """
-        将单个规则的配置片段包装成完整的 Checkstyle 配置文件。
+        Wrap a single-rule configuration snippet into a complete Checkstyle config file.
 
         Args:
-            snippet: 大模型生成的 XML 片段，如 <module name='ParameterNumber'>...</module>
+            snippet: XML fragment generated by LLM, e.g. <module name='ParameterNumber'>...</module>
         Returns:
-            完整的 XML 字符串
+            Complete XML string
         """
-        # 处理无效输入
+        # Handle invalid input
         if not snippet or not isinstance(snippet, str):
             print("=" * 60)
-            print("输入为空或无效，返回默认配置")
+            print("Input is empty or invalid, returning default config.")
             print("=" * 60)
             return """<?xml version="1.0"?>
   <!DOCTYPE module PUBLIC
@@ -503,7 +499,7 @@ class gen_checkstyle:
     <property name="fileExtensions" value="java, properties, xml"/>
   </module>"""
 
-        # 1. 加载规则元数据 (构建 Name -> Parent 的映射字典，提高查询效率)
+        # 1. Load rule metadata (build Name -> Parent lookup dict for efficiency)
         rule_parent_map = {}
         rule_file = os.path.join(current_dir, "data", "checkstyle_rules_complete.json")
         try:
@@ -515,19 +511,18 @@ class gen_checkstyle:
                     if name:
                         rule_parent_map[name] = parent
         except Exception as e:
-            print(f"Warning: 无法读取规则元数据: {e}，将默认使用 TreeWalker 嵌套。")
+            print(f"Warning: failed to read rule metadata: {e}, defaulting to TreeWalker nesting.")
 
-        # 2. 提取所有 module 片段
-        # 正则解释：匹配 <module name='Name'> ... </module>，re.DOTALL 让 . 匹配换行符
-        # group(1) 是整个XML片段，group(2) 是规则名称
-        # 有时用户输入不合法会产生TypeError
+        # 2. Extract all module fragments
+        # Regex: match <module name='Name'> ... </module>, re.DOTALL makes . match newlines
+        # group(1) is the full XML fragment, group(2) is the rule name
         try:
             module_pattern = re.compile(r"(<module\s+name=['\"](\w+)['\"].*?</module>)", re.DOTALL)
             matches = module_pattern.findall(snippet)
         except Exception as e:
-            print(f"警告：无法提取配置片段: {e}\n")
+            print(f"Warning: failed to extract configuration snippet: {e}\n")
             matches = None
-        # 如果没有匹配到任何内容，返回默认配置
+        # If no matches, return default config
         if not matches:
             return """<?xml version="1.0"?>
   <!DOCTYPE module PUBLIC
@@ -540,49 +535,49 @@ class gen_checkstyle:
       <property name="fileExtensions" value="java, properties, xml"/>
     </module>"""
 
-        checker_children = []  # 直接挂在 Checker 下的模块
-        treewalker_children = []  # 挂在 TreeWalker 下的模块
+        checker_children = []   # Modules directly under Checker
+        treewalker_children = []  # Modules under TreeWalker
 
         for full_xml, rule_name in matches:
-            # 判断父级
+            # Determine parent
             parent = rule_parent_map.get(rule_name, '')
 
-            # 这里的逻辑是：如果明确是 Checker 下的规则（如 LineLength, FileTabCharacter），放入 checker_children
-            # 否则（包括 TreeWalker 下的规则、未知规则、或者没找到元数据的规则），统统放入 TreeWalker
-            # 这样鲁棒性最强，因为 Checkstyle 90% 的规则都在 TreeWalker 下
+            # If explicitly a Checker-level rule (e.g. LineLength, FileTabCharacter),
+            # put under checker_children. Otherwise default to TreeWalker
+            # (90% of Checkstyle rules are under TreeWalker).
             if parent.endswith('Checker'):
                 is_treewalker = False
             else:
                 is_treewalker = True
 
-            # 3. 缩进处理函数
+            # 3. Indentation helper
             def reindent_snippet(xml_str, base_indent_level):
                 lines = xml_str.strip().split('\n')
                 formatted_lines = []
-                indent_str = "  " * base_indent_level  # 每一级2个空格
+                indent_str = "  " * base_indent_level  # 2 spaces per level
 
                 for i, line in enumerate(lines):
                     stripped = line.strip()
                     if i == 0:
-                        # <module ...> 标签
+                        # <module ...> tag
                         formatted_lines.append(f"{indent_str}{stripped}")
                     elif i == len(lines) - 1:
-                        # </module> 标签
+                        # </module> tag
                         formatted_lines.append(f"{indent_str}{stripped}")
                     else:
-                        # 中间的 <property ...> 或其他内容，增加一级缩进
+                        # Inner <property ...> or other content, add one more indent level
                         formatted_lines.append(f"{indent_str}  {stripped}")
                 return "\n".join(formatted_lines)
 
-            # 根据归属分类并调整缩进
+            # Classify by parent and adjust indentation
             if is_treewalker:
-                # TreeWalker 本身在 Checker 下 (1级)，所以子模块在 (2级)
+                # TreeWalker is level 1 under Checker, so its children are level 2
                 treewalker_children.append(reindent_snippet(full_xml, 2))
             else:
-                # Checker 的直接子模块在 (1级)
+                # Checker direct children are level 1
                 checker_children.append(reindent_snippet(full_xml, 1))
 
-        # 4. 组装最终 XML
+        # 4. Assemble final XML
         xml_header = """<?xml version="1.0"?>
   <!DOCTYPE module PUBLIC
     "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
@@ -594,12 +589,12 @@ class gen_checkstyle:
     <property name="fileExtensions" value="java, properties, xml"/>
         """
 
-        # 拼接 Checker 的直接子模块 (如 LineLength)
+        # Append Checker direct children (e.g. LineLength)
         body_content = ""
         if checker_children:
             body_content += "\n" + "\n".join(checker_children) + "\n"
 
-        # 拼接 TreeWalker 及其子模块
+        # Append TreeWalker and its children
         if treewalker_children:
             body_content += '\n  <module name="TreeWalker">\n'
             body_content += "\n".join(treewalker_children)
@@ -610,20 +605,19 @@ class gen_checkstyle:
         return xml_header + body_content + xml_footer
 
     def _format_output(self, content, output_format):
-        """格式化输出"""
+        """Format output"""
         if output_format == "json":
             if isinstance(content, str):
                 try:
-                    # 尝试解析为JSON
+                    # Try to parse as JSON
                     return json.dumps({"response": content}, ensure_ascii=False, indent=2)
                 except:
                     return json.dumps({"response": content}, ensure_ascii=False)
             else:
                 return json.dumps(content, ensure_ascii=False, indent=2)
         else:
-            # 文本格式
+            # Text format
             if isinstance(content, dict):
                 return "\n".join([f"{k}: {v}" for k, v in content.items()])
             else:
                 return str(content)
-
