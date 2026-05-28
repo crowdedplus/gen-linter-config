@@ -186,21 +186,23 @@ class gen_checkstyle:
             example=examples
         )
         if self.gpt_agent:
+            # 步骤3.1: 详细选项映射
             if self.debugger:
                 self.debugger.sub_step("3.1 详细选项映射")
             mapping_res = self.gpt_agent.get_response(prompt, model=model)
             extract_prompt = CheckstyleGenerator.extract_config_promt(mapping_res)
+            # 步骤3.2: 提取映射
             if self.debugger:
                 self.debugger.sub_step("3.2 提取映射")
             final_mapping = self.gpt_agent.get_response(extract_prompt, model=model)
-            # 步骤3.1: 提取非空配置映射
             extract_non_empty_prompt = CheckstyleGenerator.extract_non_empty_config_promt(final_mapping)
+            # 步骤3.3 过滤空映射
             if self.debugger:
                 self.debugger.sub_step("3.3 过滤空映射")
             final_mapping = self.gpt_agent.get_response(extract_non_empty_prompt, model=model)
             if "Yes" not in final_mapping:
                 return "No valid mappings found."
-            # 步骤3.2: 正则表达式占位符处理
+
             if "regular expression" in final_mapping.lower():
                 if self.debugger:
                     self.debugger.sub_step("3.4 正则值分析")
