@@ -253,11 +253,11 @@ class gen_checkstyle:
                 text=merge_answer_map, answer_map=dsl_ruleset)
             if self.debugger:
                 self.debugger.sub_step("4.2 Extract Merged Mappings")
-            dsl_ruleset = self.gpt_agent.get_response(prompt_extract_merge, model=model)
+            dsl_ruleset_merged = self.gpt_agent.get_response(prompt_extract_merge, model=model)
 
             # 1. Validate semantic match
             prompt = CheckstyleGenerator.validation_config_superset_semantics(
-                mapping=dsl_ruleset,
+                mapping=dsl_ruleset_merged,
                 tool="Checkstyle",
                 style="Google Java Style",
                 toolruleset=checkstyle_ruleset
