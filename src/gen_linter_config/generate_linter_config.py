@@ -48,6 +48,9 @@ def main():
     parser.add_argument('--debug', '-d', action='store_true', help='Enable debug mode: print colored prompts/responses and save log')
     # parser.add_argument('--format', '-f', choices=['text', 'json'], default='json', help='output format')
     parser.add_argument('--examples', '-e', help='Sample text')
+    parser.add_argument('--full', dest='lightweight', action='store_false',
+                        help='Use full DSL mode instead of lightweight JSON mode for rule matching')
+    parser.set_defaults(lightweight=True)
     parser.add_argument('--version', '-v', action='version', version=f'%(prog)s {__version__}')
 
     args = parser.parse_args()
@@ -62,11 +65,11 @@ def main():
         if args.tool == "checkstyle":
             from gen_linter_config.checkstyle.gen_checkstyle_config import gen_checkstyle
             gen_checkstyle_config = gen_checkstyle(api_key=args.api_key, debug=args.debug)
-            result = gen_checkstyle_config.process_input(input_content=input_content,model= args.model,examples= args.examples,)
+            result = gen_checkstyle_config.process_input(input_content=input_content,model= args.model,examples= args.examples, lightweight=args.lightweight)
         elif args.tool == "eslint":
             from gen_linter_config.ESLint.gen_eslint_config import gen_eslint
             gen_eslint_config_ = gen_eslint(api_key=args.api_key, debug=args.debug)
-            result = gen_eslint_config_.process_input(input_content=input_content,model= args.model,examples= args.examples)
+            result = gen_eslint_config_.process_input(input_content=input_content,model= args.model,examples= args.examples, lightweight=args.lightweight)
         else:
             from gen_linter_config.others import gen_lint_config_rough
             result = gen_lint_config_rough.generate_lint_config(rule=input_content,lint_name=args.tool,model=args.model,api_key=args.api_key,debug=args.debug)

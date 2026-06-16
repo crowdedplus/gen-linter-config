@@ -21,7 +21,7 @@ class gen_eslint:
         self.debugger = self.gpt_agent.debugger if self.gpt_agent else None
 
     # Main entry point for processing coding standards
-    def process_input(self, input_content, model, output_format="text", examples=""):
+    def process_input(self, input_content, model, output_format="text", examples="", lightweight=True):
         print("=" * 60)
         print("Step 1: NL-to-DSL Parsing")
         print("=" * 60)
@@ -35,7 +35,7 @@ class gen_eslint:
         print("=" * 60)
         if self.debugger:
             self.debugger.step("Step 2: Candidate Rule Name Selection")
-        mapping_result = self.map_to_eslint(dsl_result, model, output_format=output_format, examples=examples)
+        mapping_result = self.map_to_eslint(dsl_result, model, output_format=output_format, examples=examples, lightweight=lightweight)
         print(mapping_result)
 
         print("\n" + "=" * 60)
@@ -43,7 +43,7 @@ class gen_eslint:
         print("=" * 60)
         if self.debugger:
             self.debugger.step("Step 3: Option Rule Configuration")
-        detailed_mapping = self.step_3_detailed_mapping(dsl_result,mapping_result,model,examples)
+        detailed_mapping = self.step_3_detailed_mapping(dsl_result,mapping_result,model,examples,lightweight=lightweight)
         print(detailed_mapping)
 
         print("\n" + "=" * 60)
@@ -89,14 +89,20 @@ class gen_eslint:
         return self._format_output(final_response, output_format)
 
     # Step 2: Map DSL to ESLint DSL rule set
-    def map_to_eslint(self, dsl_ruleset, model, output_format="text", examples=""):
+    def map_to_eslint(self, dsl_ruleset, model, output_format="text", examples="", lightweight=True):
         """
         Map DSL rules to ESLint rules
         """
-        dsl_basic_rules = self._load_eslint_dsl_basic_rules()
+        if lightweight:
+            dsl_basic_rules = self._load_eslint_json_rules(mode="basic")
+        else:
+            dsl_basic_rules = self._load_eslint_dsl_basic_rules()
 
-        rule_count = dsl_basic_rules.count("RuleName:") if dsl_basic_rules else 0
-        print("="*15 + f"Mapping against {rule_count} ESLint DSL Basic Rules.")
+        rule_count = dsl_basic_rules.count('"name"') if lightweight else (dsl_basic_rules.count("RuleName:") if dsl_basic_rules else 0)
+        print("="*15 + f"Mapping against {rule_count} ESLint rules.")
+
+        if lightweight:
+            dsl_basic_rules = "ESLint rules in JSON format. Each line is a JSON object with 'name' and 'options' keys.\n" + dsl_basic_rules
 
         prompt = RuleSelector.preprocess_promt(
             DSL_Syntax=self.dsl_syntax,
@@ -121,8 +127,14 @@ class gen_eslint:
         return self._format_output(final_response, output_format)
 
     # Step 3: Map sub configuration options
-    def step_3_detailed_mapping(self,dsl_ruleset, candidate_names, model, examples=""):
-        filtered_tool_rules = self._get_detailed_tool_rules(candidate_names)
+    def step_3_detailed_mapping(self,dsl_ruleset, candidate_names, model, examples="", lightweight=True):
+        if lightweight:
+            filtered_tool_rules = self._get_detailed_tool_rules_json(candidate_names, data_type="eslint")
+        else:
+            filtered_tool_rules = self._get_detailed_tool_rules(candidate_names)
+
+        if lightweight:
+            filtered_tool_rules = "ESLint rules in JSON format.\n" + filtered_tool_rules
         prompt = EslintGenerator.preprocess_promt(
             DSL_Syntax=self.dsl_syntax,
             style="RuleSet of Google JavaScript Style Guide",
@@ -301,6 +313,62 @@ class gen_eslint:
         ])
         return ruleset_text
 
+
+    def _load_eslint_json_rules(self, mode="basic"):
+        """Lightweight mode: load raw JSON rules instead of DSL-formatted text."""
+        json_file = os.path.join(current_dir, "data", "eslint_rules_complete.json")
+        try:
+            with open(json_file, 'r', encoding='utf-8') as f:
+                rules = json.load(f)
+        except Exception as e:
+            print(f"Warning: failed to load JSON rules from {json_file}: {e}\n")
+            return ""
+
+        if mode == "basic":
+            lines = []
+            for r in rules:
+                opts = r.get("options", [])
+                if isinstance(opts, list) and opts and isinstance(opts[0], dict) and "properties" in opts[0]:
+                    opt_names = list(opts[0]["properties"].keys())
+                elif isinstance(opts, list):
+                    opt_names = [o.get("name", str(o)) for o in opts]
+                else:
+                    opt_names = []
+                line = f'{{"name": "{r["name"]}", "category": "{r.get("category","")}", "options": {json.dumps(opt_names, ensure_ascii=False)}}}'
+                lines.append(line)
+            return "\n".join(lines)
+        else:
+            lines = []
+            for r in rules:
+                line = json.dumps({"name": r["name"], "category": r.get("category", ""), "description": r.get("description", ""), "options": r.get("options", [])}, ensure_ascii=False)
+                lines.append(line)
+            return "\n".join(lines)
+
+    def _get_detailed_tool_rules_json(self, name_list_str, data_type="eslint"):
+        """Lightweight mode: filter JSON rules by candidate names and return as compact JSON."""
+        if isinstance(name_list_str, list):
+            candidate_names = [str(n).strip() for n in name_list_str]
+        else:
+            candidate_names = re.findall(r'([a-z0-9\-]+)', name_list_str.lower())
+        unique_candidates = set(candidate_names)
+        if not unique_candidates:
+            return "No candidate rules provided."
+
+        json_file = os.path.join(current_dir, "data", "eslint_rules_complete.json")
+        try:
+            with open(json_file, 'r', encoding='utf-8') as f:
+                all_rules = json.load(f)
+        except Exception as e:
+            print(f"Error loading JSON rules: {e}")
+            return ""
+
+        matched = []
+        for r in all_rules:
+            if r["name"] in unique_candidates:
+                matched.append(json.dumps({"name": r["name"], "description": r.get("description", ""), "options": r.get("options", [])}, ensure_ascii=False))
+        if not matched:
+            return "No matching detailed rules found."
+        return "\n".join(matched)
 
     def _load_eslint_dsl_basic_rules(self):
         dsl_file = os.path.join(current_dir, "data", "DSL_ESLint_all.json")

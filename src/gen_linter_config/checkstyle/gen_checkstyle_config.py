@@ -22,7 +22,7 @@ class gen_checkstyle:
         self.debugger = self.gpt_agent.debugger if self.gpt_agent else None
 
     # Main entry point for processing code style rules
-    def process_input(self,  input_content, model, output_format="text", examples=""):
+    def process_input(self,  input_content, model, output_format="text", examples="", lightweight=True):
         print("=" * 60)
         print("Step 1: NL-to-DSL Parsing")
         print("=" * 60)
@@ -36,7 +36,7 @@ class gen_checkstyle:
         print("=" * 60)
         if self.debugger:
             self.debugger.step("Step 2: Selection of the configuration name")
-        mapping_result = self.map_to_checkstyle(dsl_result,model, output_format=output_format, examples=examples)
+        mapping_result = self.map_to_checkstyle(dsl_result,model, output_format=output_format, examples=examples, lightweight=lightweight)
         print(mapping_result)
 
         # --- Step 3: Detailed Option Mapping (sub-option config generation) ---
@@ -45,7 +45,7 @@ class gen_checkstyle:
         print("=" * 60)
         if self.debugger:
             self.debugger.step("Step 3: Option Rule Configuration")
-        detailed_mapping = self.detailed_mapping(dsl_result, mapping_result, model, examples)
+        detailed_mapping = self.detailed_mapping(dsl_result, mapping_result, model, examples, lightweight=lightweight)
         print(detailed_mapping)
 
         # --- Step 4: Configuration Generation ---
@@ -140,17 +140,23 @@ class gen_checkstyle:
         return self._format_output(final_response, output_format)
 
 # Step 2: Map DSL to Checkstyle
-    def map_to_checkstyle(self, dsl_ruleset, model, checkstyle_ruleset=None, output_format="text", examples=""):
+    def map_to_checkstyle(self, dsl_ruleset, model, checkstyle_ruleset=None, output_format="text", examples="", lightweight=True):
         """
         Map DSL rules to Checkstyle rules
         """
-        dsl_basic_rules = self._load_checkstyle_dsl_basic_rules()
+        if lightweight:
+            dsl_basic_rules = self._load_checkstyle_json_rules(mode="basic")
+        else:
+            dsl_basic_rules = self._load_checkstyle_dsl_basic_rules()
 
-        rule_count = dsl_basic_rules.count("RuleName:") if dsl_basic_rules else 0
-        print("="*15 + f"Mapping against {rule_count} Checkstyle DSL Basic Rules.")
+        rule_count = dsl_basic_rules.count('"name"') if lightweight else (dsl_basic_rules.count("RuleName:") if dsl_basic_rules else 0)
+        print("="*15 + f"Mapping against {rule_count} Checkstyle rules.")
 
         if checkstyle_ruleset is None:
             checkstyle_ruleset = dsl_basic_rules
+
+        if lightweight:
+            checkstyle_ruleset = "{{tool}} rules in JSON format. Each line is a JSON object with 'name' and 'options' keys.\n" + checkstyle_ruleset
 
         prompt = rule_mapper_preprocess(
             DSL_Syntax=self.dsl_syntax,
@@ -175,8 +181,15 @@ class gen_checkstyle:
         return self._format_output(final_response, output_format)
 
     # Step 3: Map sub-option rules
-    def detailed_mapping(self, dsl_ruleset, candidate_names, model, examples=""):
-        filtered_tool_rules = self._get_detailed_tool_rules(candidate_names)
+    def detailed_mapping(self, dsl_ruleset, candidate_names, model, examples="", lightweight=True):
+        if lightweight:
+            filtered_tool_rules = self._get_detailed_tool_rules_json(candidate_names, data_type="checkstyle")
+        else:
+            filtered_tool_rules = self._get_detailed_tool_rules(candidate_names)
+
+        if lightweight:
+            filtered_tool_rules = "{{tool}} rules in JSON format.\n" + filtered_tool_rules
+
         prompt = CheckstyleGenerator.preprocess_promt(
             DSL_Syntax=self.dsl_syntax,
             style="RuleSet of Google Java Style Guide",
@@ -455,6 +468,62 @@ class gen_checkstyle:
                 formatted_rules.append(f"RuleName: {rule_name}\n{clean_dsl}")
         dsl_rules = "\n\n".join(formatted_rules)
         return dsl_rules
+
+    def _load_checkstyle_json_rules(self, mode="basic"):
+        """Lightweight mode: load raw JSON rules instead of DSL-formatted text."""
+        json_file = os.path.join(current_dir, "data", "checkstyle_rules_simple.json")
+        try:
+            with open(json_file, 'r', encoding='utf-8') as f:
+                rules = json.load(f)
+        except Exception as e:
+            print(f"Warning: failed to load JSON rules from {json_file}: {e}\n")
+            return ""
+
+        if mode == "basic":
+            lines = []
+            for r in rules:
+                opt_names = [o["name"] for o in r.get("options", [])]
+                line = f'{{"name": "{r["name"]}", "category": "{r.get("category","")}", "options": {json.dumps(opt_names, ensure_ascii=False)}}}'
+                lines.append(line)
+            return "\n".join(lines)
+        else:
+            lines = []
+            for r in rules:
+                options = []
+                for o in r.get("options", []):
+                    options.append({"name": o["name"], "type": o.get("type", ""), "default": o.get("default", "")})
+                line = json.dumps({"name": r["name"], "category": r.get("category", ""), "options": options}, ensure_ascii=False)
+                lines.append(line)
+            return "\n".join(lines)
+
+    def _get_detailed_tool_rules_json(self, name_list_str, data_type="checkstyle"):
+        """Lightweight mode: filter JSON rules by candidate names and return as compact JSON."""
+        if isinstance(name_list_str, list):
+            candidate_names = [str(n).strip() for n in name_list_str]
+        else:
+            candidate_names = re.findall(r'([a-zA-Z0-9]+)', name_list_str)
+        unique_candidates = set(candidate_names)
+        if not unique_candidates:
+            return "No candidate rules provided."
+
+        json_file = os.path.join(current_dir, "data", "checkstyle_rules_simple.json")
+        try:
+            with open(json_file, 'r', encoding='utf-8') as f:
+                all_rules = json.load(f)
+        except Exception as e:
+            print(f"Error loading JSON rules: {e}")
+            return ""
+
+        matched = []
+        for r in all_rules:
+            if r["name"] in unique_candidates:
+                options = []
+                for o in r.get("options", []):
+                    options.append({"name": o["name"], "type": o.get("type", ""), "default": o.get("default", ""), "description": o.get("description", "")})
+                matched.append(json.dumps({"name": r["name"], "options": options}, ensure_ascii=False))
+        if not matched:
+            return "No matching detailed rules found."
+        return "\n".join(matched)
 
     def _load_checkstyle_dsl_basic_rules(self):
         dsl_file = os.path.join(current_dir, "data", "DSL_Checkstyle_all.json")
