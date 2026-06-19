@@ -6,6 +6,8 @@ import os
 import re
 from gen_linter_config.gpt_wrapper import GPTAgent
 
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 def generate_lint_config(rule: str, lint_name: str, model: str, api_key: str = None, debug: bool = False):
     """
@@ -118,7 +120,7 @@ def dsl_2_rule_list(dsl:str,lint_name:str):
     # 1. Build path: preserve directory structure
     # e.g. "PMD/Java" -> directory path: data/PMD/Java
     dir_parts = lint_name.split("/")
-    dir_path = os.path.join(os.getcwd(),"others", "data", *dir_parts)
+    dir_path = os.path.join(CURRENT_DIR, "data", *dir_parts)
 
     # 2. Build filename: replace / with _
     # e.g. "PMD/Java" -> filename prefix: PMD_Java
@@ -247,7 +249,7 @@ def rule_list_2_config(rule_list_str: str, lint_name: str, original_rule: str):
 
     # --- 3. Load detailed JSON info ---
     dir_parts = lint_name.split("/")
-    rules_base_dir = os.path.join(os.getcwd(),"others", "data", *dir_parts, "rules")
+    rules_base_dir = os.path.join(CURRENT_DIR, "data", *dir_parts, "rules")
     rules_detailed_context = []
 
     for rule_name in selected_names:
