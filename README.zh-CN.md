@@ -3,7 +3,7 @@
 
 # gen-linter-config
 
-A LLM-based linter configuration generate tool .
+一个基于大语言模型的linter配置生成工具。
 
 ## 使用方法
 
@@ -13,7 +13,7 @@ A LLM-based linter configuration generate tool .
 pip install gen-linter-config
 ```
 
-2. 配置大模型：本项目使用litellm库进行大模型的统一格式调用，因此在使用前请确保您已经将自己的key配置为环境变量且有充足的token资源。
+2. 配置大模型：本项目使用litellm库进行大模型的统一格式调用，在使用前请确保您有充足的token资源，api_key可以自动从环境变量读取或者通过参数传递。
 
 3. 使用示例：
 
@@ -21,8 +21,7 @@ pip install gen-linter-config
    gen-linter-config -t checkstyle --input "函数参数不多于5个"
    gen-linter-config -t checkstyle --input rule.txt --out output.json
    gen-linter-config -t checkstyle --input "使用大括号包裹代码块" --format json
-   gen-linter-config --tool Cppcheck --model dashscope/qwen3-max --input "函数参数不多于5个"
-   # cppcheck不适用属性名系统所以实际上不会返回包含属性名的内容。
+   gen-linter-config -t checkstyle -m deepseek/deepseek-v4-pro -i "The package declaration is not line-wrapped. The column limit(Section 4.4, Column limit: 100) does not apply to package declarations."
    ```
 
 
@@ -58,15 +57,18 @@ source ~/.zshrc
 
 ## 参数介绍
 
-| 参数           | 介绍                           | 是否必须 | 默认值            |
-| -------------- | ------------------------------ | -------- | ----------------- |
-| -h, --help     | 打印帮助信息并退出             | 否       | -                 |
-| --tool, -t     | 指定代码检查工具               | 是       | -                 |
-| --input, -i    | 代码规范的文本路径或者文字描述 | 是       | -                 |
-| --model, -m    | 指定使用模型                   | 否       | deepseek-reasoner |
-| --out, -o      | 输出文件路径                   | 否       | -                 |
-| --examples, -e | 文本示例                       | 否       | -                 |
-| --version, -v  | 打印包版本并退出               | 否       | -                 |
+| 参数           | 介绍                               | 是否必须 | 默认值      |
+| -------------- | ---------------------------------- | -------- | ----------- |
+| -h, --help     | 打印帮助信息并退出                 | 否       | -           |
+| --tool, -t     | 指定代码检查工具                   | 是       | -           |
+| --input, -i    | 代码规范的文本路径或者文字描述     | 是       | -           |
+| --model, -m    | 指定使用模型                       | 否       | qwen3.7-max |
+| --out, -o      | 输出文件路径                       | 否       | -           |
+| --examples, -e | 文本示例                           | 否       | -           |
+| --full         | 完整提示词模式                     | 否       | false       |
+| --api-key,-k   | 大模型的key                        | 否       | -           |
+| --debug,-d     | 调试模式，输出完整日志在logs文件夹 | 否       | false       |
+| --version, -v  | 打印包版本并退出                   | 否       | -           |
 
 当不指定输出文件只会直接输出在控制台中。
 

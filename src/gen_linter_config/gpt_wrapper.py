@@ -123,7 +123,7 @@ class GPTAgent:
         self.debugger = DebugLogger(enabled=debug, api_key=api_key)
 
     @retry(delay=0, tries=6, backoff=1, max_delay=120)
-    def ask(self, content, examples=None, model="deepseek/deepseek-v4-flash", temperature=0, previous_msg=[]):
+    def ask(self, content, examples=None, model="dashscope/qwen3.7-max", temperature=0, previous_msg=[]):
         messages = []
         if isinstance(previous_msg, list):
             for i, each_prompt in enumerate(previous_msg):
@@ -154,7 +154,7 @@ class GPTAgent:
         self.debugger.response(model, answer)
         return answer
 
-    def get_response(self, prompt, examples=None, model="deepseek/deepseek-v4-flash", temperature=0, previous_msg=[]):
+    def get_response(self, prompt, examples=None, model="dashscope/qwen3.7-max", temperature=0, previous_msg=[]):
         answer = self.ask(prompt, examples, model, temperature, previous_msg)
         return answer
 

@@ -63,9 +63,12 @@ source ~/.zshrc
 | -h, --help     | show help message and exit             | n    | -                 |
 | --tool, -t     | Specify the code checking tool         | y    | -                 |
 | --input, -i    | File path or rule text                 | y    | -                 |
-| --model, -m    | Specify the model to use               | n    | deepseek-reasoner |
+| --model, -m    | Specify the model to use               | n    | qwen3.7-max       |
 | --out, -o      | Output file path                       | n    | -                 |
 | --examples, -e | Sample text                            | n    | -                 |
+| --full         | Full prompt mode                       | n    | false             |
+| --api-key, -k  | API key for LLM                        | n    | -                 |
+| --debug, -d    | Debug mode, output complete log in logs directory | n    | false             |
 | --version, -v  | show program's version number and exit | n    | -                 |
 
 If you don't specify an output file, the output will directly printed in the console.

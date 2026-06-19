@@ -29,7 +29,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 **Examples:**
-  gen-linter-config --tool checkstyle --model deepseek/deepseek-chat --input "No more than 5 function parameters."
+  gen-linter-config -t checkstyle -m deepseek/deepseek-v4-pro -i "The package declaration is not line-wrapped. The column limit(Section 4.4, Column limit: 100) does not apply to package declarations."
   gen-linter-config -t checkstyle -i path/to/rule.txt -o path/to/output.json
   gen-linter-config -t eslint -m deepseek/deepseek-chat -i "The parent class construction must be called in the constructor."
 **Wrong Usages:**
