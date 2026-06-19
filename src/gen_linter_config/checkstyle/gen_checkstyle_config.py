@@ -13,6 +13,7 @@ from .DSL_gpt_google_java_style import preprocess_promt as nl_preprocess, \
 from .Config_name_select_checkstyle_for_googlejava_one import preprocess_promt as rule_mapper_preprocess, \
     extract_basic_rule
 from . import Config_set_checkstyle_for_googlejava_ours_o1 as CheckstyleGenerator
+from . import checkstyle_lightweight as CheckstyleLightweight
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 class gen_checkstyle:
@@ -28,6 +29,7 @@ class gen_checkstyle:
         print("=" * 60)
         if self.debugger:
             self.debugger.step("Step 1: NL-to-DSL Parsing")
+            self.debugger._file(f"Mode: {'lightweight (JSON)' if lightweight else 'full (DSL)'}")
         dsl_result = self.process_nl_rule(input_content, model, output_format, examples)
         print(dsl_result)
 
@@ -54,7 +56,7 @@ class gen_checkstyle:
         print("=" * 60)
         if self.debugger:
             self.debugger.step("Step 4: Alignment Check & Configuration Generation")
-        config_result = self.generate_config(detailed_mapping, model, output_format=output_format, examples=examples)
+        config_result = self.generate_config(detailed_mapping, model, output_format=output_format, examples=examples, lightweight=lightweight)
         final_res = self.generate_full_checkstyle_xml(config_result)
         print(final_res)
         return final_res
@@ -184,20 +186,23 @@ class gen_checkstyle:
     def detailed_mapping(self, dsl_ruleset, candidate_names, model, examples="", lightweight=True):
         if lightweight:
             filtered_tool_rules = self._get_detailed_tool_rules_json(candidate_names, data_type="checkstyle")
+            prompt = CheckstyleLightweight.step3_preprocess_promt(
+                style="RuleSet of Google Java Style Guide",
+                DSLruleset=dsl_ruleset,
+                tool="Checkstyle",
+                toolruleset=filtered_tool_rules,
+                example=examples
+            )
         else:
             filtered_tool_rules = self._get_detailed_tool_rules(candidate_names)
-
-        if lightweight:
-            filtered_tool_rules = "{{tool}} rules in JSON format.\n" + filtered_tool_rules
-
-        prompt = CheckstyleGenerator.preprocess_promt(
-            DSL_Syntax=self.dsl_syntax,
-            style="RuleSet of Google Java Style Guide",
-            DSLruleset=dsl_ruleset,
-            tool="Checkstyle",
-            toolruleset=filtered_tool_rules,
-            example=examples
-        )
+            prompt = CheckstyleGenerator.preprocess_promt(
+                DSL_Syntax=self.dsl_syntax,
+                style="RuleSet of Google Java Style Guide",
+                DSLruleset=dsl_ruleset,
+                tool="Checkstyle",
+                toolruleset=filtered_tool_rules,
+                example=examples
+            )
         if self.gpt_agent:
             if self.debugger:
                 self.debugger.sub_step("3.1 Detailed Option Mapping")
@@ -236,7 +241,7 @@ class gen_checkstyle:
         return candidate_names
 
     # Step 4: Generate Checkstyle configuration
-    def generate_config(self, dsl_ruleset, model, checkstyle_ruleset=None, output_format="text", examples=""):
+    def generate_config(self, dsl_ruleset, model, checkstyle_ruleset=None, output_format="text", examples="", lightweight=True):
         """
         Generate Checkstyle configuration
         """
@@ -258,7 +263,8 @@ class gen_checkstyle:
                 f'2. ...\n'
                 f'...\n',
                 model=model)
-            merg_prompt = CheckstyleGenerator.merge_basic_option_rules(tool_sem_rules)
+            merg_prompt = CheckstyleLightweight.merge_basic_option_rules_lightweight(tool_sem_rules) if lightweight \
+                else CheckstyleGenerator.merge_basic_option_rules(tool_sem_rules)
             if self.debugger:
                 self.debugger.sub_step("4.1 Merge Option Rules")
             merge_answer_map = self.gpt_agent.get_response(merg_prompt, model=model)
@@ -269,12 +275,20 @@ class gen_checkstyle:
             dsl_ruleset_merged = self.gpt_agent.get_response(prompt_extract_merge, model=model)
 
             # 1. Validate semantic match
-            prompt = CheckstyleGenerator.validation_config_superset_semantics(
-                mapping=dsl_ruleset_merged,
-                tool="Checkstyle",
-                style="Google Java Style",
-                toolruleset=checkstyle_ruleset
-            )
+            if lightweight:
+                prompt = CheckstyleLightweight.validation_config_superset_semantics_lightweight(
+                    mapping=dsl_ruleset_merged,
+                    tool="Checkstyle",
+                    style="Google Java Style",
+                    toolruleset=checkstyle_ruleset
+                )
+            else:
+                prompt = CheckstyleGenerator.validation_config_superset_semantics(
+                    mapping=dsl_ruleset_merged,
+                    tool="Checkstyle",
+                    style="Google Java Style",
+                    toolruleset=checkstyle_ruleset
+                )
             if self.debugger:
                 self.debugger.sub_step("4.3 Semantic Validation")
             val_response = self.gpt_agent.get_response(prompt, model=model)
@@ -482,8 +496,11 @@ class gen_checkstyle:
         if mode == "basic":
             lines = []
             for r in rules:
+                desc = r.get("description", "")
+                if desc:
+                    desc = desc.split(". ")[0].strip().rstrip(".")
                 opt_names = [o["name"] for o in r.get("options", [])]
-                line = f'{{"name": "{r["name"]}", "category": "{r.get("category","")}", "options": {json.dumps(opt_names, ensure_ascii=False)}}}'
+                line = f'{{"name": "{r["name"]}", "desc": "{desc}", "options": {json.dumps(opt_names, ensure_ascii=False)}}}'
                 lines.append(line)
             return "\n".join(lines)
         else:

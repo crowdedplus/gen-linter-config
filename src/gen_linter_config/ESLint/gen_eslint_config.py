@@ -12,6 +12,7 @@ from .DSL_gpt_google_JSstyle import preprocess_promt as nl_preprocess, \
 from . import gpt_instr_select_eslint_for_googleJS as RuleSelector
 extract_basic_rule = RuleSelector.extract_basic_rule
 from . import Config_set_ESLint_for_googleJS as EslintGenerator
+from . import eslint_lightweight as EslintLightweight
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 class gen_eslint:
@@ -27,6 +28,7 @@ class gen_eslint:
         print("=" * 60)
         if self.debugger:
             self.debugger.step("Step 1: NL-to-DSL Parsing")
+            self.debugger._file(f"Mode: {'lightweight (JSON)' if lightweight else 'full (DSL)'}")
         dsl_result = self.process_nl_rule(input_content, model, output_format, examples)
         print(dsl_result)
 
@@ -51,7 +53,7 @@ class gen_eslint:
         print("=" * 60)
         if self.debugger:
             self.debugger.step("Step 4: Alignment Check & Configuration Generation")
-        config_result = self.generate_config(detailed_mapping, model, output_format=output_format, examples=examples)
+        config_result = self.generate_config(detailed_mapping, model, output_format=output_format, examples=examples, lightweight=lightweight)
 
         final_res = self.generate_full_eslint_js(config_result)
         # print("\n" + "=" * 30 + "    :")
@@ -130,19 +132,23 @@ class gen_eslint:
     def step_3_detailed_mapping(self,dsl_ruleset, candidate_names, model, examples="", lightweight=True):
         if lightweight:
             filtered_tool_rules = self._get_detailed_tool_rules_json(candidate_names, data_type="eslint")
+            prompt = EslintLightweight.step3_preprocess_promt(
+                style="RuleSet of Google JavaScript Style Guide",
+                DSLruleset=dsl_ruleset,
+                tool="ESLint",
+                toolruleset=filtered_tool_rules,
+                example=examples
+            )
         else:
             filtered_tool_rules = self._get_detailed_tool_rules(candidate_names)
-
-        if lightweight:
-            filtered_tool_rules = "ESLint rules in JSON format.\n" + filtered_tool_rules
-        prompt = EslintGenerator.preprocess_promt(
-            DSL_Syntax=self.dsl_syntax,
-            style="RuleSet of Google JavaScript Style Guide",
-            DSLruleset=dsl_ruleset,
-            tool="ESLint",
-            toolruleset=filtered_tool_rules,
-            example=examples
-        )
+            prompt = EslintGenerator.preprocess_promt(
+                DSL_Syntax=self.dsl_syntax,
+                style="RuleSet of Google JavaScript Style Guide",
+                DSLruleset=dsl_ruleset,
+                tool="ESLint",
+                toolruleset=filtered_tool_rules,
+                example=examples
+            )
         if self.gpt_agent:
             if self.debugger:
                 self.debugger.sub_step("3.1 Detailed Option Mapping")
@@ -192,7 +198,7 @@ class gen_eslint:
         return final_mapping
 
     # Step 4: Semantic validation & generate ESLint config
-    def generate_config(self, detailed_mappings, model, eslint_ruleset=None, output_format="text", examples=""):
+    def generate_config(self, detailed_mappings, model, eslint_ruleset=None, output_format="text", examples="", lightweight=True):
         """
         Generate ESLint configuration (JSON snippet)
         """
@@ -215,7 +221,8 @@ class gen_eslint:
                 f'2. ...\n'
                 f'...\n',
                 model=model)
-            merg_prompt = EslintGenerator.merge_basic_option_rules(tool_sem_rules)
+            merg_prompt = EslintLightweight.merge_basic_option_rules_lightweight(tool_sem_rules) if lightweight \
+                else EslintGenerator.merge_basic_option_rules(tool_sem_rules)
             if self.debugger:
                 self.debugger.sub_step("4.1 Merge Option Rules")
             merge_answer_map = self.gpt_agent.get_response(merg_prompt, model=model)
@@ -226,12 +233,20 @@ class gen_eslint:
             detailed_mappings = self.gpt_agent.get_response(prompt_extract_merge, model=model)
 
             # 1. Validate semantic match
-            prompt = EslintGenerator.validation_config_superset_semantics(
-                mapping=detailed_mappings,
-                tool="ESLint",
-                style="Google JavaScript Style",
-                toolruleset=eslint_ruleset
-            )
+            if lightweight:
+                prompt = EslintLightweight.validation_config_superset_semantics_lightweight(
+                    mapping=detailed_mappings,
+                    tool="ESLint",
+                    style="Google JavaScript Style",
+                    toolruleset=eslint_ruleset
+                )
+            else:
+                prompt = EslintGenerator.validation_config_superset_semantics(
+                    mapping=detailed_mappings,
+                    tool="ESLint",
+                    style="Google JavaScript Style",
+                    toolruleset=eslint_ruleset
+                )
             if self.debugger:
                 self.debugger.sub_step("4.3 Semantic Validation")
             val_response = self.gpt_agent.get_response(prompt, model=model)
@@ -327,6 +342,9 @@ class gen_eslint:
         if mode == "basic":
             lines = []
             for r in rules:
+                desc = r.get("description", "")
+                if desc:
+                    desc = desc.split(". ")[0].strip().rstrip(".")
                 opts = r.get("options", [])
                 if isinstance(opts, list) and opts and isinstance(opts[0], dict) and "properties" in opts[0]:
                     opt_names = list(opts[0]["properties"].keys())
@@ -334,7 +352,7 @@ class gen_eslint:
                     opt_names = [o.get("name", str(o)) for o in opts]
                 else:
                     opt_names = []
-                line = f'{{"name": "{r["name"]}", "category": "{r.get("category","")}", "options": {json.dumps(opt_names, ensure_ascii=False)}}}'
+                line = f'{{"name": "{r["name"]}", "desc": "{desc}", "options": {json.dumps(opt_names, ensure_ascii=False)}}}'
                 lines.append(line)
             return "\n".join(lines)
         else:
